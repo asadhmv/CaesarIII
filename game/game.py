@@ -14,6 +14,7 @@ from .map_controller import MapController
 from .panel import Panel
 from .game_controller import GameController
 from threading import Thread, Event
+from multiplayer_connection import Multiplayer_connection
 
 def my_thread(func, event: Event):
     fps_moyen = [0]
@@ -34,6 +35,9 @@ class Game:
         self.game_controller = GameController.get_instance()
         self.width, self.height = self.screen.get_size()
 
+        #Gestion de la connexion multijoueur
+        self.multplayer = Multiplayer_connection()
+
         # sound manager
         self.sound_manager = SoundManager()
 
@@ -42,7 +46,7 @@ class Game:
         self.panel = Panel(self.width, self.height, self.screen)
 
         # World contains populations or graphical objects like buildings, trees, grass
-        self.world = World(self.width, self.height, self.panel)
+        self.world = World(self.width, self.height, self.panel, self.multplayer)
 
         self.thread_event = Event()
         self.draw_thread = Thread(None, my_thread, "1", [self.display, self.thread_event])
@@ -60,6 +64,8 @@ class Game:
         EventManager.add_hooked_function(self.world.event_handler)
         EventManager.register_key_listener(pg.K_SPACE, self.toogle_pause)
         self.draw_thread.start()
+
+        
 
     # Game Loop
     def run(self):

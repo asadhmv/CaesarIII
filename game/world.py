@@ -34,12 +34,13 @@ import backup_game
 
 class World:
 
-    def __init__(self, width, height, panel):
+    def __init__(self, width, height, panel, multplayer):
         self.game_controller = GameController.get_instance()
         self.width = width
         self.height = height
-
         self.builder = Builder(panel)
+        self.multplayer = multplayer
+        self.multplayer.set_builder(self.builder)
         self.overlay = Overlay.get_instance()
 
 
@@ -138,6 +139,8 @@ class World:
         
         Return: None
         """
+
+        #self.builder.build_from_start_to_end(BuildingTypes, )
         mouse_pos = pg.mouse.get_pos()
         mouse_grid_pos = self.mouse_pos_to_grid(mouse_pos)
         mouse_action = pg.mouse.get_pressed()
@@ -164,6 +167,8 @@ class World:
                     start_point = self.builder.get_start_point()
                     end_point = self.builder.get_end_point()
                     self.builder.build_from_start_to_end(selected_tile, start_point, end_point)
+
+                    self.multplayer.write(start_point, end_point, selected_tile)
 
                     self.builder.set_start_point(None)  # update start point to default after building
                     self.builder.set_end_point(None)  # update start point to default after building

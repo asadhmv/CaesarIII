@@ -237,3 +237,11 @@ class Tile:
                         open_set.append(neighbor)
 
         return []
+    
+
+    def get_row(self):
+        return self.x
+    
+    def get_col(self):
+        return self.y
+

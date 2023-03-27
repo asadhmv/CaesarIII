@@ -171,6 +171,7 @@ class Builder:
         grid[row][col].set_building(building, show_building=True)
         self.game_controller.new_building(building)
 
+
     
 
     def road_add(self, road_row: int, road_col: int):
@@ -213,6 +214,7 @@ class Builder:
 
         road.set_road_connection(road_connection)
         grid[road_row][road_col].set_road(road)
+
 
 
     def road_update(self, road_row: int, road_col: int):
