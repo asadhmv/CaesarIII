@@ -1,9 +1,10 @@
 class KeyListener:
-    def __init__(self, func, key, continuous_press: bool = False):
+    def __init__(self, func, key, params = [], continuous_press: bool = False):
         self.func = func
         self.key = key
         self.continuous_press = continuous_press
         self.being_pressed = False
+        self.params = params
 
     def is_being_pressed(self):
         return self.being_pressed
@@ -13,4 +14,7 @@ class KeyListener:
             self.being_pressed = being_pressed
 
     def call(self):
-        self.func()
+        if len(self.params) != 0:
+            self.func(self.params)
+        else:
+            self.func(self.params)
