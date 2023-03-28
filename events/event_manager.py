@@ -140,7 +140,7 @@ class EventManager:
         EventManager.components = []
 
     @staticmethod
-    def register_key_listener(key, func, continuous_press: bool = False):
+    def register_key_listener(key, func, continuous_press: bool = False, params = []):
         """
         Add a new key listener to the event manager, and remove the old one bound to the key if it exists.
 
@@ -151,7 +151,7 @@ class EventManager:
         :param func: The function to call when the key is pressed
         :return: The EventManager itself
         """
-        kl = KeyListener(func, key, continuous_press)
+        kl = KeyListener(func, key, continuous_press, params)
         EventManager.remove_key_listener(key)
         EventManager.key_listeners.append(kl)
 
