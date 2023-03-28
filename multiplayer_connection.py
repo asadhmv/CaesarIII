@@ -70,6 +70,7 @@ class Multiplayer_connection:
         os.close(pipe_out)
 
     def receive(self):
+        thread.executer_code_c("./Online/recv")
         pipe_name = "receive_pipe"
         if os.path.exists(pipe_name):
             os.remove(pipe_name)
@@ -77,6 +78,8 @@ class Multiplayer_connection:
         pipe_in = os.open(pipe_name, os.O_RDONLY)
         self.buffer_receive = os.read(pipe_in, 10000).decode("utf-8")
         os.close(pipe_in)
+
+        print(self.buffer_receive)
 
         if self.buffer_receive.replace(" ", "") != "":
             self.read()
@@ -91,8 +94,3 @@ class Multiplayer_connection:
         return (int(tab[0]), int(tab[1]))
         
         
-
-
-        
-
-

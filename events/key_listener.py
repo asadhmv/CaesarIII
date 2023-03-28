@@ -1,5 +1,5 @@
 class KeyListener:
-    def __init__(self, func, key, params = [], continuous_press: bool = False):
+    def __init__(self, func, key, continuous_press: bool = False, params = []):
         self.func = func
         self.key = key
         self.continuous_press = continuous_press
@@ -17,4 +17,4 @@ class KeyListener:
         if len(self.params) != 0:
             self.func(self.params)
         else:
-            self.func(self.params)
+            self.func()
