@@ -82,6 +82,8 @@ class Game:
                 if self.game_controller.is_load_save():
                     self.load_save()
 
+                self.multplayer.receive()
+
                 time.sleep(1/targeted_ticks_per_seconds)
 
         # Main programm exeption stop the thread and show the traceback

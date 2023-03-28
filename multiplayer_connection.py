@@ -1,4 +1,6 @@
 import os
+
+import thread
 from class_types.buildind_types import BuildingTypes
 from class_types.road_types import RoadTypes
 
@@ -45,19 +47,34 @@ class Multiplayer_connection:
         type_name = type_parts[-1]
         type_value = getattr(BuildingTypes, type_name)
 
-        self.builder.build_from_start_to_end(type_value, Multiplayer_connection.string_to_tuple(tab[1]), Multiplayer_connection.string_to_tuple(tab[2]))
+        #self.builder.build_from_start_to_end(type_value, Multiplayer_connection.string_to_tuple(tab[1]), Multiplayer_connection.string_to_tuple(tab[2]))
 
+        #self.builder.build_from_start_to_end(type_value, (28,22),(28,20))
 
-    
     def send(self):
-        return
-    
+        pipe_name = "send_pipe"
+        if os.path.exists(pipe_name):
+            os.remove(pipe_name)
+        os.mkfifo(pipe_name)
+        pipe_out = os.open(pipe_name, os.O_WRONLY)
+        message = self.buffer_send.encode("utf-8")
+
+        os.write(pipe_out, message)
+        thread.executer_code_c("./Online/send")
+        os.close(pipe_out)
+
     def receive(self):
-        return
-    
-    
-    
-    
+        pipe_name = "receive_pipe"
+        if os.path.exists(pipe_name):
+            os.remove(pipe_name)
+        os.mkfifo(pipe_name)
+        pipe_in = os.open(pipe_name, os.O_RDONLY)
+        self.buffer_receive = os.read(pipe_in, 10000).decode("utf-8")
+        os.close(pipe_in)
+
+        if self.buffer_receive.replace(" ", "") != "":
+            self.read()
+
     def string_to_tuple(string):
         string = string.replace("(", "")
         string = string.replace(")", "")
