@@ -1,99 +1,58 @@
-#include <stdio.h>	
-#include <string.h> 
-#include <stdlib.h> 
-#include <unistd.h>
-#include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
-#include <net/if.h>
-#include <ifaddrs.h>
-#include <sys/ioctl.h>
-#include "ip.h"
-#define BUFLEN 512	    //Buffer length
-#define PORT   1234	    //Destination port
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 
-#define P1 "PONG"
+#define PORT 1234
+#define BUFF_LEN 1024
 
-void stop(char *s)
+char * recvC()
 {
-	perror(s);
-	exit(EXIT_FAILURE);
-}
+ 
+ int sock = socket(AF_INET, SOCK_DGRAM, 0);
+ if (sock == -1) {
+ perror("socket");
+ exit(EXIT_FAILURE);
+ }
 
-int main(void)
-{
-	char **arg=calloc(sizeof(char *),3);
-	
-	arg[0]="./send";
-	arg[1]=calloc(1,250);
-	arg[2]=NULL;
-	
-	struct sockaddr_in servaddr, cliaddr;
-	int sockfd, len, nbbytes;
+ 
+ int enable_reuseaddr = 1;
+ int res = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable_reuseaddr, sizeof(enable_reuseaddr));
+ if (res == -1) {
+ perror("setsockopt");
+ exit(EXIT_FAILURE);
+ }
 
-	char message[BUFLEN+1];
-	char message2[BUFLEN+1];
-	bzero(message2,sizeof(message2));
+ 
+ struct sockaddr_in listen_addr;
+ memset(&listen_addr, 0, sizeof(listen_addr));
+ listen_addr.sin_family = AF_INET;
+ listen_addr.sin_port = htons(PORT);
+ listen_addr.sin_addr.s_addr = INADDR_ANY;
 
-	if ( (sockfd=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
-	{
-		stop("socket");
-	}
+ 
+ res = bind(sock, (struct sockaddr *)&listen_addr, sizeof(listen_addr));
+ if (res == -1) {
+ perror("bind");
+ exit(EXIT_FAILURE);
+ }
 
-	memset((char *) &servaddr, 0, sizeof(servaddr));
-	servaddr.sin_family = AF_INET;
-	servaddr.sin_port = htons(PORT);
-	
-	
-	if (inet_aton(get_myIP() , &servaddr.sin_addr) == 0) 
-	{
-		fprintf(stderr, "inet_aton() failed\n");
-		exit(1);
-	}
+ 
+ char* buffer=calloc(1,BUFF_LEN);
+ struct sockaddr_in sender_addr;
+ socklen_t sender_addr_len = sizeof(sender_addr);
 
+ if((res = recvfrom(sock, buffer, BUFF_LEN, 0, (struct sockaddr *)&sender_addr, &sender_addr_len))<0){
+ return NULL;
+ }
+ 
+ 
+ /*printf("Received broadcast message from %s:%d: %s\n", inet_ntoa(sender_addr.sin_addr), ntohs(sender_addr.sin_port), buffer);*/
 
-	// Bind the socket with the server address 
-	if ( bind(sockfd, (const struct sockaddr *)&servaddr,  
-				sizeof(servaddr)) < 0 ) 
-	{ 
-		perror("bind failed"); 
-		exit(EXIT_FAILURE); 
-	} 
+ close(sock);
 
-        
-	for(;;){
-		memset(&cliaddr, 0, sizeof(cliaddr)); 
-		bzero(&message,BUFLEN+1);
-		len=sizeof(cliaddr);
-		// recv the message
-		if ( (nbbytes = recvfrom(sockfd, message, BUFLEN , 0 , (struct sockaddr *) &cliaddr, (socklen_t *)&len)) < 0)
-		{
-			stop("recvfrom()");
-		}
-		if(strncmp(message,message2,strlen(message))!=0){
-			const char *pipe_name= "receive_pipe";
-			int pipe_fd;
-			char *buffer = calloc(1, BUFLEN);
-
-			pipe_fd = open(pipe_name, O_WRONLY);
-			write(pipe_fd, message, strlen(message)+1);
-			close(pipe_fd);
-			
-
-			bzero(arg[1],sizeof(arg[1]));
-			strcpy(arg[1],message);
-			int pid=fork();
-			if(pid==0){
-				execvp("./send",arg);
-			}			
-		}
-		for(int i=0;i<strlen(message);i++){
-			message2[i]=message[i];
-		}
-
-
-		
-	}
-
-	close(sockfd);
-	return EXIT_SUCCESS;
+ return buffer;
 }

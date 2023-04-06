@@ -1,6 +1,7 @@
 import os
-
-import thread
+import subprocess
+import ctypes
+#import thread
 from class_types.buildind_types import BuildingTypes
 from class_types.road_types import RoadTypes
 
@@ -9,15 +10,12 @@ class Multiplayer_connection:
 
     def __init__(self):
         self.buffer_receive = ""
-        self.buffer_send = ""
+        self.buffer_send = "ython Jeuuu"
         self.builder = None
+        self.libNetwork = ctypes.cdll.LoadLibrary('Online/libNetwork.so')
+        self.libNetwork.recvC.restype = ctypes.c_char_p
+        self.libNetwork.sendC.argtypes = [ctypes.c_char_p]
 
-        pipe_name = "pythonToC"
-
-        if os.path.exists(pipe_name):
-            os.remove(pipe_name)
-
-        os.mkfifo(pipe_name)
 
     def set_builder(self, builder):
         self.builder = builder
@@ -58,31 +56,13 @@ class Multiplayer_connection:
 
     
     def send(self):
-        pipe_name = "send_pipe"
-        if os.path.exists(pipe_name):
-            os.remove(pipe_name)
-        os.mkfifo(pipe_name)
-        pipe_out = os.open(pipe_name, os.O_WRONLY)
-        message = self.buffer_send.encode("utf-8")
-
-        os.write(pipe_out, message)
-        thread.executer_code_c("./Online/send")
-        os.close(pipe_out)
+        self.libNetwork.sendC(self.buffer_send.encode())
 
     def receive(self):
-        thread.executer_code_c("./Online/recv")
-        pipe_name = "receive_pipe"
-        if os.path.exists(pipe_name):
-            os.remove(pipe_name)
-        os.mkfifo(pipe_name)
-        pipe_in = os.open(pipe_name, os.O_RDONLY)
-        self.buffer_receive = os.read(pipe_in, 10000).decode("utf-8")
-        os.close(pipe_in)
-
+        #os.system("gcc ") 
+        self.buffer_receive = self.libNetwork.recvC().decode()
+        self.libNetwork.recvC.restype = ctypes.c_char_p
         print(self.buffer_receive)
-
-        if self.buffer_receive.replace(" ", "") != "":
-            self.read()
 
     def string_to_tuple(string):
         string = string.replace("(", "")
@@ -92,5 +72,9 @@ class Multiplayer_connection:
         tab = string.split(",")
 
         return (int(tab[0]), int(tab[1]))
-        
+
+
+
+multiplayer = Multiplayer_connection()
+multiplayer.send()
         
