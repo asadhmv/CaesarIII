@@ -10,7 +10,7 @@ class Multiplayer_connection:
 
     def __init__(self):
         self.buffer_receive = ""
-        self.buffer_send = "ython Jeuuu"
+        self.buffer_send = ""
         self.builder = None
         self.libNetwork = ctypes.cdll.LoadLibrary('Online/libNetwork.so')
         self.libNetwork.recvC.restype = ctypes.c_char_p
@@ -34,6 +34,7 @@ class Multiplayer_connection:
     def write(self, row, col, buildingType="destroy"):
         string = str(buildingType) + ";"+ str(row) + ";"+ str(col)
         self.buffer_send += string
+        print(self.buffer_send)
         self.send()
         self.set_buffer_send("")
         return
@@ -62,6 +63,7 @@ class Multiplayer_connection:
         #os.system("gcc ") 
         self.buffer_receive = self.libNetwork.recvC().decode()
         self.libNetwork.recvC.restype = ctypes.c_char_p
+        self.read()
         print(self.buffer_receive)
 
     def string_to_tuple(string):
