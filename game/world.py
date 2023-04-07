@@ -585,4 +585,15 @@ class World:
         self.arr_diags = [numpy.array(self.game_controller.get_map())[::-1, :].diagonal(i) for i in range(-48, 49)]
 
     def check_no_builds(self,start_point, end_point):
-        pass
+        x_start, y_start = start_point
+        x_end, y_end = end_point
+
+        grid = self.game_controller.get_map()
+
+        for row in range(min(x_start,x_end),max(x_start,x_end)):
+            for column in range(min(y_start,y_end),max(y_start,y_end)):
+                tile = grid[row][column]
+                if not tile.isBuildable():
+                    return False
+                
+        return True
