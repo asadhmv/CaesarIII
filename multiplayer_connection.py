@@ -74,8 +74,4 @@ class Multiplayer_connection:
 
         return (int(tab[0]), int(tab[1]))
 
-
-
-multiplayer = Multiplayer_connection()
-multiplayer.send()
         
