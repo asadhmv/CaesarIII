@@ -393,6 +393,7 @@ class Textures:
             SwitchViewButtonTypes.FILE_BUTTON: pg.transform.scale(pg.image.load(os.path.join(IMAGE_PATH, 'file_button.png')), (100,46)).convert_alpha(screen),
             SwitchViewButtonTypes.JULIUS: pg.image.load(os.path.join(IMAGE_PATH, 'paneling_00079.png')).convert_alpha(screen),
             SwitchViewButtonTypes.EUROPEAN: pg.image.load(os.path.join(IMAGE_PATH, 'paneling_00082.png')).convert_alpha(screen),
+            SwitchViewButtonTypes.CHAT_BUTTON: pg.transform.scale(pg.image.load(os.path.join(IMAGE_PATH, 'button_chat.png')), (100,46)).convert_alpha(screen),
 
             SwitchViewButtonTypes.BUTTON1: pg.image.load(os.path.join(IMAGE_PATH, 'paneling_00085.png')).convert_alpha(screen),
             SwitchViewButtonTypes.BUTTON2: pg.image.load(os.path.join(IMAGE_PATH, 'paneling_00088.png')).convert_alpha(screen),

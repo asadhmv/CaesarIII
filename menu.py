@@ -6,7 +6,7 @@ from components import button
 from events.event_manager import EventManager
 from game.utils import draw_text
 from sounds.sounds import SoundManager
-
+from Rooms import Rooms
 pg.font.init()
 class Menu:
     def __init__(self, screen):
@@ -17,10 +17,11 @@ class Menu:
         self.active = True
         self.save_loading = False
         self.type_text = ""
-
+        self.Rooms= Rooms()
         self.screen = screen
         self. graphics = self.load_images()
         self.sound_manager = SoundManager()
+        
 
         # (Width, Height)
         button_size = (322, 32)
@@ -192,7 +193,7 @@ class Menu:
         self.screen.blit(zone_de_texte, ((x[0] / 2) - 150, (x[1] / 4) + 30))
         self.screen.blit(text,((x[0] / 2)- 165 , (x[1] / 4) ))
         self.screen.blit(text_2, ((x[0] / 2 )-100 , (x[1] / 4) +40))
-
+        
 
 
 
