@@ -13,7 +13,7 @@ from game.textures import Textures
 from game.utils import draw_text
 from map_element.tile import Tile
 from game.overlay import Overlay
-from components.Chat import Chat
+# from components.Chat import Chat
 TOPBAR_HEIGHT = 46
 PANEL_WIDTH = 162
 PANEL_HEIGHT = 1080 - TOPBAR_HEIGHT
@@ -25,7 +25,7 @@ class Panel:
         # Mini_Map
         self.mini_map = MiniMap()
         self.sous_menu = False
-        self.chat_window = False
+        # self.chat_window = False
         self.ressource_panel_color = (204, 174, 132)
         self.building_panel_color = (230, 162, 64)
 
@@ -157,10 +157,10 @@ class Panel:
                                       disable_unselect=True, selectable=True, text_pop_up="Build Market")
         self.build__commerce.on_click2(lambda: self.set_sous_menu(True))
 
-        #Chat Menu:
-        self.chat = Button((self.width-150, 700), (100, 46),
-                                                      image=Textures.get_texture(SwitchViewButtonTypes.CHAT_BUTTON), selectable=True)
-        self.chat.on_click2(lambda: self.set_chat(True))
+        # #Chat Menu:
+        # self.chat = Button((self.width-150, 700), (100, 46),
+        #                                               image=Textures.get_texture(SwitchViewButtonTypes.CHAT_BUTTON), selectable=True)
+        # self.chat.on_click2(lambda: self.set_chat(True))
 
         self.file = Button((0, 0), (100, 46), image=Textures.get_texture(SwitchViewButtonTypes.FILE_BUTTON), selectable=True)
         self.file.on_click2(lambda: self.set_sous_menu(True))
@@ -172,7 +172,7 @@ class Panel:
             self.build__well, self.build__hospital, self.build__school, self.build__temple, self.build__commerce,
             self.build__theatre, self.build__engineer_post, self.change_overlay, self.increase_speed,
             self.decrease_speed,
-            self.chat,
+            # self.chat,
             self.file
         ]
 
@@ -195,7 +195,7 @@ class Panel:
         self.commerce_menu.on_unselect(lambda: self.build__commerce.set_selected(False) if self.get_selected_tile() is None else True)
         EventManager.register_menu_deroulant(self.commerce_menu)
         #Chat
-        self.chat_room = Chat(self.screen)
+        # self.chat_room = Chat(self.screen)
         
         # File Menu
         self.file_continue_game = Button((0, 46), (200, 46), text="Continue Game", center_text=False, text_size=14)
@@ -276,14 +276,14 @@ class Panel:
             for sous_menu in [self.file_menu, self.commerce_menu, self.religion_menu]:
                 if sous_menu.get_isActive():
                     sous_menu.display()
-        if self.chat_window:
-            EventManager.clear_components()
-            EventManager.register_component(self.chat)
-            self.chat_room.show_chat(self.width-500,self.height-500)
-            self.chat.on_click2(lambda: self.set_chat(False))
-        if not self.chat_window:
-            self.chat_room.destroy_chat(self.width-500,self.height-500)      
-            self.chat.on_click2(lambda: self.set_chat(True))
+        # if self.chat_window:
+        #     EventManager.clear_components()
+        #     EventManager.register_component(self.chat)
+        #     self.chat_room.show_chat(self.width-500,self.height-500)
+        #     self.chat.on_click2(lambda: self.set_chat(False))
+        # if not self.chat_window:
+        #     self.chat_room.destroy_chat(self.width-500,self.height-500)      
+        #     self.chat.on_click2(lambda: self.set_chat(True))
         if not self.destroy_tile.is_selected():
             pg.mouse.set_cursor(pg.cursors.Cursor((0, 0), pg.image.load("assets/C3_sprites/system/Arrow.png")))
 
@@ -342,5 +342,5 @@ class Panel:
 
     def set_sous_menu(self, status):
         self.sous_menu = status
-    def set_chat(self, status):
-        self.chat_window = status
+    # def set_chat(self, status):
+    #     self.chat_window = status

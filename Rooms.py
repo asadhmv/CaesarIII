@@ -4,7 +4,6 @@ class Rooms():
         
         self.rooms={}
 
-
     def create(self,room_name, player):
         if room_name in self.rooms:
             return False

@@ -12,7 +12,7 @@ class SwitchViewButtonTypes(Enum):
     DYNAMIC_DISPLAY = 4
     BARRE = 5
     FILE_BUTTON = 100
-    CHAT_BUTTON =101
+    # CHAT_BUTTON =101
     MINI_SCULPTURE = 6
     JULIUS = 7
     BUTTON1 = 8
