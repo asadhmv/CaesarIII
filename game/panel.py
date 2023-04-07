@@ -56,7 +56,7 @@ class Panel:
 
         # Overlay button
         self.change_overlay = Button((self.width - 158, 49), (117, 25), text_fn=Overlay.get_instance().get_name,
-                                     center_text=True, text_size=30)
+                                     center_text=True, text_size=16)
         self.change_overlay.on_click(lambda: Overlay.get_instance().set_overlay_types())
 
         button_size = (39, 26)
@@ -208,7 +208,7 @@ class Panel:
         self.file_load_game.on_click(lambda: backup_game.load_game("save.bin"), lambda: self.set_sous_menu(False))
 
         self.file_exit_game = Button((0, 184), (200, 46), text="Exit Game", center_text=False, text_size=14)
-        self.file_exit_game.on_click(lambda: pg.quit())
+        self.file_exit_game.on_click(lambda: pg.event.post(pg.event.Event(pg.KEYDOWN, unicode="\x1b", key=pg.K_ESCAPE, mod=pg.KMOD_NONE)))
 
         self.file_sous_menu_list = [self.file_continue_game, self.file_save_game, self.file_load_game,
                                     self.file_exit_game]

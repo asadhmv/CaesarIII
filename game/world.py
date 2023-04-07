@@ -363,7 +363,7 @@ class World:
         [pos_x, pos_y] = coord
         pos_x += 5
         pos_y -= 20
-        utils.draw_text(text=str(cost), screen=screen, pos=(pos_x, pos_y), color=color, size=14)
+        utils.draw_text(text=str(cost), screen=screen, pos=(pos_x, pos_y), color=color, size=16)
 
     def load_map(self):
         img = Image.open(MAPS_PATH)

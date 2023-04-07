@@ -19,7 +19,7 @@ class Button(Component):
             size,
             text_size : int = 38,
             text: str = "",
-            text_fn: () = None,
+            text_fn = None,
             image: Surface = None,
             image_hover: Surface = None,
             image_selected: Surface = None,

@@ -1,63 +1,73 @@
-#include<stdio.h>	
-#include<string.h> 
-#include<stdlib.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <unistd.h>
-#include<arpa/inet.h>
-#include<sys/socket.h>
-#include "ip.h"
+#include <ifaddrs.h>
+#define PORT 1234
 
-#define BUFLEN 512	    //Buffer length
-#define PORT   1234	    //Destination port
+char* get_Broadcast() {
+    struct ifaddrs *ifaddr, *ifa;
+    int family, s;
+    char *host=calloc(1,1025);
 
+    if (getifaddrs(&ifaddr) == -1) {
+        perror("getifaddrs");
+        return NULL;
+    }
 
+    // Parcourir les interfaces réseau
+    for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
+        if (ifa->ifa_addr == NULL)
+            continue;
 
-void stop(char *s)
-{
-	perror(s);
-	exit(1);
+        family = ifa->ifa_addr->sa_family;
+
+        // Obtenir l'adresse de diffusion de l'interface réseau par défaut
+        if (family == AF_INET && (ifa->ifa_flags & 0x02)) {
+            struct sockaddr_in *addr = (struct sockaddr_in *)ifa->ifa_broadaddr;
+            strcpy(host, inet_ntoa(addr->sin_addr));
+            return  host;
+        }
+    }
+
+    freeifaddrs(ifaddr);
+    return NULL;
 }
 
-int main()
+void sendC(char *arg)
 {
-	//------------------------------------PIPE----------------------------------------------------
-	const char *pipe_name = "send_pipe";
-	int pipe_fd;
-	char *buffer = calloc(1,1024);
-	pipe_fd = open(pipe_name, O_RDONLY);
-	read(pipe_fd, buffer, sizeof(buffer));
-	//printf("Message received in C: %s\n", buffer);
-	close(pipe_fd);
-	//--------------------------------------------------------------------------------------------
+    printf("%s",arg);
+    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock == -1) {
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
 
 
-	struct sockaddr_in sockaddr;
-	int sockfd=-1, slen=sizeof(sockaddr);
-	char message[BUFLEN+1];
+    int enable_broadcast = 1;
+    int res = setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &enable_broadcast, sizeof(enable_broadcast));
+    if (res == -1) {
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
+    }
+   
+    struct sockaddr_in broadcast_addr;
+    memset(&broadcast_addr, 0, sizeof(broadcast_addr));
+    broadcast_addr.sin_family = AF_INET;
+    broadcast_addr.sin_port = htons(PORT);
+    broadcast_addr.sin_addr.s_addr = inet_addr(get_Broadcast());
 
-	char *serverIP = calloc(1,16);
-	strcpy(serverIP, get_sender_ip());
 
-	if ( (sockfd=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
-	{
-		stop("socket");
-	}
+    res = sendto(sock, arg, 1024, 0, (struct sockaddr *)&broadcast_addr, sizeof(broadcast_addr));
+    if (res == -1) {
+        perror("sendto");
+        exit(EXIT_FAILURE);
+    }
 
-	memset((char *) &sockaddr, 0, sizeof(sockaddr));
-	sockaddr.sin_family = AF_INET;
-	sockaddr.sin_port = htons(PORT);
-	
-	if (inet_aton(serverIP , &sockaddr.sin_addr) == 0) 
-	{
-		fprintf(stderr, "inet_aton() failed\n");
-		exit(1);
-	}
-	//send the message
-	
-	if (sendto(sockfd, buffer, strlen(buffer) , 0 , (struct sockaddr *) &sockaddr, slen)==-1)
-	{
-		stop("sendto()");
-	}
-		
-	close(sockfd);
-	return 0;
+    close(sock);
+
 }
+
