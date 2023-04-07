@@ -16,12 +16,13 @@ class Menu:
         self.loading_menu = False
         self.main_menu = True
         self.username_menu = False
-        self.nbPlayer_menu = False
+        self.roomSettings_menu = False
         self.roomPassword_menu = False
         self.splash_screen = True
         self.active = True
         self.save_loading = False
         self.nbPlayer = 1
+        self.roomPublic = True
 
         self.screen = screen
         self. graphics = self.load_images()
@@ -87,7 +88,8 @@ class Menu:
         zone_de_texte = pg.image.load("assets/menu_sprites/zone_txt.png")
         zone_de_texte = pg.transform.scale(zone_de_texte, (300,50))
         self.input_username = Input_text((size_screen[0]/2-150, size_screen[1]/4+30), legende_username, zone_de_texte, typeText_username)
-        self.valide_username = button.Button((0,0), button_size, text="Valider")
+        #self.valide_username = button.Button((0,0), (size_screen[0]/20,size_screen[1]/25), text="Valider", text_size=20, center_text=True)
+        self.valide_username = button.Button((size_screen[0]/2,size_screen[1]/3), (size_screen[0]/15,size_screen[1]/20), text="Valider", text_size=20, center_text=True)
         self.valide_username.on_click(self.set_room_menu)
 
         
@@ -102,17 +104,20 @@ class Menu:
         
         self.button__create_room= button.Button(((self.screen.get_size()[0]/2)+30, self.screen.get_size()[1]/3), (70,20),
                                                       image=pg.image.load('assets/menu_sprites/create_room.png').convert())
-        self.button__create_room.on_click(self.set_nbPlayer_menu)
+        self.button__create_room.on_click(self.set_roomSettings_menu)
 
 
 
         self.nbPlayerText = Text(str(self.nbPlayer), 40, (size_screen[0]/2-150, size_screen[1]/4), (0,0,0))
         self.plus = button.Button((0, 400), button_size, text="+")
-        self.moins = button.Button((0, 400), button_size, text="-")
+        self.moins = button.Button((0, 0), button_size, text="-")
         self.plus.on_click(self.incrementNbPlayer)
         self.moins.on_click(self.decrementNbPlayer)
-        self.valide_nbPlayer = button.Button((0,0), button_size, text="Valider")
-        self.valide_nbPlayer.on_click(exit)
+        
+
+        self.roomPublicText = Text("Room is ", 30, (size_screen[0]/2-150, size_screen[1]/4), (0,0,0))
+        self.public_button = button.Button((400, 400), button_size, text="Public")
+        self.private_button = button.Button((400, 0), button_size, text="Private")
 
 
         size_screen = self.screen.get_size()
@@ -120,9 +125,9 @@ class Menu:
         typeText_password = Text("", 24, (size_screen[0]/2-135, size_screen[1]/4+50), (0,0,0))
         zone_de_texte = pg.image.load("assets/menu_sprites/zone_txt.png")
         zone_de_texte = pg.transform.scale(zone_de_texte, (300,50))
-        self.input_password = Input_text((size_screen[0]/2-150, size_screen[1]/4+30), legende_username, zone_de_texte, typeText_username)
-        self.valide_password = button.Button((0,0), button_size, text="Valider")
-        self.valide_password.on_click(self.set_nbPlayer_menu)
+        self.input_password = Input_text((size_screen[0]/2-150, size_screen[1]/4+30), legende_password, zone_de_texte, typeText_password)
+        self.valide_settings = button.Button((size_screen[0]/2,size_screen[1]/3), (size_screen[0]/15,size_screen[1]/20), text="Valider", text_size=20, center_text=True)
+        self.valide_settings.on_click(self.set_roomSettings_menu)
 
 
 
@@ -174,8 +179,8 @@ class Menu:
             self.room_menu_display()
         elif self.username_menu:
             self.username_menu_display()
-        elif self.nbPlayer_menu:
-            self.nbPlayer_menu_display()
+        elif self.roomSettings_menu:
+            self.roomSettings_menu_display()
         elif self.roomPassword_menu:
             self.roomPassword_menu_display()
         
@@ -233,7 +238,15 @@ class Menu:
     def room_menu_display(self):#fonctionne uniquement quand on est dans la boucle des events
         #en gros on récup que les touches pendant que le programme tourne sur cette fonction
         EventManager.clear_any_input()
+        EventManager.clear_any_input()
+        EventManager.remove_component(self.button__start_new_career)
+        EventManager.remove_component(self.button__load_saved_game)
+        EventManager.remove_component(self.button__connexion)
+        EventManager.remove_component(self.button__exit)
+        EventManager.remove_component(self.valide_username)
         EventManager.register_component(self.come_back_to_main_menu)
+        EventManager.register_component(self.button__create_room)
+        EventManager.register_component(self.button__join)
         self.input_room.display(self.screen)
         self.input_room.add_input_listener()
         self.come_back_to_main_menu.display(self.screen)
@@ -246,15 +259,27 @@ class Menu:
         EventManager.remove_component(self.button__load_saved_game)
         EventManager.remove_component(self.button__connexion)
         EventManager.remove_component(self.button__exit)
+        EventManager.register_component(self.valide_username)
         self.input_username.add_input_listener()
         self.input_username.display(self.screen)
+        self.valide_username.display(self.screen)
         return
 
-    def nbPlayer_menu_display(self):
-        return
-    
-    def roomPassword_menu_display(self):
-        return
+    def roomSettings_menu_display(self):
+        EventManager.clear_any_input()
+        EventManager.remove_component(self.button__start_new_career)
+        EventManager.remove_component(self.button__load_saved_game)
+        EventManager.remove_component(self.button__connexion)
+        EventManager.remove_component(self.button__exit)
+        EventManager.remove_component(self.valide_username)
+        EventManager.remove_component(self.come_back_to_main_menu)
+        EventManager.remove_component(self.button__create_room)
+        EventManager.remove_component(self.button__join)
+        EventManager.register_component(self.plus)
+        EventManager.register_component(self.moins)
+        self.plus.display(self.screen)
+        self.moins.display(self.screen)
+        self.nbPlayerText.display(self.screen)
 
     def is_splashscreen_skipped(self):
         return not self.splash_screen
@@ -274,7 +299,7 @@ class Menu:
         self.loading_menu = True
         self.main_menu = False
         self.username_menu = False
-        self.nbPlayer_menu = False
+        self.roomSettings_menu = False
         self.roomPassword_menu = False
 
     def set_main_menu(self):
@@ -282,7 +307,7 @@ class Menu:
         self.loading_menu = False
         self.main_menu = True
         self.username_menu = False
-        self.nbPlayer_menu = False
+        self.roomSettings_menu = False
         self.roomPassword_menu = False
         self.skip_splashscreen()
 
@@ -291,7 +316,7 @@ class Menu:
         self.loading_menu = False
         self.main_menu = False
         self.username_menu = False
-        self.nbPlayer_menu = False
+        self.roomSettings_menu = False
         self.roomPassword_menu = False
         
     def set_username_menu(self):
@@ -299,15 +324,15 @@ class Menu:
         self.loading_menu = False
         self.main_menu = False
         self.username_menu = True
-        self.nbPlayer_menu = False
+        self.roomSettings_menu = False
         self.roomPassword_menu = False
     
-    def set_nbPlayer_menu(self):
+    def set_roomSettings_menu(self):
         self.room_menu = False
         self.loading_menu = False
         self.main_menu = False
         self.username_menu = False
-        self.nbPlayer_menu = True
+        self.roomSettings_menu = True
         self.roomPassword_menu = False
     
     def set_roomPassword_menu(self):
@@ -315,7 +340,7 @@ class Menu:
         self.loading_menu = False
         self.main_menu = False
         self.username_menu = False
-        self.nbPlayer_menu = False
+        self.roomSettings_menu = False
         self.roomPassword_menu = True
     
     def incrementNbPlayer(self):
