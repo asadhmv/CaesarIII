@@ -39,7 +39,6 @@ class Input_text():
         return
     
 
-    @staticmethod
     def add_input_listener(self):
         EventManager.register_key_listener(pg.K_a, self.add_text, params = ['a'])
         EventManager.register_key_listener(pg.K_b, self.add_text, params = ['b'])
@@ -83,7 +82,7 @@ class Input_text():
     
     
     @staticmethod
-    def remove_input_listener(self):
+    def remove_input_listener():
         EventManager.remove_key_listener(pg.K_a)
         EventManager.remove_key_listener(pg.K_b)
         EventManager.remove_key_listener(pg.K_c)

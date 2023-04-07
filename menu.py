@@ -211,7 +211,7 @@ class Menu:
 
     def skip_splashscreen(self):
         EventManager.clear_any_input()
-        self.splash_screen = False@staticmethod
+        self.splash_screen = False
         EventManager.register_component(self.button__start_new_career)
         EventManager.register_component(self.button__load_saved_game)
         EventManager.register_component(self.button__connexion)
@@ -246,6 +246,7 @@ class Menu:
         EventManager.remove_component(self.button__load_saved_game)
         EventManager.remove_component(self.button__connexion)
         EventManager.remove_component(self.button__exit)
+        self.input_username.add_input_listener()
         self.input_username.display(self.screen)
         return
 
