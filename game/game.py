@@ -2,6 +2,8 @@ import time
 import traceback
 import numpy
 import pygame as pg
+import threading
+import signal 
 
 from class_types.panel_types import SwitchViewButtonTypes
 from components.button import Button
@@ -70,6 +72,7 @@ class Game:
     # Game Loop
     def run(self):
         self.is_running = True
+        start_time = time.time()
         # Main control
         try:
             while self.is_running and not self.thread_event.is_set():
@@ -81,11 +84,15 @@ class Game:
                         walker.update()
                 if self.game_controller.is_load_save():
                     self.load_save()
-
-                self.multplayer.receive()
+                
+                elapsed_time = time.time() - start_time
+                if elapsed_time < 3:
+                    self.multplayer.receive()
+                   
 
                 time.sleep(1/targeted_ticks_per_seconds)
-
+         
+               
         # Main programm exeption stop the thread and show the traceback
         except Exception:
             self.thread_event.set()
@@ -98,6 +105,13 @@ class Game:
         self.draw_thread.join()
         exit()
 
+
+    def start(self):
+        self.is_running = True
+        self.run()
+
+    def stop(self):
+        self.is_running = False
 
     def toogle_pause(self):
         self.paused = not self.paused
