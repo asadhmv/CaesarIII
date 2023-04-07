@@ -22,7 +22,6 @@ class Menu:
         self.active = True
         self.save_loading = False
         self.nbPlayer = 1
-        self.roomPublic = True
 
         self.screen = screen
         self. graphics = self.load_images()
@@ -108,16 +107,18 @@ class Menu:
 
 
 
-        self.nbPlayerText = Text(str(self.nbPlayer), 40, (size_screen[0]/2-150, size_screen[1]/4), (0,0,0))
+        self.nbPlayerText = Text("Nombre de joueur maximum : "+str(self.nbPlayer), 40, (size_screen[0]/2-150, size_screen[1]/4), (0,0,0))
         self.plus = button.Button((0, 400), button_size, text="+")
         self.moins = button.Button((0, 0), button_size, text="-")
         self.plus.on_click(self.incrementNbPlayer)
         self.moins.on_click(self.decrementNbPlayer)
         
 
-        self.roomPublicText = Text("Room is ", 30, (size_screen[0]/2-150, size_screen[1]/4), (0,0,0))
+        self.roomPublicText = Text("Room is Public", 30, (size_screen[0]/2-150, size_screen[1]/4), (0,0,0))
         self.public_button = button.Button((400, 400), button_size, text="Public")
         self.private_button = button.Button((400, 0), button_size, text="Private")
+        self.public_button.on_click(self.set_roomPublic)
+        self.private_button.on_click(self.set_roomPrive)
 
 
         size_screen = self.screen.get_size()
@@ -127,7 +128,7 @@ class Menu:
         zone_de_texte = pg.transform.scale(zone_de_texte, (300,50))
         self.input_password = Input_text((size_screen[0]/2-150, size_screen[1]/4+30), legende_password, zone_de_texte, typeText_password)
         self.valide_settings = button.Button((size_screen[0]/2,size_screen[1]/3), (size_screen[0]/15,size_screen[1]/20), text="Valider", text_size=20, center_text=True)
-        self.valide_settings.on_click(self.set_roomSettings_menu)
+        self.valide_settings.on_click(exit)
 
 
 
@@ -252,6 +253,7 @@ class Menu:
         self.come_back_to_main_menu.display(self.screen)
         self.button__join.display(self.screen)
         self.button__create_room.display(self.screen)
+        
 
     def username_menu_display(self):
         EventManager.clear_any_input()
@@ -260,9 +262,11 @@ class Menu:
         EventManager.remove_component(self.button__connexion)
         EventManager.remove_component(self.button__exit)
         EventManager.register_component(self.valide_username)
+        EventManager.register_component(self.come_back_to_main_menu)
         self.input_username.add_input_listener()
         self.input_username.display(self.screen)
         self.valide_username.display(self.screen)
+        self.come_back_to_main_menu.display(self.screen)
         return
 
     def roomSettings_menu_display(self):
@@ -277,9 +281,25 @@ class Menu:
         EventManager.remove_component(self.button__join)
         EventManager.register_component(self.plus)
         EventManager.register_component(self.moins)
+        EventManager.register_component(self.public_button)
+        EventManager.register_component(self.private_button)
+        EventManager.register_component(self.come_back_to_main_menu)
+        
+        if self.roomPublicText.getString() == "Room is Private":
+            self.input_password.add_input_listener()
+            self.input_password.display(self.screen)
+        else:
+            Input_text.remove_input_listener()
+            
+
+        self.public_button.display(self.screen)
+        self.private_button.display(self.screen)
+        self.roomPublicText.display(self.screen)
         self.plus.display(self.screen)
         self.moins.display(self.screen)
         self.nbPlayerText.display(self.screen)
+        self.valide_settings.display(self.screen)
+        self.come_back_to_main_menu.display(self.screen)
 
     def is_splashscreen_skipped(self):
         return not self.splash_screen
@@ -347,7 +367,7 @@ class Menu:
         max = 99
         if self.nbPlayer < max:
             self.nbPlayer += 1
-            self.nbPlayerText.setString(str(self.nbPlayer))
+            self.nbPlayerText.setString("Nombre de joueur maximum : "+str(self.nbPlayer))
         else:
             return
     
@@ -355,6 +375,13 @@ class Menu:
         min = 1
         if self.nbPlayer > min:
             self.nbPlayer -= 1
-            self.nbPlayerText.setString(str(self.nbPlayer))
+            self.nbPlayerText.setString("Nombre de joueur maximum : "+str(self.nbPlayer))
         else:
             return
+
+
+    def set_roomPublic(self):
+        self.roomPublicText.setString("Room is Public")
+    
+    def set_roomPrive(self):
+        self.roomPublicText.setString("Room is Private")
