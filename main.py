@@ -1,13 +1,21 @@
 import pygame as pg
-
+import asyncio
+import ctypes
 import backup_game
 from events.event_manager import EventManager
 from game.game import Game
 from menu import Menu
 from game.textures import Textures
 
+libNetwork = ctypes.cdll.LoadLibrary('Online/libNetwork.so')
+libNetwork.recvC.restype = ctypes.c_char_p
 
-def main():
+
+async def call_Receive_in_C():
+    await asyncio.to_thread(libNetwork.recvC)
+
+
+async def main():
     is_game_run = True
     is_playing = True
 
@@ -32,12 +40,15 @@ def main():
     if menu.get_save_loading():
         backup_game.load_game("save.bin")
 
+    asyncio.create_task(call_Receive_in_C())
+
     while is_game_run:
 
         while is_playing:
 
             game.run()
 
+    await asyncio.sleep(1)
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
