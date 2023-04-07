@@ -12,11 +12,14 @@ Régles:
 systeme de niveau(points) :
 tu passes un niveau ou tu gagnes une attaque -> tu gagnes de l'argent->t'achetes des ressources.
 
- - Régler le problème des walkers
+ - Test VirtualMachine
+ - Régler le problème des walkers (){Hadil & Ines}
+ - Régler les problèmes de priorité (Arrivée de plusiseurs paquets au meme temps) {Asad & Souhail}
  - Gérer des username
- - Créer un Room avec des réglages (nombre limite de joueurs, privé/public, ...)
+ - Créer un Room avec des réglages (nombre limite de joueurs, privé/public, stockage des joueurs ...){Corentin}
+ - class Player(ipJoueur, username, ...)
  - Création d'espace chat dans le jeu(Partie Graphique) {Hiba}
- - Sécuriser le Broadcast dans le réseau
+ - Sécuriser le Broadcast dans le réseau (Send uniquement aux jouers connectés)
  - Lister les Rooms qui sont disponibles
  - Lorsqu'un nouveau joueur se connecte dans une partie, une sauvegarde de l'état actuel du jeu est envoyé
  - Mettre en place les différents modes de Jeu
