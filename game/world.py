@@ -169,7 +169,6 @@ class World:
                     self.builder.build_from_start_to_end(selected_tile, start_point, end_point)
                     #print(self.builder.get_start_point())
                     #print(self.builder.get_end_point())
-                    self.multplayer.write(start_point, end_point, selected_tile)
 
                     self.builder.set_start_point(None)  # update start point to default after building
                     self.builder.set_end_point(None)  # update start point to default after building
@@ -307,7 +306,6 @@ class World:
                         (x_offset, y_offset) = _offset(x, y)
                         screen.blit(build_sign,
                                     (x_offset, y_offset - build_sign.get_height() + TILE_SIZE))
-                        #print("X =",row,"Y =",col)
 
                     elif tile.is_destroyable() and temp_tile["name"] == BuildingTypes.PELLE and tile.get_building() not in already_selected:
                         # Go to the left of the building, for buildinds larger than 1x1
@@ -585,3 +583,6 @@ class World:
 
     def load_numpy_array(self):
         self.arr_diags = [numpy.array(self.game_controller.get_map())[::-1, :].diagonal(i) for i in range(-48, 49)]
+
+    def check_no_builds(self,start_point, end_point):
+        pass

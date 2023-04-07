@@ -34,7 +34,6 @@ class Multiplayer_connection:
     def write(self, row, col, buildingType="destroy"):
         string = str(buildingType) + ";"+ str(row) + ";"+ str(col)
         self.buffer_send += string
-        print(self.buffer_send)
         self.send()
         self.set_buffer_send("")
         return
