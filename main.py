@@ -7,15 +7,7 @@ from game.game import Game
 from menu import Menu
 from game.textures import Textures
 
-libNetwork = ctypes.cdll.LoadLibrary('Online/libNetwork.so')
-libNetwork.recvC.restype = ctypes.c_char_p
-
-
-async def call_Receive_in_C():
-    await asyncio.to_thread(libNetwork.recvC)
-
-
-async def main():
+def main():
     is_game_run = True
     is_playing = True
 
@@ -40,7 +32,6 @@ async def main():
     if menu.get_save_loading():
         backup_game.load_game("save.bin")
 
-    asyncio.create_task(call_Receive_in_C())
 
     while is_game_run:
 
@@ -48,7 +39,7 @@ async def main():
 
             game.run()
 
-    await asyncio.sleep(1)
+
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

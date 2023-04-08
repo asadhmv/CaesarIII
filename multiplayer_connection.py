@@ -2,6 +2,7 @@ import os
 import subprocess
 import ctypes
 #import thread
+import threading
 from class_types.buildind_types import BuildingTypes
 from class_types.road_types import RoadTypes
 
@@ -12,18 +13,19 @@ class Multiplayer_connection:
         self.buffer_receive = ""
         self.buffer_send = ""
         self.builder = None
+        self.buffer_receive = None
+        self.thread = threading.Thread(target=self.receive_thread)
         self.libNetwork = ctypes.cdll.LoadLibrary('Online/libNetwork.so')
         self.libNetwork.recvC.restype = ctypes.c_char_p
         self.libNetwork.sendC.argtypes = [ctypes.c_char_p]
+        self.thread.start()
 
 
     def set_builder(self, builder):
         self.builder = builder
 
     
-    def set_buffer_receive(self, buffer):
-        self.buffer_receive = buffer
-        return
+
 
 
     def set_buffer_send(self, buffer):
@@ -58,12 +60,18 @@ class Multiplayer_connection:
     def send(self):
         self.libNetwork.sendC(self.buffer_send.encode())
 
+
+
+    def receive_thread(self):
+        while True:
+            buffer = self.libNetwork.recvC()
+            if buffer is not None:
+                self.buffer_receive = buffer.decode()
+
     def receive(self):
-        #os.system("gcc ") 
-        self.buffer_receive = self.libNetwork.recvC().decode()
-        self.libNetwork.recvC.restype = ctypes.c_char_p
-        self.read()
-        print(self.buffer_receive)
+        buffer = self.buffer_receive
+        self.buffer_receive = None
+        return buffer
 
     def string_to_tuple(string):
         string = string.replace("(", "")
