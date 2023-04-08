@@ -22,6 +22,9 @@ class Menu:
         self.active = True
         self.save_loading = False
         self.nbPlayer = 1
+        self.online = True
+        self.join = False
+
 
         self.screen = screen
         self. graphics = self.load_images()
@@ -34,7 +37,7 @@ class Menu:
         self.button__start_new_career = button.Button((button_start, 350),button_size,
                                                       image=pg.image.load('assets/menu_sprites/start.png').convert(),
                                                       image_hover=pg.image.load('assets/menu_sprites/start_hover.png').convert())
-        self.button__start_new_career.on_click(self.set_inactive)
+        self.button__start_new_career.on_click(self.set_inactive_offline)
 
         self.button__load_saved_game = button.Button((button_start, 400), button_size,
                                                       image=pg.image.load('assets/menu_sprites/load saved game.png').convert(),
@@ -63,7 +66,7 @@ class Menu:
 
 
         self.save1 = button.Button((button_start, 300), button_size, text="Save1")
-        self.save1.on_click(self.set_inactive)
+        self.save1.on_click(self.set_inactive_offline)
 
         self.save2 = button.Button((button_start, 350), button_size, text="Save2")
         #self.save2.on_click(self.load_save)
@@ -99,7 +102,7 @@ class Menu:
         self.input_room = Input_text((size_screen[0]/2.4, size_screen[1]/4+30), legende, zone_de_texte, typeText)
         self.button__join = button.Button(((self.screen.get_size()[0] / 2.4), self.screen.get_size()[1]/3), (70, 20),
                                                       image=pg.image.load('assets/menu_sprites/join.png').convert())
-        self.button__join.on_click(exit)
+        self.button__join.on_click(self.set_inactive_join)
         
         self.button__create_room= button.Button(((self.screen.get_size()[0]/2), self.screen.get_size()[1]/3), (70,20),
                                                       image=pg.image.load('assets/menu_sprites/create_room.png').convert())
@@ -128,7 +131,7 @@ class Menu:
         zone_de_texte = pg.transform.scale(zone_de_texte, (300,50))
         self.input_password = Input_text((size_screen[0]/2.4, size_screen[1]/6+30), legende_password, zone_de_texte, typeText_password)
         self.valide_settings = button.Button((size_screen[0]/2,size_screen[1]/2.17), (size_screen[0]/15,size_screen[1]/20), text="Valider", text_size=20, center_text_mod2=True)
-        self.valide_settings.on_click(exit)
+        self.valide_settings.on_click(self.set_inactive)
 
 
 
@@ -214,6 +217,14 @@ class Menu:
     def set_inactive(self):
         self.active = False
         pg.mixer.music.stop()
+    
+    def set_inactive_offline(self):
+        self.online = False
+        self.set_inactive()
+
+    def set_inactive_join(self):
+        self.join = True
+        self.set_inactive()
 
     def skip_splashscreen(self):
         EventManager.clear_any_input()
@@ -385,3 +396,17 @@ class Menu:
     
     def set_roomPrive(self):
         self.roomPublicText.setString("Room is Private")
+
+    def get_online(self):
+        return self.online
+    
+    def getInformationsRoom(self):
+        return {
+            "online":self.online,
+            "nbPlayer":self.nbPlayer,
+            "public":self.roomPublicText,
+            "password":self.input_password.getString(),
+            "username":self.input_username.getString(),
+            "name":self.input_room.getString(),
+            "join":self.join
+            }

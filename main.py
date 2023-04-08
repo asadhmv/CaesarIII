@@ -26,7 +26,10 @@ def main():
 
     # Clear buttons from the menu
     EventManager.reset()
-    game = Game(screen)
+    if menu.get_online():
+        roomInformations = menu.getInformationsRoom()
+    
+    game = Game(screen, menu.get_online())
 
     # Save load, need to be here to load save after init game
     if menu.get_save_loading():

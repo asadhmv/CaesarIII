@@ -8,10 +8,11 @@ from class_types.road_types import RoadTypes
 
 class Multiplayer_connection:
 
-    def __init__(self):
+    def __init__(self, online=False):
         self.buffer_receive = ""
         self.buffer_send = ""
         self.builder = None
+        self.online = online
         self.libNetwork = ctypes.cdll.LoadLibrary('Online/libNetwork.so')
         self.libNetwork.recvC.restype = ctypes.c_char_p
         self.libNetwork.sendC.argtypes = [ctypes.c_char_p]
@@ -32,6 +33,9 @@ class Multiplayer_connection:
 
     
     def write(self, row, col, buildingType="destroy"):
+        if not self.online:
+            return
+        
         string = str(buildingType) + ";"+ str(row) + ";"+ str(col)
         self.buffer_send += string
         print(self.buffer_send)
@@ -40,6 +44,10 @@ class Multiplayer_connection:
         return
     
     def read(self):
+        if not self.online:
+            return
+        
+        
         tab = self.buffer_receive.split(";")
         type_str = tab[0]
         type_parts = type_str.split('.')
@@ -57,9 +65,14 @@ class Multiplayer_connection:
 
     
     def send(self):
+        if not self.online:
+            return
+        
         self.libNetwork.sendC(self.buffer_send.encode())
 
     def receive(self):
+        if not self.online:
+            return
         #os.system("gcc ") 
         self.buffer_receive = self.libNetwork.recvC().decode()
         self.libNetwork.recvC.restype = ctypes.c_char_p
@@ -74,6 +87,7 @@ class Multiplayer_connection:
         tab = string.split(",")
 
         return (int(tab[0]), int(tab[1]))
+
 
 
 

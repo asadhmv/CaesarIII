@@ -28,15 +28,16 @@ def my_thread(func, event: Event):
         exit()
 
 class Game:
-    def __init__(self, screen):
+    def __init__(self, screen, online=False):
         self.is_running = False
         self.screen = screen
         self.paused = False
+        self.online = online
         self.game_controller = GameController.get_instance()
         self.width, self.height = self.screen.get_size()
 
         #Gestion de la connexion multijoueur
-        self.multplayer = Multiplayer_connection()
+        self.multplayer = Multiplayer_connection(self.online)
 
         # sound manager
         self.sound_manager = SoundManager()
