@@ -74,7 +74,7 @@ class Menu:
         self.save4 = button.Button((button_start, 450), button_size, text="Save4")
         #self.save4.on_click(exit)
 
-        self.come_back_to_main_menu = button.Button((button_start, 500), (50,45), text="<")
+        self.come_back_to_main_menu = button.Button((button_start, 500), (50,45), text="<", center_text=True)
         self.come_back_to_main_menu.on_click(self.set_main_menu)
 
     
@@ -82,52 +82,52 @@ class Menu:
 
         
         size_screen = self.screen.get_size()
-        legende_username = Text("Please enter Username", 40, (size_screen[0]/2-150, size_screen[1]/4), (245,245,220))
+        legende_username = Text("Please enter Username", 40, (size_screen[0]/2.4, size_screen[1]/4), (245,245,220))
         typeText_username = Text("", 24, (size_screen[0]/2-135, size_screen[1]/4+50), (0,0,0))
         zone_de_texte = pg.image.load("assets/menu_sprites/zone_txt.png")
         zone_de_texte = pg.transform.scale(zone_de_texte, (300,50))
-        self.input_username = Input_text((size_screen[0]/2-150, size_screen[1]/4+30), legende_username, zone_de_texte, typeText_username)
+        self.input_username = Input_text((size_screen[0]/2.4, size_screen[1]/4+30), legende_username, zone_de_texte, typeText_username)
         #self.valide_username = button.Button((0,0), (size_screen[0]/20,size_screen[1]/25), text="Valider", text_size=20, center_text=True)
-        self.valide_username = button.Button((size_screen[0]/2,size_screen[1]/3), (size_screen[0]/15,size_screen[1]/20), text="Valider", text_size=20, center_text=True)
+        self.valide_username = button.Button((size_screen[0]/2,size_screen[1]/3), (size_screen[0]/15,size_screen[1]/20), text="Valider", text_size=20, center_text_mod2=True)
         self.valide_username.on_click(self.set_room_menu)
 
         
-        legende = Text("Please enter RoomID", 40, (size_screen[0]/2-150, size_screen[1]/4), (245,245,220))
+        legende = Text("Please enter RoomID", 40, (size_screen[0]/2.4, size_screen[1]/4), (245,245,220))
         typeText = Text("", 24, (size_screen[0]/2-135, size_screen[1]/4+50), (0,0,0))
         zone_de_texte= pg.image.load("assets/menu_sprites/zone_txt.png")
         zone_de_texte= pg.transform.scale(zone_de_texte, (300,50))
-        self.input_room = Input_text((size_screen[0]/2-150, size_screen[1]/4+30), legende, zone_de_texte, typeText)
-        self.button__join = button.Button(((self.screen.get_size()[0] / 2) - 150, self.screen.get_size()[1]/3), (70, 20),
+        self.input_room = Input_text((size_screen[0]/2.4, size_screen[1]/4+30), legende, zone_de_texte, typeText)
+        self.button__join = button.Button(((self.screen.get_size()[0] / 2.4), self.screen.get_size()[1]/3), (70, 20),
                                                       image=pg.image.load('assets/menu_sprites/join.png').convert())
         self.button__join.on_click(exit)
         
-        self.button__create_room= button.Button(((self.screen.get_size()[0]/2)+30, self.screen.get_size()[1]/3), (70,20),
+        self.button__create_room= button.Button(((self.screen.get_size()[0]/2), self.screen.get_size()[1]/3), (70,20),
                                                       image=pg.image.load('assets/menu_sprites/create_room.png').convert())
         self.button__create_room.on_click(self.set_roomSettings_menu)
 
 
 
-        self.nbPlayerText = Text("Nombre de joueur maximum : "+str(self.nbPlayer), 40, (size_screen[0]/2-150, size_screen[1]/4), (0,0,0))
-        self.plus = button.Button((0, 400), button_size, text="+")
-        self.moins = button.Button((0, 0), button_size, text="-")
+        self.nbPlayerText = Text("Nombre de joueur maximum : "+str(self.nbPlayer), 30, (size_screen[0]/2.4, size_screen[1]/2.9), (0,0,0))
+        self.plus = button.Button((size_screen[0]/1.95, size_screen[1]/2.6), (size_screen[0]/30,size_screen[1]/25), text="+", text_size=40, center_text=True)
+        self.moins = button.Button((size_screen[0]/2.35, size_screen[1]/2.6), (size_screen[0]/30,size_screen[1]/25), text="-", text_size=40, center_text=True)
         self.plus.on_click(self.incrementNbPlayer)
         self.moins.on_click(self.decrementNbPlayer)
         
 
-        self.roomPublicText = Text("Room is Public", 30, (size_screen[0]/2-150, size_screen[1]/4), (0,0,0))
-        self.public_button = button.Button((400, 400), button_size, text="Public")
-        self.private_button = button.Button((400, 0), button_size, text="Private")
+        self.roomPublicText = Text("Room is Public", 30, (size_screen[0]/2.2, size_screen[1]/4), (0,0,0))
+        self.public_button = button.Button((size_screen[0]/2, size_screen[1]/3.6), (size_screen[0]/15,size_screen[1]/20), text="Public", text_size=20, center_text_mod2=True)
+        self.private_button = button.Button((size_screen[0]/2.4, size_screen[1]/3.6), (size_screen[0]/15,size_screen[1]/20), text="Private", text_size=20, center_text_mod2=True)
         self.public_button.on_click(self.set_roomPublic)
         self.private_button.on_click(self.set_roomPrive)
 
 
         size_screen = self.screen.get_size()
-        legende_password = Text("Please enter password", 40, (size_screen[0]/2-150, size_screen[1]/4), (245,245,220))
-        typeText_password = Text("", 24, (size_screen[0]/2-135, size_screen[1]/4+50), (0,0,0))
+        legende_password = Text("Please enter password", 40, (size_screen[0]/2.4, size_screen[1]/6), (245,245,220))
+        typeText_password = Text("", 24, (size_screen[0]/2-135, size_screen[1]/6+50), (0,0,0))
         zone_de_texte = pg.image.load("assets/menu_sprites/zone_txt.png")
         zone_de_texte = pg.transform.scale(zone_de_texte, (300,50))
-        self.input_password = Input_text((size_screen[0]/2-150, size_screen[1]/4+30), legende_password, zone_de_texte, typeText_password)
-        self.valide_settings = button.Button((size_screen[0]/2,size_screen[1]/3), (size_screen[0]/15,size_screen[1]/20), text="Valider", text_size=20, center_text=True)
+        self.input_password = Input_text((size_screen[0]/2.4, size_screen[1]/6+30), legende_password, zone_de_texte, typeText_password)
+        self.valide_settings = button.Button((size_screen[0]/2,size_screen[1]/2.17), (size_screen[0]/15,size_screen[1]/20), text="Valider", text_size=20, center_text_mod2=True)
         self.valide_settings.on_click(exit)
 
 
@@ -284,7 +284,7 @@ class Menu:
         EventManager.register_component(self.public_button)
         EventManager.register_component(self.private_button)
         EventManager.register_component(self.come_back_to_main_menu)
-        
+        EventManager.register_component(self.valide_settings)
         if self.roomPublicText.getString() == "Room is Private":
             self.input_password.add_input_listener()
             self.input_password.display(self.screen)
