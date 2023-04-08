@@ -63,15 +63,17 @@ class Multiplayer_connection:
 
 
     def receive_thread(self):
-        while not threading.Event().is_set():
+        while True:
+            self.buffer_receive=""
             buffer = self.libNetwork.recvC()
-            if buffer is not None:
+            if len(buffer)>0:
                 self.buffer_receive = buffer.decode()
+                self.read()
 
-    def receive(self):
+    #def receive(self):
         buffer = self.buffer_receive
-        self.buffer_receive = None
-        return buffer
+        #self.buffer_receive = None
+        #return buffer
     def kill_thread(self):
         threading.Event().set()
     def string_to_tuple(string):
