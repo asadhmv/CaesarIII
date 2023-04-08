@@ -14,6 +14,7 @@ from .map_controller import MapController
 from .panel import Panel
 from .game_controller import GameController
 from threading import Thread, Event
+from multiplayer_connection import Multiplayer_connection
 
 def my_thread(func, event: Event):
     fps_moyen = [0]
@@ -34,6 +35,9 @@ class Game:
         self.game_controller = GameController.get_instance()
         self.width, self.height = self.screen.get_size()
 
+        #Gestion de la connexion multijoueur
+        self.multplayer = Multiplayer_connection()
+
         # sound manager
         self.sound_manager = SoundManager()
 
@@ -42,7 +46,7 @@ class Game:
         self.panel = Panel(self.width, self.height, self.screen)
 
         # World contains populations or graphical objects like buildings, trees, grass
-        self.world = World(self.width, self.height, self.panel)
+        self.world = World(self.width, self.height, self.panel, self.multplayer)
 
         self.thread_event = Event()
         self.draw_thread = Thread(None, my_thread, "1", [self.display, self.thread_event])
@@ -61,6 +65,8 @@ class Game:
         EventManager.register_key_listener(pg.K_SPACE, self.toogle_pause)
         self.draw_thread.start()
 
+        
+
     # Game Loop
     def run(self):
         self.is_running = True
@@ -75,6 +81,8 @@ class Game:
                         walker.update()
                 if self.game_controller.is_load_save():
                     self.load_save()
+
+                #self.multplayer.receive()
 
                 time.sleep(1/targeted_ticks_per_seconds)
 
@@ -105,15 +113,15 @@ class Game:
         self.panel.draw(self.screen)
         month_number = self.game_controller.get_actual_month()
 
-        draw_text('fps={}'.format(fps), self.screen, (self.width - 120, 10), size=42)
-        draw_text('food={}'.format(self.game_controller.actual_foods), self.screen, (self.width - 300, 10), size=42)
-        draw_text('Denier  {}'.format(self.game_controller.get_denier()), self.screen, (self.width - 905, 10), size=42)
-        draw_text('Pop  {}'.format(self.game_controller.get_actual_citizen()), self.screen, (self.width - 1200, 10), size=42)
-        draw_text('{} '.format(self.game_controller.get_month(month_number)), self.screen, (self.width - 590, 10), color=pg.Color(255, 255, 0), size=42)
-        draw_text('{} BC'.format(self.game_controller.get_actual_year()), self.screen, (self.width - 500, 10), color=pg.Color(255, 255, 0), size=42)
-        draw_text('Speed {}%'.format(int(100*self.game_controller.get_actual_speed())), self.screen, (self.width - 150, 510), color=pg.Color(60, 40, 25), size=30)
-        draw_text('Des. {}'.format(int(self.game_controller.global_desirability)), self.screen, (self.width - 150, 560), color=pg.Color(60, 40, 25), size=30)
-        draw_text('Food {}'.format(int(self.game_controller.actual_foods)), self.screen, (self.width - 150, 610), color=pg.Color(60, 40, 25), size=30)
+        draw_text('fps={}'.format(fps), self.screen, (self.width - 120, 10), size=22)
+        draw_text('food={}'.format(self.game_controller.actual_foods), self.screen, (self.width - 300, 10), size=22)
+        draw_text('Denier  {}'.format(self.game_controller.get_denier()), self.screen, (self.width - 905, 10), size=22)
+        draw_text('Pop  {}'.format(self.game_controller.get_actual_citizen()), self.screen, (self.width - 1200, 10), size=22)
+        draw_text('{} '.format(self.game_controller.get_month(month_number)), self.screen, (self.width - 590, 10), color=pg.Color(255, 255, 0), size=22)
+        draw_text('{} BC'.format(self.game_controller.get_actual_year()), self.screen, (self.width - 500, 10), color=pg.Color(255, 255, 0), size=22)
+        draw_text('Speed {}%'.format(int(100*self.game_controller.get_actual_speed())), self.screen, (self.width - 150, 510), color=pg.Color(60, 40, 25), size=16)
+        draw_text('Des. {}'.format(int(self.game_controller.global_desirability)), self.screen, (self.width - 150, 560), color=pg.Color(60, 40, 25), size=16)
+        draw_text('Food {}'.format(int(self.game_controller.actual_foods)), self.screen, (self.width - 150, 610), color=pg.Color(60, 40, 25), size=16)
 
 
 
@@ -138,6 +146,7 @@ class Game:
 
     def exit_game(self):
         self.is_running = False
+        self.multplayer.kill_thread()
 
     def load_save(self):
         self.world.load_numpy_array()

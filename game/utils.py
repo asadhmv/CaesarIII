@@ -2,14 +2,17 @@ import pygame as pg
 import random as rd
 import string as st
 from pygame.surface import Surface
+import pygame.freetype
 
 TEXT_COLOR = pg.Color(255, 255, 255)
-FONT_SIZE = 42
+FONT_SIZE = 20 #changer size= dans tout le projet, force à toi
+pygame.freetype.init()
+font = pygame.freetype.Font(None, FONT_SIZE) 
+font.pad = True
 
 def draw_text(text: str, screen: Surface, pos: tuple[int, int], color: pg.Color = TEXT_COLOR, size: int = FONT_SIZE,
               center_on_width: int = None,center_on_height: int = None):
-    font = pg.font.Font(None, size)
-    text_surface = font.render(text, True, color, None)  # -> Surface
+    text_surface = font.render(text, fgcolor=color, size=size)[0]  # -> Surface
 
     if center_on_width:
         # Calculate the size difference between the size to center on and the size needed to render the text

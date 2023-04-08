@@ -34,12 +34,13 @@ import backup_game
 
 class World:
 
-    def __init__(self, width, height, panel):
+    def __init__(self, width, height, panel, multplayer):
         self.game_controller = GameController.get_instance()
         self.width = width
         self.height = height
-
         self.builder = Builder(panel)
+        self.multplayer = multplayer
+        self.multplayer.set_builder(self.builder)
         self.overlay = Overlay.get_instance()
 
 
@@ -138,6 +139,8 @@ class World:
         
         Return: None
         """
+
+        #self.builder.build_from_start_to_end(BuildingTypes, )
         mouse_pos = pg.mouse.get_pos()
         mouse_grid_pos = self.mouse_pos_to_grid(mouse_pos)
         mouse_action = pg.mouse.get_pressed()
@@ -164,6 +167,12 @@ class World:
                     start_point = self.builder.get_start_point()
                     end_point = self.builder.get_end_point()
                     self.builder.build_from_start_to_end(selected_tile, start_point, end_point)
+                    #print(self.builder.get_start_point())
+                    #print(self.builder.get_end_point())
+
+                    #if self.check_no_builds(start_point,end_point):
+                    self.multplayer.write(start_point,end_point, selected_tile)
+
 
                     self.builder.set_start_point(None)  # update start point to default after building
                     self.builder.set_end_point(None)  # update start point to default after building
@@ -358,7 +367,7 @@ class World:
         [pos_x, pos_y] = coord
         pos_x += 5
         pos_y -= 20
-        utils.draw_text(text=str(cost), screen=screen, pos=(pos_x, pos_y), color=color, size=30)
+        utils.draw_text(text=str(cost), screen=screen, pos=(pos_x, pos_y), color=color, size=16)
 
     def load_map(self):
         img = Image.open(MAPS_PATH)
@@ -578,3 +587,33 @@ class World:
 
     def load_numpy_array(self):
         self.arr_diags = [numpy.array(self.game_controller.get_map())[::-1, :].diagonal(i) for i in range(-48, 49)]
+
+    def check_no_builds(self,start_point, end_point):
+        x_start, y_start = start_point
+        x_end, y_end = end_point
+
+
+        min_x = min(x_start,x_end)
+        max_x = max(x_start,x_end)
+        min_y = min(y_start,y_end)
+        max_y = max(y_start,y_end)
+        if min_x == max_x: 
+            max_x +=1        
+        if min_y == max_y: 
+            max_y +=1
+
+        print("X From ",min_x, " To ", max_x)
+        print("Y From ",min_y, " To ", max_y)
+
+
+        grid = self.game_controller.get_map()
+
+        for row in range(min_x,max_x):
+            for column in range(min_y,max_y):
+                tile = grid[row][column]
+                print("x=",row ," Y=", column, "Building = ", tile.get_building())
+                if not tile.is_buildable() or tile.type == TileTypes.WATER or tile.get_road():
+                    print("False")
+                    return False
+        print("True")
+        return True
