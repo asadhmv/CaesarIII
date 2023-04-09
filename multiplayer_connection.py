@@ -21,7 +21,7 @@ class Multiplayer_connection:
         self.libNetwork = ctypes.cdll.LoadLibrary('Online/libNetwork.so')
         self.libNetwork.recvC.restype = ctypes.c_char_p
         self.libNetwork.sendC.argtypes = [ctypes.c_char_p]
-        self.sock = self.libNetwork.createSocket()
+        self.sock = -1
         self.thread_stop_event = threading.Event()
         self.thread = threading.Thread(target=self.receive_thread)
         self.thread.start()
@@ -71,10 +71,13 @@ class Multiplayer_connection:
     def receive_thread(self):
         while not self.thread_stop_event.is_set():
             self.buffer_receive=""
+            self.sock = self.libNetwork.createSocket()
             buffer = self.libNetwork.recvC(self.sock)
             if buffer is not None and len(buffer)>0:
                 self.buffer_receive = buffer.decode()
                 self.read()
+            self.libNetwork.closeSocket(self.sock)
+            
 
 
     def kill_thread(self):

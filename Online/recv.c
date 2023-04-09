@@ -11,14 +11,34 @@
 
 char * recvC(int sock)
 {
+    int enable_reuseaddr = 1;
+    int res = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable_reuseaddr, sizeof(enable_reuseaddr));
+    if (res == -1) {
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
+    }
+
+
+    struct sockaddr_in listen_addr;
+    memset(&listen_addr, 0, sizeof(listen_addr));
+    listen_addr.sin_family = AF_INET;
+    listen_addr.sin_port = htons(PORT);
+    listen_addr.sin_addr.s_addr = INADDR_ANY;
+
+
+    res = bind(sock, (struct sockaddr *)&listen_addr, sizeof(listen_addr));
+    if (res == -1) {
+        perror("bind");
+        exit(EXIT_FAILURE);
+    }
 
     struct sockaddr_in sender_addr;
     socklen_t sender_addr_len = sizeof(sender_addr);
 
     char* buffer=calloc(1,BUFF_LEN);
-    int res;
+    int res_recv;
 
-    if((res = recvfrom(sock, buffer, BUFF_LEN, 0, (struct sockaddr *)&sender_addr, &sender_addr_len))<0){
+    if((res_recv = recvfrom(sock, buffer, BUFF_LEN, 0, (struct sockaddr *)&sender_addr, &sender_addr_len))<0){
         return NULL;
     }
 
@@ -34,31 +54,12 @@ int createSocket()
 {
     int sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock == -1) {
-    perror("socket");
-    exit(EXIT_FAILURE);
+        perror("socket");
+        exit(EXIT_FAILURE);
     }
+    printf("La socket en c = %i",sock);
 
-
-    int enable_reuseaddr = 1;
-    int res = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable_reuseaddr, sizeof(enable_reuseaddr));
-    if (res == -1) {
-    perror("setsockopt");
-    exit(EXIT_FAILURE);
-    }
-
-
-    struct sockaddr_in listen_addr;
-    memset(&listen_addr, 0, sizeof(listen_addr));
-    listen_addr.sin_family = AF_INET;
-    listen_addr.sin_port = htons(PORT);
-    listen_addr.sin_addr.s_addr = INADDR_ANY;
-
-
-    res = bind(sock, (struct sockaddr *)&listen_addr, sizeof(listen_addr));
-    if (res == -1) {
-    perror("bind");
-    exit(EXIT_FAILURE);
-    }
+    return sock;
 }
 
 void closeSocket(int sock)
