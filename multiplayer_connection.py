@@ -14,18 +14,22 @@ class Multiplayer_connection:
         self.buffer_send = ""
         self.builder = None
         self.buffer_receive = None
-        self.thread = threading.Thread(target=self.receive_thread)
+        os.chdir('Online')
+        subprocess.run(["gcc",  "-c", "-fPIC", "recv.c"])
+        subprocess.run(["gcc",  "-c", "-fPIC", "send.c"])
+        subprocess.run(["gcc", "-shared", "-fPIC", "-o", "libNetwork.so", "recv.o", "send.o"])
+        os.chdir('..')
         self.libNetwork = ctypes.cdll.LoadLibrary('Online/libNetwork.so')
         self.libNetwork.recvC.restype = ctypes.c_char_p
         self.libNetwork.sendC.argtypes = [ctypes.c_char_p]
+        self.sock = self.libNetwork.createSocket()
+        self.thread_stop_event = threading.Event()
+        self.thread = threading.Thread(target=self.receive_thread)
         self.thread.start()
 
 
     def set_builder(self, builder):
         self.builder = builder
-
-    
-
 
 
     def set_buffer_send(self, buffer):
@@ -51,7 +55,7 @@ class Multiplayer_connection:
         elif "BuildingTypes" in type_str:
             type_value = getattr(BuildingTypes, type_name)
         else:
-            type_value = None
+            return
 
         self.builder.build_from_start_to_end(type_value, Multiplayer_connection.string_to_tuple(tab[1]), Multiplayer_connection.string_to_tuple(tab[2]))
 
@@ -63,19 +67,19 @@ class Multiplayer_connection:
 
 
     def receive_thread(self):
-        while True:
+        while not self.thread_stop_event.is_set():
             self.buffer_receive=""
-            buffer = self.libNetwork.recvC()
-            if len(buffer)>0:
+            buffer = self.libNetwork.recvC(self.sock)
+            if buffer is not None and len(buffer)>0:
                 self.buffer_receive = buffer.decode()
                 self.read()
 
-    #def receive(self):
-        buffer = self.buffer_receive
-        #self.buffer_receive = None
-        #return buffer
+
     def kill_thread(self):
-        threading.Event().set()
+        self.thread_stop_event.set()
+        self.libNetwork.closeSocket(self.sock)
+        self.thread.join()
+
     def string_to_tuple(string):
         string = string.replace("(", "")
         string = string.replace(")", "")
@@ -84,5 +88,7 @@ class Multiplayer_connection:
         tab = string.split(",")
 
         return (int(tab[0]), int(tab[1]))
+    
+
 
         
