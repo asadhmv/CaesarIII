@@ -1,7 +1,6 @@
 import os
 import subprocess
 import ctypes
-#import thread
 import threading
 from class_types.buildind_types import BuildingTypes
 from class_types.road_types import RoadTypes
@@ -64,7 +63,10 @@ class Multiplayer_connection:
     def send(self):
         self.libNetwork.sendC(self.buffer_send.encode())
 
-
+    """def receive(self,buffer):
+        if len(buffer) > 0:
+            self.buffer_receive = buffer.decode()
+            self.read()"""
 
     def receive_thread(self):
         while not self.thread_stop_event.is_set():
