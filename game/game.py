@@ -14,7 +14,7 @@ from .map_controller import MapController
 from .panel import Panel
 from .game_controller import GameController
 from threading import Thread, Event
-from multiplayer_connection import Multiplayer_connection
+from Online.multiplayer_connection import Multiplayer_connection
 
 def my_thread(func, event: Event):
     fps_moyen = [0]
