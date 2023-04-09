@@ -1,7 +1,6 @@
 import pygame as pg
 import asyncio
 import ctypes
-import backup_game
 from events.event_manager import EventManager
 from game.game import Game
 from menu import Menu

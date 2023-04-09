@@ -5,13 +5,22 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-
+#include <errno.h>
 #define PORT 1234
 #define BUFF_LEN 1024
 
 char * recvC(int sock)
 {
     int enable_reuseaddr = 1;
+    struct timeval timeout;
+    timeout.tv_sec = 1;  // délai d'attente de 5 secondes
+    timeout.tv_usec = 0;
+
+    // configuration du délai d'attente sur la socket
+    if (setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) == -1) {
+        perror("setsockopt");
+        exit(1);
+    }
     int res = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable_reuseaddr, sizeof(enable_reuseaddr));
     if (res == -1) {
         perror("setsockopt");
@@ -38,8 +47,12 @@ char * recvC(int sock)
     char* buffer=calloc(1,BUFF_LEN);
     int res_recv;
 
-    if((res_recv = recvfrom(sock, buffer, BUFF_LEN, MSG_DONTWAIT, (struct sockaddr *)&sender_addr, &sender_addr_len))<0){
-        return NULL;
+    if((res_recv = recvfrom(sock, buffer, BUFF_LEN, 0, (struct sockaddr *)&sender_addr, &sender_addr_len))<0){
+         if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                return NULL;
+            } else {
+                return NULL;
+            }
     }
 
 
@@ -55,7 +68,6 @@ int createSocket()
         perror("socket");
         exit(EXIT_FAILURE);
     }
-    printf("La socket en c = %i",sock);
 
     return sock;
 }

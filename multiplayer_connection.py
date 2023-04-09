@@ -22,7 +22,9 @@ class Multiplayer_connection:
         self.libNetwork.recvC.restype = ctypes.c_char_p
         self.libNetwork.sendC.argtypes = [ctypes.c_char_p]
         self.sock = None
-
+        self.thread_stop_event = threading.Event()
+        self.thread = threading.Thread(target=self.receive_thread)
+        self.thread.start()
 
 
     def set_builder(self, builder):
@@ -67,17 +69,20 @@ class Multiplayer_connection:
             self.read()"""
 
     def receive_thread(self):
-        while True:
+        while not self.thread_stop_event.is_set():
             self.buffer_receive=""
             self.sock = self.libNetwork.createSocket()
             buffer = self.libNetwork.recvC(self.sock)
             if buffer is not None and len(buffer)>0:
                 self.buffer_receive = buffer.decode()
                 self.read()
+            self.libNetwork.closeSocket(self.sock)
             
 
 
-
+    def kill_thread(self):
+        self.thread_stop_event.set()
+        self.thread.join()
 
     def string_to_tuple(string):
         string = string.replace("(", "")
