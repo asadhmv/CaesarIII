@@ -20,17 +20,6 @@ def main():
     pg.mouse.set_cursor(curseur)
     pg.event.set_grab(True)
     menu = Menu(screen)
-    
- 
-    
-    
-    
-    
-    
-    
-        
-    
-    
    
     Textures.init(screen)
 
@@ -48,16 +37,8 @@ def main():
          
         p = Player(username)
         p.set_ip()
-        
-       
-    
-    
-    
-   
+
     game = Game(screen, menu.get_online())
-
-    
-
 
     # Save load, need to be here to load save after init game
     if menu.get_save_loading():
