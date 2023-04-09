@@ -24,7 +24,7 @@ def main():
     while menu.is_active():
         menu.run()
 
-    # Clear buttons from the menu
+    # Clear buttons fromgit  the menu
     EventManager.reset()
     game = Game(screen)
 

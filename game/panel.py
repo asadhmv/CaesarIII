@@ -195,7 +195,7 @@ class Panel:
         self.commerce_menu.on_unselect(lambda: self.build__commerce.set_selected(False) if self.get_selected_tile() is None else True)
         EventManager.register_menu_deroulant(self.commerce_menu)
         #Chat
-        self.chat_room = Chat(self.screen)
+        self.chat_room = Chat(self.screen, self.width-500,self.height-500)
         
         # File Menu
         self.file_continue_game = Button((0, 46), (200, 46), text="Continue Game", center_text=False, text_size=14)
@@ -277,11 +277,14 @@ class Panel:
                 if sous_menu.get_isActive():
                     sous_menu.display()
         if self.chat_window:
-            # EventManager.clear_components()
-            # EventManager.register_component(self.chat)
+            EventManager.clear_components()
+            EventManager.register_component(self.chat)
+            
             self.chat_room.show_chat(self.width-500,self.height-500)
             self.chat.on_click2(lambda: self.set_chat(False))
         if not self.chat_window:
+            for button in self.button_list:
+                EventManager.register_component(button)
             self.chat_room.destroy_chat(self.width-500,self.height-500)      
             self.chat.on_click2(lambda: self.set_chat(True))
         if not self.destroy_tile.is_selected():
