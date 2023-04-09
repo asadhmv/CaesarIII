@@ -26,6 +26,7 @@ class Multiplayer_connection:
         self.thread_stop_event = threading.Event()
         self.thread = threading.Thread(target=self.receive_thread)
         self.thread.start()
+        self.getExistingRooms()
 
 
     def set_builder(self, builder):
@@ -104,6 +105,9 @@ class Multiplayer_connection:
 
         return (int(tab[0]), int(tab[1]))
     
+    def getExistingRooms(self):
+        existingRoomsRequest = "$#[|Who is Room Creator?|]#$"
+        self.libNetwork.sendC(existingRoomsRequest.encode())
 
 
 

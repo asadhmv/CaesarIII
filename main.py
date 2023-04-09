@@ -36,7 +36,6 @@ def main():
         username=roomInformations["username"]
          
         p = Player(username)
-        p.set_ip()
 
     game = Game(screen, menu.get_online())
 

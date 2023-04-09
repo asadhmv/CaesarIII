@@ -6,6 +6,7 @@ class Room():
         self.nbJoueur = nbJoueur
         self.mdp = mdp
         self.id = id
+        print("Room crée")
 
     def addPlayer(self, player):
         if(len(self.players)==self.nbJoueur):

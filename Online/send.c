@@ -39,7 +39,7 @@ char* get_Broadcast() {
 
 void sendC(char *arg)
 {
-
+    printf("%s",arg);
     int sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock == -1) {
         perror("socket");
