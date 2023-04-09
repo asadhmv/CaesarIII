@@ -93,6 +93,7 @@ class Menu:
         #self.valide_username = button.Button((0,0), (size_screen[0]/20,size_screen[1]/25), text="Valider", text_size=20, center_text=True)
         self.valide_username = button.Button((size_screen[0]/2,size_screen[1]/3), (size_screen[0]/15,size_screen[1]/20), text="Valider", text_size=20, center_text_mod2=True)
         self.valide_username.on_click(self.set_room_menu)
+        self.type=typeText_username
 
         
         legende = Text("Please enter RoomID", 40, (size_screen[0]/2.4, size_screen[1]/4), (245,245,220))
