@@ -13,7 +13,7 @@ char * recvC(int sock)
 {
     int enable_reuseaddr = 1;
     struct timeval timeout;
-    timeout.tv_sec = 1;  // délai d'attente de 5 secondes
+    timeout.tv_sec = 1;  // délai d'attente de 1 secondes
     timeout.tv_usec = 0;
 
     // configuration du délai d'attente sur la socket

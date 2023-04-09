@@ -5,6 +5,7 @@ from events.event_manager import EventManager
 from game.game import Game
 from menu import Menu
 from game.textures import Textures
+import backup_game
 
 def main():
     is_game_run = True
