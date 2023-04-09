@@ -38,14 +38,12 @@ char * recvC(int sock)
     char* buffer=calloc(1,BUFF_LEN);
     int res_recv;
 
-    if((res_recv = recvfrom(sock, buffer, BUFF_LEN, 0, (struct sockaddr *)&sender_addr, &sender_addr_len))<0){
+    if((res_recv = recvfrom(sock, buffer, BUFF_LEN, MSG_DONTWAIT, (struct sockaddr *)&sender_addr, &sender_addr_len))<0){
         return NULL;
     }
 
 
     printf("Received broadcast message from %s:%d: %s\n", inet_ntoa(sender_addr.sin_addr), ntohs(sender_addr.sin_port), buffer);
-
-    close(sock);
 
     return buffer;
 }

@@ -146,7 +146,6 @@ class Game:
 
     def exit_game(self):
         self.is_running = False
-        self.multplayer.kill_thread()
 
     def load_save(self):
         self.world.load_numpy_array()

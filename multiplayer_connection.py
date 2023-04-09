@@ -5,7 +5,7 @@ import threading
 from class_types.buildind_types import BuildingTypes
 from class_types.road_types import RoadTypes
 
-
+list=[]
 class Multiplayer_connection:
 
     def __init__(self):
@@ -21,10 +21,8 @@ class Multiplayer_connection:
         self.libNetwork = ctypes.cdll.LoadLibrary('Online/libNetwork.so')
         self.libNetwork.recvC.restype = ctypes.c_char_p
         self.libNetwork.sendC.argtypes = [ctypes.c_char_p]
-        self.sock = -1
-        self.thread_stop_event = threading.Event()
-        self.thread = threading.Thread(target=self.receive_thread)
-        self.thread.start()
+        self.sock = None
+
 
 
     def set_builder(self, builder):
@@ -69,21 +67,17 @@ class Multiplayer_connection:
             self.read()"""
 
     def receive_thread(self):
-        while not self.thread_stop_event.is_set():
+        while True:
             self.buffer_receive=""
             self.sock = self.libNetwork.createSocket()
             buffer = self.libNetwork.recvC(self.sock)
             if buffer is not None and len(buffer)>0:
                 self.buffer_receive = buffer.decode()
                 self.read()
-            self.libNetwork.closeSocket(self.sock)
             
 
 
-    def kill_thread(self):
-        self.thread_stop_event.set()
-        self.libNetwork.closeSocket(self.sock)
-        self.thread.join()
+
 
     def string_to_tuple(string):
         string = string.replace("(", "")
