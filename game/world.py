@@ -170,7 +170,7 @@ class World:
                     #print(self.builder.get_start_point())
                     #print(self.builder.get_end_point())
 
-                    #if self.check_no_builds(start_point,end_point):
+                    #if self.check_no_builds(startset_bu_point,end_point):
                     self.multplayer.write(start_point,end_point, selected_tile)
 
 
@@ -354,8 +354,11 @@ class World:
             if rect.collidepoint(pg.mouse.get_pos()):
                 return False
 
-        in_map_limit = (0 <= grid_pos[0] < GRID_SIZE) and (0 <= grid_pos[1] < GRID_SIZE)
-        return in_map_limit
+        if(grid_pos is not None and grid_pos[0] is not None and grid_pos[1] is not None):
+            in_map_limit = (0 <= grid_pos[0] < GRID_SIZE) and (0 <= grid_pos[1] < GRID_SIZE)
+            return in_map_limit
+        else :
+            return False
 
     def display_cost(self, screen: pg.Surface, cost: int, coord: tuple[int, int]):
         if cost == 0:

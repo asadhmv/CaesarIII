@@ -26,6 +26,7 @@ class Multiplayer_connection:
         self.thread_stop_event = threading.Event()
         self.thread = threading.Thread(target=self.receive_thread)
         self.thread.start()
+        self.thread2=None
 
 
     def set_builder(self, builder):
@@ -34,18 +35,19 @@ class Multiplayer_connection:
 
     def set_buffer_send(self, buffer):
         self.buffer_send = buffer
-        return
+
 
     
     def write(self, row, col, buildingType="destroy"):
         if not self.online:
             return
-        
-        string = str(buildingType) + ";"+ str(row) + ";"+ str(col)
+        string = str(buildingType) + ";" + str(row) + ";" + str(col)
         self.buffer_send += string
-        self.send()
+        self.thread2 = threading.Thread(target=self.send, args=(self.buffer_send,))
+        self.thread2.start()
         self.set_buffer_send("")
-        return
+
+
     
     def read(self):
         if not self.online:
@@ -68,11 +70,11 @@ class Multiplayer_connection:
 
 
     
-    def send(self):
+    def send(self,buffer):
         if not self.online:
             return
         
-        self.libNetwork.sendC(self.buffer_send.encode())
+        self.libNetwork.sendC(buffer.encode())
 
     """def receive(self,buffer):
         if len(buffer) > 0:

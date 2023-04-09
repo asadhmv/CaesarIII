@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <ifaddrs.h>
+#include <time.h>
 #define PORT 1234
 
 char* get_Broadcast() {
@@ -39,6 +40,10 @@ char* get_Broadcast() {
 
 void sendC(char *arg)
 {
+    srand(time(NULL));
+    int rand_num = rand();
+    float rand_sec = (float) rand_num / (float) RAND_MAX;
+    usleep(rand_sec * 1000000);
 
     int sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock == -1) {
