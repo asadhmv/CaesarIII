@@ -51,7 +51,7 @@ class Multiplayer_connection:
         elif "BuildingTypes" in type_str:
             type_value = getattr(BuildingTypes, type_name)
         else:
-            type_value = None
+            return
 
         self.builder.build_from_start_to_end(type_value, Multiplayer_connection.string_to_tuple(tab[1]), Multiplayer_connection.string_to_tuple(tab[2]))
 
@@ -60,22 +60,20 @@ class Multiplayer_connection:
     def send(self):
         self.libNetwork.sendC(self.buffer_send.encode())
 
-
+    def receive(self,buffer):
+        if len(buffer) > 0:
+            self.buffer_receive = buffer.decode()
+            self.read()
 
     def receive_thread(self):
         while True:
             self.buffer_receive=""
-            buffer = self.libNetwork.recvC()
-            if len(buffer)>0:
-                self.buffer_receive = buffer.decode()
-                self.read()
+            self.buffer_receive = self.libNetwork.recvC()
+            thread = threading.Thread(target=self.receive,args=(self.buffer_receive,))
+            thread.start()
 
-    #def receive(self):
-        buffer = self.buffer_receive
-        #self.buffer_receive = None
-        #return buffer
-    def kill_thread(self):
-        threading.Event().set()
+
+
     def string_to_tuple(string):
         string = string.replace("(", "")
         string = string.replace(")", "")
