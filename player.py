@@ -5,7 +5,7 @@ from menu import Menu
 # créer une instance de la classe Menu
 
 
-class player:
+class Player:
     def __init__(self,username):
         
         self.username=username

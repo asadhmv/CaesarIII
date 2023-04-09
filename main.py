@@ -5,7 +5,7 @@ from events.event_manager import EventManager
 from game.game import Game
 from menu import Menu
 from game.textures import Textures
-from player import player
+from player import Player
 
 
 def main():
@@ -42,12 +42,13 @@ def main():
     print(menu.get_online)
     if menu.get_online():
         
-         roomInformations = menu.getInformationsRoom()
+        roomInformations = menu.getInformationsRoom()
         
-         username=roomInformations["username"]
+        username=roomInformations["username"]
          
-         p = player(username)
-         print(p.username)
+        p = Player(username)
+        p.set_ip()
+        
        
     
     
