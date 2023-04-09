@@ -19,11 +19,12 @@ class Button(Component):
             size,
             text_size : int = 38,
             text: str = "",
-            text_fn: () = None,
+            text_fn = None,
             image: Surface = None,
             image_hover: Surface = None,
             image_selected: Surface = None,
             center_text: bool = False,
+            center_text_mod2: bool = False,
             selectable: bool = False,
             disable_unselect: bool = False,
             text_pop_up: str = "",
@@ -49,6 +50,7 @@ class Button(Component):
         self.surface_text_pop_up = pg.font.SysFont('default_font', 22).render(self.text_pop_up, False, (0,0,0), (255,255,255))
         self.sous_menu_button = sous_menu_button
         self.sound_manager = SoundManager()
+        self.center_text_mod2 = center_text_mod2
 
 
     def is_hover(self, pos):
@@ -123,9 +125,14 @@ class Button(Component):
 
         pos = (self.bg.x + self.margin, self.bg.y + self.margin)
         if self.text_centered:
-            pos = (self.bg.x, self.bg.y + self.margin)
+            pos = (self.bg.x, self.bg.y)
             center_width = self.size[0]
-            center_height = self.size[1]
+            center_height = (self.size[1]/2)
+        
+        if self.center_text_mod2:
+            pos = (self.bg.x, self.bg.y + self.text_size)
+            center_width = self.size[0]
+            center_height = (self.size[1]/2)
 
         if (self.is_hovered() or self.is_being_pressed()) and self.image_hover is not None:
             screen.blit(self.image_hover, self.bg)

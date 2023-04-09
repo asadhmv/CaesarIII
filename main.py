@@ -6,6 +6,7 @@ from events.event_manager import EventManager
 from game.game import Game
 from menu import Menu
 from game.textures import Textures
+from player import Player
 
 def main():
     is_game_run = True
@@ -19,6 +20,18 @@ def main():
     pg.mouse.set_cursor(curseur)
     pg.event.set_grab(True)
     menu = Menu(screen)
+    
+ 
+    
+    
+    
+    
+    
+    
+        
+    
+    
+   
     Textures.init(screen)
 
     while menu.is_active():
@@ -26,7 +39,25 @@ def main():
 
     # Clear buttons from the menu
     EventManager.reset()
-    game = Game(screen)
+    print(menu.get_online)
+    if menu.get_online():
+        
+        roomInformations = menu.getInformationsRoom()
+        
+        username=roomInformations["username"]
+         
+        p = Player(username)
+        p.set_ip()
+        
+       
+    
+    
+    
+   
+    game = Game(screen, menu.get_online())
+
+    
+
 
     # Save load, need to be here to load save after init game
     if menu.get_save_loading():

@@ -17,7 +17,7 @@ tu passes un niveau ou tu gagnes une attaque -> tu gagnes de l'argent->t'achetes
  - Régler les problèmes de priorité (Arrivée de plusiseurs paquets au meme temps) {Asad & Souhail}
  - Gérer des username
  - Créer un Room avec des réglages (nombre limite de joueurs, privé/public, stockage des joueurs ...){Corentin}
- - class Player(ipJoueur, username, ...)
+ - class Player(ipJoueur, username, ...){Hadil & Ines}
  - Création d'espace chat dans le jeu(Partie Graphique) {Hiba}
  - Sécuriser le Broadcast dans le réseau (Send uniquement aux jouers connectés)
  - Lister les Rooms qui sont disponibles
