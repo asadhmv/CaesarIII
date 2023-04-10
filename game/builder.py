@@ -93,7 +93,7 @@ class Builder:
                 if selected_tile == BuildingTypes.PELLE:
                     print("up")
                     print(tile.owner_ip)
-                    if tile.is_destroyable() and (tile.owner_ip is  None or tile.owner_ip==ip_owner):
+                    if tile.is_destroyable() and (tile.owner_ip is None or tile.owner_ip==ip_owner):
                         if tile.get_building() :
                             self.delete_building(tile.get_building())
                             tile.owner_ip=None
@@ -107,9 +107,9 @@ class Builder:
                 if not tile.is_buildable():
                     continue
 
-
+                tile.owner_ip=ip_owner
                 self.building_add(row, col, selected_tile)
-
+                print(tile.owner_ip)
                 self.start_point = None  # update start point to default after building
                 self.end_point = None  # update start point to default after building
 
