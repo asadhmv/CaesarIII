@@ -117,6 +117,7 @@ class Multiplayer_connection:
             libPlayer = ctypes.cdll.LoadLibrary('Online/libPlayer.so')
             libPlayer.get_myIP.restype = ctypes.c_char_p
             ip= libPlayer.get_myIP().decode()
+            print(ip)
             if creator[ip]:
                 return True
             return False

@@ -151,7 +151,8 @@ class Menu:
         pg.mixer.music.play(0, 0, 2000)
 
     def create_room(self):
-        self.room = Room(5, self.input_room.getString())
+        self.room = Room(self.nbPlayer, self.input_room.getString(), owner=True)
+        self.multiplayer.set_room(self.room)
     
     def get_room(self):
         return self.room

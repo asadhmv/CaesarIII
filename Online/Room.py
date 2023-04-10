@@ -2,12 +2,13 @@ from Online.player import Player
 
 class Room():
     
-    def __init__(self, nbJoueur : int, id : str, mdp=False):
+    def __init__(self, nbJoueur : int, id : str, mdp : str = False, owner : bool = False):
 
         self.players=[]
         self.nbJoueur = nbJoueur
         self.mdp = mdp
         self.id = id
+        self.owner = owner
 
     def addMySelf(self, player : Player):
         self.players.append(player)
@@ -32,6 +33,9 @@ class Room():
 
     def get_creator(self):
         return self.creator
+    
+    def amIcreator(self):
+        return self.owner
     
     def get_info(self):
         return {'room_id' : self.id,

@@ -28,14 +28,13 @@ def my_thread(func, event: Event):
         exit()
 
 class Game:
-    def __init__(self, screen, online=False, room : Room = None, multiplayer = None):
+    def __init__(self, screen, multiplayer = None):
         self.is_running = False
         self.screen = screen
         self.paused = False
         self.game_controller = GameController.get_instance()
         self.width, self.height = self.screen.get_size()
         self.multiplayer = multiplayer
-        self.room = room
 
         #Gestion de la connexion multijoueur
         #if online:
