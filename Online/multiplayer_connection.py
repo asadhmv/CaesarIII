@@ -77,6 +77,7 @@ class Multiplayer_connection:
             if buffer is not None and len(buffer)>0:
                 buffer = buffer.decode()
                 if buffer == "$#[|Who is Room Creator?|]#$":
+                    print(self.amItheCreatorOfRoom())
                     if self.amItheCreatorOfRoom():
                         creator_buffer = self.room.get_info_in_buffer()
                         self.libNetwork.sendC(creator_buffer.encode())
@@ -110,7 +111,7 @@ class Multiplayer_connection:
         existingRoomsRequest = "$#[|Who is Room Creator?|]#$"
         self.libNetwork.sendC(existingRoomsRequest.encode())
 
-    def amItheCreatorOfRoom(self):
+    def amItheCreatorOfRoom(self) -> bool:
         if self.room is not None:
             creator = self.room.get_creator()
             libPlayer = ctypes.cdll.LoadLibrary('Online/libPlayer.so')
@@ -119,6 +120,7 @@ class Multiplayer_connection:
             if creator[ip]:
                 return True
             return False
+        return False
     
     def get_available_rooms(self):
         return self.available_rooms
