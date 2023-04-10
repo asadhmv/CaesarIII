@@ -36,6 +36,13 @@ class Chat:
         self.rect.fill(TRANSPARENT)
         self.screen.blit(self.rect, (posx, posy))
 
-    
+    def on_key_down(self, event):
+        if event.key == pg.K_RETURN:
+            if self.typeText.pos[1] - 30 < self.posy:
+                erase_surface = pg.Surface((20, 20), pg.SRCALPHA, 32)
+                erase_surface.fill((0,0,0,0))
+                self.screen.blit(erase_surface, self.typeText.pos)
+                print(self.typeText.pos)
+            self.typeText.pos = (self.typeText.pos[0], self.typeText.pos[1] - 30)
 
             
