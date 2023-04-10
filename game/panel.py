@@ -56,7 +56,7 @@ class Panel:
 
         # Overlay button
         self.change_overlay = Button((self.width - 158, 49), (117, 25), text_fn=Overlay.get_instance().get_name,
-                                     center_text=True, text_size=16)
+                                     center_text=True, text_size=14)
         self.change_overlay.on_click(lambda: Overlay.get_instance().set_overlay_types())
 
         button_size = (39, 26)
