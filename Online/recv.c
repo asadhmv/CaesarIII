@@ -9,7 +9,7 @@
 #define PORT 1234
 #define BUFF_LEN 1024
 
-char * recvC(int sock)
+char ** recvC(int sock)
 {
     int enable_reuseaddr = 1;
     struct timeval timeout;
@@ -55,10 +55,15 @@ char * recvC(int sock)
             }
     }
 
-
+    char** info=calloc(sizeof(char*),2);
+    for (int i=0;i<2;i++){
+        info[i]=calloc(1,1024);
+    }
+    strcpy(info[0],inet_ntoa(sender_addr.sin_addr));
+    strcpy(info[1],buffer);
     printf("Received broadcast message from %s:%d: %s\n", inet_ntoa(sender_addr.sin_addr), ntohs(sender_addr.sin_port), buffer);
 
-    return buffer;
+    return info;
 }
 
 int createSocket()
