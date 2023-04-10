@@ -17,6 +17,8 @@ class BuildingTypes(Enum):
     TEMPLE = 24
     THEATRE = 25
 
+    CASTLE = 26
+
     BUILD_SIGN = 90
     RUINS = 91
     FIRE_RUINS = 92

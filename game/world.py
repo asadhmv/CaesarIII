@@ -146,6 +146,7 @@ class World:
         mouse_action = pg.mouse.get_pressed()
 
         selected_tile = self.panel.get_selected_tile()
+        #débrouille toi mais faut gérer le truc ici je pense
         self.builder.set_temp_tile_info(None)
 
         if selected_tile:

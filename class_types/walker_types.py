@@ -11,3 +11,4 @@ class WalkerTypes(Enum):
     TAX_COLLECTOR = 7
 
     PREFET_EXTINGUISHING_FIRE = 8
+    ATTACKER = 9

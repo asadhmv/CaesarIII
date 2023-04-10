@@ -14,6 +14,7 @@ from class_types.buildind_types import BuildingTypes
 from buildable.final.buildable.well import Well
 from buildable.final.houses.vacant_house import VacantHouse
 from buildable.final.structures.prefecture import Prefecture
+from buildable.final.structures.castle import Castle
 from buildable.final.structures.WheatFarm import WheatFarm
 from buildable.final.structures.granary import Granary
 from buildable.road import Road
@@ -120,6 +121,8 @@ class Builder:
                 building = VacantHouse(row, col)
             case BuildingTypes.PREFECTURE:
                 building = Prefecture(row, col)
+            case BuildingTypes.CASTLE:
+                building = Castle(row, col)
             case BuildingTypes.WELL:
                 building = Well(row, col)
             case BuildingTypes.WHEAT_FARM:

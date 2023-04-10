@@ -89,6 +89,29 @@ class Panel:
                                         disable_unselect=True, selectable=True, text_pop_up="Build Prefecture")
         self.build__prefecture.on_click(lambda: self.set_selected_tile(BuildingTypes.PREFECTURE))
 
+
+
+
+        self.build__castle = Button((0, 200), button_size,
+                                        image=Textures.get_texture(SwitchViewButtonTypes.BUTTON15),
+                                        image_hover=Textures.get_texture(SwitchViewButtonTypes.BUTTON15_HOVER),
+                                        image_selected=Textures.get_texture(SwitchViewButtonTypes.BUTTON15_SELECTED),
+                                        disable_unselect=True, selectable=True, text_pop_up="Build Castle")
+        self.build__castle.on_click(lambda: self.set_selected_tile(BuildingTypes.CASTLE))
+
+
+        self.attack= Button((0, 300), button_size,
+                                        image=Textures.get_texture(SwitchViewButtonTypes.BUTTON15),
+                                        image_hover=Textures.get_texture(SwitchViewButtonTypes.BUTTON15_HOVER),
+                                        image_selected=Textures.get_texture(SwitchViewButtonTypes.BUTTON15_SELECTED),
+                                        disable_unselect=True, selectable=True, text_pop_up="Attack")
+        self.attack.on_click(lambda: self.set_selected_tile("attack"))
+
+
+
+
+
+
         self.build__well = Button((self.width - 149, 312 + TOPBAR_HEIGHT), button_size,
                                   image=Textures.get_texture(SwitchViewButtonTypes.BUTTON8),
                                   image_hover=Textures.get_texture(SwitchViewButtonTypes.BUTTON8_HOVER),
@@ -162,7 +185,7 @@ class Panel:
 
 
         self.button_list = [
-            self.destroy_tile, self.build__house, self.build__prefecture, self.build__road, self.build__senate,
+            self.destroy_tile, self.build__house, self.build__prefecture, self.build__castle, self.attack, self.build__road, self.build__senate,
             self.build__well, self.build__hospital, self.build__school, self.build__temple, self.build__commerce,
             self.build__theatre, self.build__engineer_post, self.change_overlay, self.increase_speed,
             self.decrease_speed,
@@ -297,6 +320,10 @@ class Panel:
             for button in self.get_buttons_list():
                 button.set_selected(False)
             self.build__prefecture.set_selected(True)
+        elif value == BuildingTypes.CASTLE:
+            for button in self.get_buttons_list():
+                button.set_selected(False)
+            self.build__castle.set_selected(True)
         elif value == RoadTypes.TL_TO_BR:
             for button in self.get_buttons_list():
                 button.set_selected(False)
