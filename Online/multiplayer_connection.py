@@ -86,7 +86,9 @@ class Multiplayer_connection:
                     if self.amItheCreatorOfRoom():
                         creator_buffer = self.room.get_info_in_buffer()
                         joiningPlayerIp = buffer[28 : ]
+                        print(joiningPlayerIp.encode())
                         self.libNetwork.sendC(creator_buffer.encode(), joiningPlayerIp.encode())
+                        print("Envoyé")
                 elif "RoomId" in buffer and "NbOfPlayers" in buffer and "Players" in buffer:
                     self.available_rooms.append(buffer)
                     print("Received a room")
@@ -123,7 +125,6 @@ class Multiplayer_connection:
             libPlayer = ctypes.cdll.LoadLibrary('Online/libPlayer.so')
             libPlayer.get_myIP.restype = ctypes.c_char_p
             ip= libPlayer.get_myIP().decode()
-            print(ip)
             if creator[ip]:
                 return True
             return False

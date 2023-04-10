@@ -55,8 +55,7 @@ class Room():
                 buffer += ";"
             else:
                 buffer += ","
-        
-        print(buffer)
+                
         return buffer
 
 
