@@ -78,6 +78,7 @@ class Builder:
             for tile in path:
                 if tile.is_buildable():
                     tile.owner_ip=ip_owner
+                    print(tile.owner_ip)
                     self.road_add(tile.x, tile.y)
 
             self.start_point = None  # update start point to default after building
@@ -90,7 +91,8 @@ class Builder:
 
                 if selected_tile == BuildingTypes.PELLE:
                     if tile.is_destroyable():
-                        if tile.get_building() and tile.owner is not None and tile.owner_ip==ip_owner:
+                        if tile.get_building() and tile.owner_ip is not None and tile.owner_ip==ip_owner:
+                            print(tile.owner_ip)
                             self.delete_building(tile.get_building())
                             tile.owner_ip=None
                         else:
