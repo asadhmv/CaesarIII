@@ -15,6 +15,7 @@ from .panel import Panel
 from .game_controller import GameController
 from threading import Thread, Event
 from Online.multiplayer_connection import Multiplayer_connection
+from Online.Room import Room
 
 def my_thread(func, event: Event):
     fps_moyen = [0]
@@ -28,16 +29,18 @@ def my_thread(func, event: Event):
         exit()
 
 class Game:
-    def __init__(self, screen, online=False):
+    def __init__(self, screen,player, online=False, room : Room = None):
         self.is_running = False
         self.screen = screen
         self.paused = False
-        self.online = online
         self.game_controller = GameController.get_instance()
         self.width, self.height = self.screen.get_size()
+        self.multplayer = None
+        self.room = room
 
         #Gestion de la connexion multijoueur
-        self.multplayer = Multiplayer_connection(self.online)
+        if online:
+            self.multplayer = Multiplayer_connection(room)
 
         # sound manager
         self.sound_manager = SoundManager()
@@ -47,7 +50,7 @@ class Game:
         self.panel = Panel(self.width, self.height, self.screen)
 
         # World contains populations or graphical objects like buildings, trees, grass
-        self.world = World(self.width, self.height, self.panel, self.multplayer)
+        self.world = World(self.width, self.height, self.panel, self.multplayer,player)
 
         self.thread_event = Event()
         self.draw_thread = Thread(None, my_thread, "1", [self.display, self.thread_event])

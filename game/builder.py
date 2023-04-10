@@ -63,7 +63,7 @@ class Builder:
     
     def get_in_build_action(self): return self.in_build_action
 
-    def build_from_start_to_end(self, selected_tile: BuildingTypes | RoadTypes, start_point: tuple[int, int], end_point: tuple[int, int]):
+    def build_from_start_to_end(self, selected_tile: BuildingTypes | RoadTypes, start_point: tuple[int, int], end_point: tuple[int, int],ip_owner):
         grid = self.game_controller.get_map()
 
         if selected_tile == RoadTypes.TL_TO_BR:
@@ -77,6 +77,7 @@ class Builder:
 
             for tile in path:
                 if tile.is_buildable():
+                    tile.owner_ip=ip_owner
                     self.road_add(tile.x, tile.y)
 
             self.start_point = None  # update start point to default after building
@@ -89,10 +90,12 @@ class Builder:
 
                 if selected_tile == BuildingTypes.PELLE:
                     if tile.is_destroyable():
-                        if tile.get_building():
+                        if tile.get_building() and tile.owner is not None and tile.owner_ip==ip_owner:
                             self.delete_building(tile.get_building())
+                            tile.owner_ip=None
                         else:
                             tile.destroy()
+                            tile.owner_ip=None
                             self.road_update(row, col)
                         self.game_controller.denier -= 2
                     continue

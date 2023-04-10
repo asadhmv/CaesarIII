@@ -5,14 +5,15 @@ import threading
 from class_types.buildind_types import BuildingTypes
 from class_types.road_types import RoadTypes
 
-list=[]
 class Multiplayer_connection:
 
-    def __init__(self, online=False):
+
+    def __init__(self, room,online=False):
+        self.room = room
         self.list_receive = []
+
         self.buffer_send = ""
         self.builder = None
-        self.online = online
         self.buffer_receive = None
         os.chdir('Online')
         subprocess.run(["gcc",  "-c", "-fPIC", "recv.c"])
@@ -26,7 +27,7 @@ class Multiplayer_connection:
         self.thread_stop_event = threading.Event()
         self.thread = threading.Thread(target=self.receive_thread)
         self.thread.start()
-        self.thread2=None
+        self.getExistingRooms()
 
 
     def set_builder(self, builder):
@@ -39,19 +40,16 @@ class Multiplayer_connection:
 
     
     def write(self, row, col, buildingType="destroy"):
-        if not self.online:
-            return
-        string = str(buildingType) + ";" + str(row) + ";" + str(col)
+
+        
+        string = str(buildingType) + ";"+ str(row) + ";"+ str(col)
         self.buffer_send += string
-        self.thread2 = threading.Thread(target=self.send, args=(self.buffer_send,))
-        self.thread2.start()
+        self.send()
         self.set_buffer_send("")
 
 
     
     def read(self):
-        if not self.online:
-            return
 
         tab = self.list_receive[1].split(";")
         type_str = tab[0]
@@ -65,34 +63,39 @@ class Multiplayer_connection:
         else:
             return
 
-        self.builder.build_from_start_to_end(type_value, Multiplayer_connection.string_to_tuple(tab[1]), Multiplayer_connection.string_to_tuple(tab[2]))
+        self.builder.build_from_start_to_end(type_value, Multiplayer_connection.string_to_tuple(tab[1]), Multiplayer_connection.string_to_tuple(tab[2]),self.list_receive[0])
 
 
     
-    def send(self,buffer):
-        if not self.online:
-            return
-        
-        self.libNetwork.sendC(buffer.encode())
 
-    """def receive(self,buffer):
-        if len(buffer) > 0:
-            self.buffer_receive = buffer.decode()
-            self.read()"""
+    def send(self):
+        self.libNetwork.sendC(self.buffer_send.encode())
+
+
 
     def receive_thread(self):
-        if not self.online:
-            return
         while not self.thread_stop_event.is_set():
             self.list_receive=[]
             self.sock = self.libNetwork.createSocket()
             buffer = self.libNetwork.recvC(self.sock)
+
             if buffer :
                 if buffer[0]:
                     self.list_receive.append(buffer[0].decode('utf-8'))
                 if buffer[1]:
                     self.list_receive.append(buffer[1].decode('utf-8'))
-                self.read()
+                print(self.list_receive)
+
+                if self.list_receive[1] == "$#[|Who is Room Creator?|]#$":
+                    if self.amItheCreatorOfRoom():
+                        creator_buffer = self.room.get_info_in_buffer()
+                        self.libNetwork.sendC(creator_buffer.encode())
+                else:
+                    self.buffer_receive = buffer
+                    self.read()
+            
+
+
             self.libNetwork.closeSocket(self.sock)
             
     def kill_thread(self):
@@ -108,6 +111,19 @@ class Multiplayer_connection:
 
         return (int(tab[0]), int(tab[1]))
     
+    def getExistingRooms(self):
+        existingRoomsRequest = "$#[|Who is Room Creator?|]#$"
+        self.libNetwork.sendC(existingRoomsRequest.encode())
+
+    def amItheCreatorOfRoom(self):
+    #    creator = self.room.get_creator()
+    #    libPlayer = ctypes.cdll.LoadLibrary('Online/libPlayer.so')
+    #    libPlayer.get_myIP.restype = ctypes.c_char_p
+    #    ip= libPlayer.get_myIP().decode()
+    #    if creator[ip]:
+    #        return True
+    #    return False
+        pass
 
 
 

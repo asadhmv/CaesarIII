@@ -8,6 +8,7 @@ from class_types.tile_types import TileTypes
 from game.game_controller import GameController
 from game.textures import Textures
 from game.setting import TILE_SIZE, GRID_SIZE
+from Online.player import Player
 
 if TYPE_CHECKING:
     from buildable.buildable import Buildable
@@ -16,6 +17,8 @@ if TYPE_CHECKING:
 
 class Tile:
     def __init__(self, col: int, row: int, tile_type: TileTypes = TileTypes.GRASS):
+        self.owner_ip=None
+
         self.type = tile_type
         self.building: Optional[Buildable] = None
         self.show_tile = True
@@ -27,7 +30,6 @@ class Tile:
         self.water_access = False
 
         self.walkers: list['Walker'] = []
-
         cartesian_coord = [
             (col * TILE_SIZE, row * TILE_SIZE),
             (col * TILE_SIZE + TILE_SIZE, row * TILE_SIZE),
