@@ -30,6 +30,8 @@ class Multiplayer_connection:
         self.thread = threading.Thread(target=self.receive_thread)
         self.thread.start()
 
+    def get_room(self):
+        return self.room
 
     def set_builder(self, builder):
         self.builder = builder
@@ -69,8 +71,8 @@ class Multiplayer_connection:
 
     
     def send(self):
-
-        self.libNetwork.sendC_broadcast(self.buffer_send.encode())
+        for player in self.get_room().get_players():
+            self.libNetwork.sendC(self.buffer_send.encode(), player.get_ip())
 
 
     def receive_thread(self):

@@ -55,8 +55,11 @@ class Room():
                 buffer += ";"
             else:
                 buffer += ","
-                
+
         return buffer
+    
+    def get_players(self) -> list:
+        return self.players
 
 
     # def create(self,room_name, player):
