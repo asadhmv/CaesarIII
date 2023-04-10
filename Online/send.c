@@ -90,7 +90,7 @@ void sendC(char *message, char *adresse_ip)
         perror("inet_aton() failed : ");
         exit(EXIT_FAILURE);
 	}
-    if(sendto(sockfd, P1, strlen(P1) , 0 , (struct sockaddr *) &sockaddr, slen)==-1)
+    if(sendto(sockfd, message, strlen(message) , 0 , (struct sockaddr *) &sockaddr, slen)==-1)
     {
         perror("sendto() :");
         exit(EXIT_FAILURE);

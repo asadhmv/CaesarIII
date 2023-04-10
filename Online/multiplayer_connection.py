@@ -86,7 +86,7 @@ class Multiplayer_connection:
                     if self.amItheCreatorOfRoom():
                         creator_buffer = self.room.get_info_in_buffer()
                         joiningPlayerIp = buffer[28 : ]
-                        self.libNetwork.sendC(creator_buffer.encode(), joiningPlayerIp)
+                        self.libNetwork.sendC(creator_buffer.encode(), joiningPlayerIp.encode())
                 elif "RoomId" in buffer and "NbOfPlayers" in buffer and "Players" in buffer:
                     self.available_rooms.append(buffer)
                     print("Received a room")
