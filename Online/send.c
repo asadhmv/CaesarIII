@@ -37,7 +37,7 @@ char* get_Broadcast() {
     return NULL;
 }
 
-void sendC(char *arg)
+void sendC_broadcast(char *arg)
 {
     int sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock == -1) {
@@ -68,5 +68,34 @@ void sendC(char *arg)
 
     close(sock);
 
+}
+
+void sendC(char *message, char *adresse_ip)
+{
+    struct sockaddr_in sockaddr;
+	int sockfd=-1, slen=sizeof(sockaddr);
+
+	if( (sockfd=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+	{
+		perror("socket() :");
+        exit(EXIT_FAILURE);
+	}
+
+	memset((char *) &sockaddr, 0, sizeof(sockaddr));
+	sockaddr.sin_family = AF_INET;
+	sockaddr.sin_port = htons(PORT);
+	
+	if(inet_aton(adresse_ip , &sockaddr.sin_addr) == 0) 
+	{
+        perror("inet_aton() failed : ");
+        exit(EXIT_FAILURE);
+	}
+    if(sendto(sockfd, P1, strlen(P1) , 0 , (struct sockaddr *) &sockaddr, slen)==-1)
+    {
+        perror("sendto() :");
+        exit(EXIT_FAILURE);
+    }
+
+	close(sockfd);
 }
 
