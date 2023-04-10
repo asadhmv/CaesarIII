@@ -26,7 +26,6 @@ class Multiplayer_connection:
         self.thread_stop_event = threading.Event()
         self.thread = threading.Thread(target=self.receive_thread)
         self.thread.start()
-        self.getExistingRooms()
 
 
     def set_builder(self, builder):
@@ -83,6 +82,7 @@ class Multiplayer_connection:
                         self.libNetwork.sendC(creator_buffer.encode())
                 elif "RoomId" in buffer and "NbOfPlayers" in buffer and "Players" in buffer:
                     self.available_rooms.append(buffer)
+                    print("Received a room")
                 else:
                     self.buffer_receive = buffer
                     self.read()

@@ -233,6 +233,7 @@ class Menu:
 
     def  set_inactive_join(self):
         #self.join = True
+        self.multiplayer.getExistingRooms()
         available_rooms = self.multiplayer.get_available_rooms()
         for room in available_rooms:
             print(room)
