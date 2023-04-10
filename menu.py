@@ -8,6 +8,7 @@ from components.text import Text
 from events.event_manager import EventManager
 from game.utils import draw_text
 from sounds.sounds import SoundManager
+from Online.Room import Room
 
 pg.font.init()
 class Menu:
@@ -132,7 +133,7 @@ class Menu:
         zone_de_texte = pg.transform.scale(zone_de_texte, (300,50))
         self.input_password = Input_text((size_screen[0]/2.4, size_screen[1]/6+30), legende_password, zone_de_texte, typeText_password)
         self.valide_settings = button.Button((size_screen[0]/2,size_screen[1]/2.17), (size_screen[0]/15,size_screen[1]/20), text="Valider", text_size=20, center_text_mod2=True)
-        self.valide_settings.on_click(self.set_inactive)
+        self.valide_settings.on_click(self.set_inactive, self.create_room)
 
 
 
@@ -147,6 +148,11 @@ class Menu:
         pg.mixer.music.set_volume(0.6)
         pg.mixer.music.play(0, 0, 2000)
 
+    def create_room(self):
+        self.room = Room(5, self.input_room.getString())
+    
+    def get_room(self):
+        return self.room
 
     def run(self):
         EventManager.handle_events()
@@ -223,7 +229,7 @@ class Menu:
         self.online = False
         self.set_inactive()
 
-    def set_inactive_join(self):
+    def  set_inactive_join(self):
         self.join = True
         self.set_inactive()
 

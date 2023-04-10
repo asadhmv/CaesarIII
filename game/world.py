@@ -171,7 +171,8 @@ class World:
                     #print(self.builder.get_end_point())
 
                     #if self.check_no_builds(start_point,end_point):
-                    self.multplayer.write(start_point,end_point, selected_tile)
+                    if not self.multplayer == None:
+                        self.multplayer.write(start_point,end_point, selected_tile)
 
 
                     self.builder.set_start_point(None)  # update start point to default after building

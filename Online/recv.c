@@ -55,6 +55,8 @@ char * recvC(int sock)
             }
     }
 
+    printf("Received message : '%s'\n",buffer);
+
 
 
     return buffer;

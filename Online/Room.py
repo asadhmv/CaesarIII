@@ -1,14 +1,19 @@
+from Online.player import Player
+
 class Room():
     
-    def __init__(self, nbJoueur, player, id, mdp=False):
+    def __init__(self, nbJoueur : int, id : str, mdp=False):
 
-        self.players=[player]
+        self.players=[]
         self.nbJoueur = nbJoueur
         self.mdp = mdp
         self.id = id
-        print("Room crée")
 
-    def addPlayer(self, player):
+    def addMySelf(self, player : Player):
+        self.players.append(player)
+        self.creator = {player.get_ip() : player.get_username()}
+
+    def addPlayer(self, player : Player):
         if(len(self.players)==self.nbJoueur):
             return "La room est complète"
         else:
@@ -24,6 +29,31 @@ class Room():
             return self.addPlayer(player)
         else:
             return "ID ou mot de passe incorrecte"
+
+    def get_creator(self):
+        return self.creator
+    
+    def get_info(self):
+        return {'room_id' : self.id,
+                'nb_players': self.nbJoueur,
+                'players' : self.players}
+    
+    def get_info_in_buffer(self):
+        room = self.get_info()
+        buffer = 'RoomId=' + room['room_id'] + ';'
+        buffer += 'NbOfPlayers=' + str(room['nb_players']) + ';' 
+        buffer += 'Players='
+
+        for i in range(len(self.players)):
+            player = self.players[i]
+            buffer += player.get_username() + ":" + player.get_ip()
+            if i == len(self.players) - 1:
+                buffer += ";"
+            else:
+                buffer += ","
+        
+        print(buffer)
+        return buffer
 
 
     # def create(self,room_name, player):

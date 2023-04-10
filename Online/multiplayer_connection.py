@@ -5,14 +5,13 @@ import threading
 from class_types.buildind_types import BuildingTypes
 from class_types.road_types import RoadTypes
 
-list=[]
 class Multiplayer_connection:
 
-    def __init__(self, online=False):
+    def __init__(self, room):
+        self.room = room
         self.buffer_receive = ""
         self.buffer_send = ""
         self.builder = None
-        self.online = online
         self.buffer_receive = None
         os.chdir('Online')
         subprocess.run(["gcc",  "-c", "-fPIC", "recv.c"])
@@ -39,8 +38,6 @@ class Multiplayer_connection:
 
     
     def write(self, row, col, buildingType="destroy"):
-        if not self.online:
-            return
         
         string = str(buildingType) + ";"+ str(row) + ";"+ str(col)
         self.buffer_send += string
@@ -49,10 +46,7 @@ class Multiplayer_connection:
         return
     
     def read(self):
-        if not self.online:
-            return
-        
-        
+
         tab = self.buffer_receive.split(";")
         type_str = tab[0]
         type_parts = type_str.split('.')
@@ -70,26 +64,27 @@ class Multiplayer_connection:
 
     
     def send(self):
-        if not self.online:
-            return
-        
+
         self.libNetwork.sendC(self.buffer_send.encode())
 
-    """def receive(self,buffer):
-        if len(buffer) > 0:
-            self.buffer_receive = buffer.decode()
-            self.read()"""
 
     def receive_thread(self):
-        if not self.online:
-            return
         while not self.thread_stop_event.is_set():
             self.buffer_receive=""
             self.sock = self.libNetwork.createSocket()
             buffer = self.libNetwork.recvC(self.sock)
+
             if buffer is not None and len(buffer)>0:
-                self.buffer_receive = buffer.decode()
-                self.read()
+                buffer = buffer.decode()
+                if buffer == "$#[|Who is Room Creator?|]#$":
+                    if self.amItheCreatorOfRoom():
+                        creator_buffer = self.room.get_info_in_buffer()
+                        self.libNetwork.sendC(creator_buffer.encode())
+                else:
+                    self.buffer_receive = buffer
+                    self.read()
+            
+
             self.libNetwork.closeSocket(self.sock)
             
     def kill_thread(self):
@@ -108,6 +103,15 @@ class Multiplayer_connection:
     def getExistingRooms(self):
         existingRoomsRequest = "$#[|Who is Room Creator?|]#$"
         self.libNetwork.sendC(existingRoomsRequest.encode())
+
+    def amItheCreatorOfRoom(self):
+        creator = self.room.get_creator()
+        libPlayer = ctypes.cdll.LoadLibrary('Online/libPlayer.so')
+        libPlayer.get_myIP.restype = ctypes.c_char_p
+        ip= libPlayer.get_myIP().decode()
+        if creator[ip]:
+            return True
+        return False
 
 
 
