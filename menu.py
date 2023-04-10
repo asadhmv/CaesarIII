@@ -9,10 +9,12 @@ from events.event_manager import EventManager
 from game.utils import draw_text
 from sounds.sounds import SoundManager
 from Online.Room import Room
+from Online.multiplayer_connection import Multiplayer_connection
 
 pg.font.init()
 class Menu:
     def __init__(self, screen):
+        self.multiplayer = None
         self.room_menu = False
         self.loading_menu = False
         self.main_menu = True
@@ -230,8 +232,11 @@ class Menu:
         self.set_inactive()
 
     def  set_inactive_join(self):
-        self.join = True
-        self.set_inactive()
+        #self.join = True
+        available_rooms = self.multiplayer.get_available_rooms()
+        for room in available_rooms:
+            print(room)
+        #self.set_inactive()
 
     def skip_splashscreen(self):
         EventManager.clear_any_input()
@@ -364,6 +369,7 @@ class Menu:
         self.username_menu = True
         self.roomSettings_menu = False
         self.roomPassword_menu = False
+        self.multiplayer = Multiplayer_connection()
     
     def set_roomSettings_menu(self):
         self.room_menu = False
@@ -417,3 +423,6 @@ class Menu:
             "name":self.input_room.getString(),
             "join":self.join
             }
+    
+    def get_multiplayer(self) -> Multiplayer_connection:
+        return self.multiplayer

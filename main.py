@@ -37,10 +37,9 @@ def main():
         p.set_username(username)
 
         if menu.get_room() is not None:
-            print(menu.get_room().id)
             menu.get_room().addMySelf(p)
 
-    game = Game(screen, menu.get_online(), menu.get_room())
+    game = Game(screen, menu.get_online(), menu.get_room(), menu.get_multiplayer())
 
     # Save load, need to be here to load save after init game
     if menu.get_save_loading():

@@ -7,8 +7,9 @@ from class_types.road_types import RoadTypes
 
 class Multiplayer_connection:
 
-    def __init__(self, room):
+    def __init__(self, room = None):
         self.room = room
+        self.available_rooms = []
         self.buffer_receive = ""
         self.buffer_send = ""
         self.builder = None
@@ -80,6 +81,8 @@ class Multiplayer_connection:
                     if self.amItheCreatorOfRoom():
                         creator_buffer = self.room.get_info_in_buffer()
                         self.libNetwork.sendC(creator_buffer.encode())
+                elif "RoomId" in buffer and "NbOfPlayers" in buffer and "Players" in buffer:
+                    self.available_rooms.append(buffer)
                 else:
                     self.buffer_receive = buffer
                     self.read()
@@ -100,18 +103,25 @@ class Multiplayer_connection:
 
         return (int(tab[0]), int(tab[1]))
     
+    def set_room(self, room):
+        self.room = room
+    
     def getExistingRooms(self):
         existingRoomsRequest = "$#[|Who is Room Creator?|]#$"
         self.libNetwork.sendC(existingRoomsRequest.encode())
 
     def amItheCreatorOfRoom(self):
-        creator = self.room.get_creator()
-        libPlayer = ctypes.cdll.LoadLibrary('Online/libPlayer.so')
-        libPlayer.get_myIP.restype = ctypes.c_char_p
-        ip= libPlayer.get_myIP().decode()
-        if creator[ip]:
-            return True
-        return False
+        if self.room is not None:
+            creator = self.room.get_creator()
+            libPlayer = ctypes.cdll.LoadLibrary('Online/libPlayer.so')
+            libPlayer.get_myIP.restype = ctypes.c_char_p
+            ip= libPlayer.get_myIP().decode()
+            if creator[ip]:
+                return True
+            return False
+    
+    def get_available_rooms(self):
+        return self.available_rooms
 
 
 
