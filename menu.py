@@ -232,13 +232,14 @@ class Menu:
         self.online = False
         self.set_inactive()
 
-    def  set_inactive_join(self):
+    def set_inactive_join(self):
         #self.join = True
         self.multiplayer.getExistingRooms()
         available_rooms = self.multiplayer.get_available_rooms()
         for room in available_rooms:
             print(room)
         #self.set_inactive()
+        
 
     def skip_splashscreen(self):
         EventManager.clear_any_input()
