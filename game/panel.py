@@ -1,5 +1,4 @@
 import pygame as pg
-import tkinter as tk
 import backup_game
 from class_types.buildind_types import BuildingTypes
 from class_types.panel_types import SwitchViewButtonTypes
