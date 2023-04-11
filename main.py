@@ -33,11 +33,10 @@ def main():
 
         roomInformations = menu.getInformationsRoom()
         username=roomInformations["username"]
-        p = Player()
-        p.set_username(username)
+        menu.get_multiplayer().get_player().set_username(username)
 
         if menu.get_room() is not None:
-            menu.get_room().addMySelf(p)
+            menu.get_room().addMySelf(menu.get_multiplayer().get_player())
 
     game = Game(screen, menu.get_multiplayer())
 
