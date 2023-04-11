@@ -460,6 +460,9 @@ class Menu:
         self.join_create_menu = False
 
         self.listRoomButtons.clear()
+        self.multiplayer.getExistingRooms()
+        #available_rooms = self.multiplayer.get_available_rooms()
+        
         self.listRoom = self.multiplayer.get_available_rooms()
 
         tmp_list = ["salut", "cest moi", "ouf"]
