@@ -16,6 +16,7 @@ from buildable.final.buildable.ruin import Ruin
 from buildable.final.buildable.tree import SmallTree
 from buildable.final.structures.castle import Castle
 from buildable.final.structures.prefecture import Prefecture
+from buildable.buildable import Buildable
 from class_types.buildind_types import BuildingTypes
 from class_types.orientation_types import OrientationTypes
 from class_types.overlay_types import OverlayTypes
@@ -151,7 +152,7 @@ class World:
                         if self.in_map(mouse_grid_pos):
                             grid = self.game_controller.get_map()
                             tile = grid[mouse_grid_pos[1]][mouse_grid_pos[0]]
-                            if type(tile.get_building()) == Prefecture and tile.get_owner_ip() != self.player.get_ip():#on détruit que les préfectures pour l'instant
+                            if type(tile.get_building().__class__.__base__) == Buildable and tile.get_owner_ip() != self.player.get_ip():#on détruit que les préfectures pour l'instant
                                 self.mode_selectionCastle.get_building().attack(tile)
                                 #self.mutliplayer.write("écrire un truc qui envoie les info du chateau et de la cible")
                                 self.mode_selectionCastle = False
