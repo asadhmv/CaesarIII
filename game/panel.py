@@ -181,13 +181,13 @@ class Panel:
         #################################### MENUS ####################################################
 
         # Commerce Menu
-        self.build__farm = Button((self.width - 370, 431), (200, 26), text="Wheat Farm", center_text=False, text_size=12)
+        self.build__farm = Button((self.width - 370, 431), (200, 26), text="Wheat Farm", center_text=False, text_size=14)
         self.build__farm.on_click(lambda: self.set_selected_tile(BuildingTypes.WHEAT_FARM), lambda: self.set_sous_menu(False))
 
-        self.build__market = Button((self.width - 370, 459), (200, 26), text="Market", center_text=False, text_size=12)
+        self.build__market = Button((self.width - 370, 459), (200, 26), text="Market", center_text=False, text_size=14)
         self.build__market.on_click(lambda: self.set_selected_tile(BuildingTypes.MARKET), lambda: self.set_sous_menu(False))
 
-        self.build__granary = Button((self.width - 370, 487), (200, 26), text="Granary", center_text=False, text_size=12)
+        self.build__granary = Button((self.width - 370, 487), (200, 26), text="Granary", center_text=False, text_size=14)
         self.build__granary.on_click(lambda: self.set_selected_tile(BuildingTypes.GRANARY), lambda: self.set_sous_menu(False))
 
         self.commerce_menu = Menu_Deroulant(self.build__commerce, [self.build__farm, self.build__granary, self.build__market], self.screen)
@@ -197,16 +197,16 @@ class Panel:
         self.chat_room = Chat(self.screen, self.width-500,self.height-500)
         
         # File Menu
-        self.file_continue_game = Button((0, 46), (200, 46), text="Continue Game", center_text=False, text_size=14)
+        self.file_continue_game = Button((0, 46), (200, 46), text="Continue Game", center_text=False, text_size=16)
         self.file_continue_game.on_click(lambda: self.set_sous_menu(False))
 
-        self.file_save_game = Button((0, 92), (200, 46), text="Save Game", center_text=False, text_size=14)
+        self.file_save_game = Button((0, 92), (200, 46), text="Save Game", center_text=False, text_size=16)
         self.file_save_game.on_click(lambda: backup_game.save_game("save.bin"))
 
-        self.file_load_game = Button((0, 138), (200, 46), text="Load Game", center_text=False, text_size=14)
+        self.file_load_game = Button((0, 138), (200, 46), text="Load Game", center_text=False, text_size=16)
         self.file_load_game.on_click(lambda: backup_game.load_game("save.bin"), lambda: self.set_sous_menu(False))
 
-        self.file_exit_game = Button((0, 184), (200, 46), text="Exit Game", center_text=False, text_size=14)
+        self.file_exit_game = Button((0, 184), (200, 46), text="Exit Game", center_text=False, text_size=16)
         self.file_exit_game.on_click(lambda: pg.event.post(pg.event.Event(pg.KEYDOWN, unicode="\x1b", key=pg.K_ESCAPE, mod=pg.KMOD_NONE)))
 
         self.file_sous_menu_list = [self.file_continue_game, self.file_save_game, self.file_load_game,
@@ -216,19 +216,19 @@ class Panel:
         EventManager.register_menu_deroulant(self.file_menu)
 
         # Religion Menu
-        self.ceres = Button((self.width - 370, 358), (200, 26), text="Ceres", center_text=False, text_size=12)
+        self.ceres = Button((self.width - 370, 358), (200, 26), text="Ceres", center_text=False, text_size=14)
         self.ceres.on_click(lambda: self.set_selected_tile(BuildingTypes.CERES), lambda: self.set_sous_menu(False))
 
-        self.mars = Button((self.width - 370, 386), (200, 26), text="Mars", center_text=False, text_size=12)
+        self.mars = Button((self.width - 370, 386), (200, 26), text="Mars", center_text=False, text_size=14)
         self.mars.on_click(lambda: self.set_selected_tile(BuildingTypes.MARS), lambda: self.set_sous_menu(False))
 
-        self.mercury = Button((self.width - 370, 414), (200, 26), text="Mercury", center_text=False, text_size=12)
+        self.mercury = Button((self.width - 370, 414), (200, 26), text="Mercury", center_text=False, text_size=14)
         self.mercury.on_click(lambda: self.set_selected_tile(BuildingTypes.MERCURY), lambda: self.set_sous_menu(False))
 
-        self.venus = Button((self.width - 370, 442), (200, 26), text="Venus", center_text=False, text_size=12)
+        self.venus = Button((self.width - 370, 442), (200, 26), text="Venus", center_text=False, text_size=14)
         self.venus.on_click(lambda: self.set_selected_tile(BuildingTypes.VENUS), lambda: self.set_sous_menu(False))
 
-        self.neptune = Button((self.width - 370, 470), (200, 26), text="Neptune", center_text=False, text_size=12)
+        self.neptune = Button((self.width - 370, 470), (200, 26), text="Neptune", center_text=False, text_size=14)
         self.neptune.on_click(lambda: self.set_selected_tile(BuildingTypes.NEPTUNE), lambda: self.set_sous_menu(False))
 
         self.religion_menu = Menu_Deroulant(self.build__temple, [self.ceres, self.mars, self.mercury, self.venus, self.neptune], self.screen)
@@ -280,6 +280,7 @@ class Panel:
             EventManager.register_component(self.chat)
             
             self.chat_room.show_chat(self.width-500,self.height-500)
+            self.chat_room.display_received_message()
             self.chat.on_click2(lambda: self.set_chat(False))
         if not self.chat_window:
             for button in self.button_list:
@@ -292,6 +293,7 @@ class Panel:
 
     def update(self):
         self.mini_map.update()
+        
 
     def has_selected_tile(self):
         return self.selected_tile is not None

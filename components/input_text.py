@@ -38,6 +38,8 @@ class Input_text():
             self.inputText.setString(self.inputText.getString()+key[0])
         return
     
+    def getString(self):
+        return self.inputText.getString()
 
     def add_input_listener(self):
         EventManager.register_key_listener(pg.K_a, self.add_text, params = ['a'])
@@ -121,3 +123,6 @@ class Input_text():
         EventManager.remove_key_listener(pg.K_SPACE)
         EventManager.remove_key_listener(pg.K_BACKSPACE)
         return
+
+    def clear_inputText(self):
+        self.inputText.setString("")

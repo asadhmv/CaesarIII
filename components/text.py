@@ -20,7 +20,7 @@ class Text:
         
         self.text = self.font.render(self.string, True, self.color)
 
-    def display(self, screen, pos=False):
+    def display(self, screen, pos=False):            
         if not pos:
             screen.blit(self.text, self.pos)
         else:

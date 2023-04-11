@@ -14,7 +14,7 @@ from .map_controller import MapController
 from .panel import Panel
 from .game_controller import GameController
 from threading import Thread, Event
-from multiplayer_connection import Multiplayer_connection
+from Online.multiplayer_connection import Multiplayer_connection
 
 def my_thread(func, event: Event):
     fps_moyen = [0]
@@ -28,15 +28,16 @@ def my_thread(func, event: Event):
         exit()
 
 class Game:
-    def __init__(self, screen):
+    def __init__(self, screen, online=False):
         self.is_running = False
         self.screen = screen
         self.paused = False
+        self.online = online
         self.game_controller = GameController.get_instance()
         self.width, self.height = self.screen.get_size()
 
         #Gestion de la connexion multijoueur
-        self.multplayer = Multiplayer_connection()
+        self.multplayer = Multiplayer_connection(self.online)
 
         # sound manager
         self.sound_manager = SoundManager()
@@ -82,7 +83,7 @@ class Game:
                 if self.game_controller.is_load_save():
                     self.load_save()
 
-                self.multplayer.receive()
+                #self.multplayer.receive()
 
                 time.sleep(1/targeted_ticks_per_seconds)
 
@@ -146,6 +147,7 @@ class Game:
 
     def exit_game(self):
         self.is_running = False
+        self.multplayer.kill_thread()
 
     def load_save(self):
         self.world.load_numpy_array()
