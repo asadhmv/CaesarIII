@@ -104,9 +104,7 @@ class Builder:
 
                 if not tile.is_buildable():
                     continue
-
-                tile.owner_ip=ip_owner
-                self.building_add(row, col, selected_tile)
+                self.building_add(row, col, selected_tile,ip_owner)
                 self.start_point = None  # update start point to default after building
                 self.end_point = None  # update start point to default after building
 
@@ -114,7 +112,7 @@ class Builder:
         for tile in tile_with_building.get_all_building_tiles():
             tile.destroy()
 
-    def building_add(self, row: int, col: int, selected_type: RoadTypes | BuildingTypes):
+    def building_add(self, row: int, col: int, selected_type: RoadTypes | BuildingTypes,ip_owner):
         if not self.game_controller.has_enough_denier(selected_type):
             return
 
@@ -170,9 +168,11 @@ class Builder:
                 for y in range(row,row-y_building,-1):
                     if x != col or y != row:
                         grid[y][x].set_building(building, show_building=False)
+                        grid[y][x].owner_ip=ip_owner
 
         #Show first case
         grid[row][col].set_building(building, show_building=True)
+        grid[row][col].owner_ip=ip_owner
         self.game_controller.new_building(building)
 
 
