@@ -55,8 +55,9 @@ char * recvC(int sock)
             }
     }
 
+    printf("Received message : '%s'\n",buffer);
 
-    printf("Received broadcast message from %s:%d: %s\n", inet_ntoa(sender_addr.sin_addr), ntohs(sender_addr.sin_port), buffer);
+
 
     return buffer;
 }

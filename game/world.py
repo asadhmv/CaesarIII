@@ -34,13 +34,13 @@ import backup_game
 
 class World:
 
-    def __init__(self, width, height, panel, multplayer):
+    def __init__(self, width, height, panel, multiplayer):
         self.game_controller = GameController.get_instance()
         self.width = width
         self.height = height
         self.builder = Builder(panel)
-        self.multplayer = multplayer
-        self.multplayer.set_builder(self.builder)
+        self.multiplayer = multiplayer
+        self.multiplayer.set_builder(self.builder)
         self.overlay = Overlay.get_instance()
 
 
@@ -171,7 +171,8 @@ class World:
                     #print(self.builder.get_end_point())
 
                     #if self.check_no_builds(start_point,end_point):
-                    self.multplayer.write(start_point,end_point, selected_tile)
+                    if self.multiplayer is not None:
+                        self.multiplayer.write(start_point,end_point, selected_tile)
 
 
                     self.builder.set_start_point(None)  # update start point to default after building

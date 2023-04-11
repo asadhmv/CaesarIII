@@ -12,7 +12,7 @@ from game.textures import Textures
 from game.utils import draw_text
 from map_element.tile import Tile
 from game.overlay import Overlay
-from components.Chat import Chat
+from Online.Chat import Chat
 TOPBAR_HEIGHT = 46
 PANEL_WIDTH = 162
 PANEL_HEIGHT = 1080 - TOPBAR_HEIGHT

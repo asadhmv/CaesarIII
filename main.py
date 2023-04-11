@@ -28,17 +28,9 @@ def main():
 
     # Clear buttons fromgit  the menu
     EventManager.reset()
-    print(menu.get_online)
-    if menu.get_online():
-        
-        roomInformations = menu.getInformationsRoom()
-        
-        username=roomInformations["username"]
-         
-        p = Player(username)
-        p.set_ip()
+    #print(menu.get_online)
 
-    game = Game(screen, menu.get_online())
+    game = Game(screen, menu.get_multiplayer())
 
     # Save load, need to be here to load save after init game
     if menu.get_save_loading():

@@ -1,6 +1,7 @@
 import time
 import traceback
 import numpy
+#import os
 import pygame as pg
 
 from class_types.panel_types import SwitchViewButtonTypes
@@ -14,7 +15,7 @@ from .map_controller import MapController
 from .panel import Panel
 from .game_controller import GameController
 from threading import Thread, Event
-from Online.multiplayer_connection import Multiplayer_connection
+from Online.Room import Room
 
 def my_thread(func, event: Event):
     fps_moyen = [0]
@@ -28,16 +29,19 @@ def my_thread(func, event: Event):
         exit()
 
 class Game:
-    def __init__(self, screen, online=False):
+    def __init__(self, screen, multiplayer = None):
+        #print(os.getcwd())
+        #os.chdir('..')
         self.is_running = False
         self.screen = screen
         self.paused = False
-        self.online = online
         self.game_controller = GameController.get_instance()
         self.width, self.height = self.screen.get_size()
+        self.multiplayer = multiplayer
 
         #Gestion de la connexion multijoueur
-        self.multplayer = Multiplayer_connection.get_instance()
+        #if online:
+        #    self.multiplayer = Multiplayer_connection(room)
 
         # sound manager
         self.sound_manager = SoundManager()
@@ -47,7 +51,7 @@ class Game:
         self.panel = Panel(self.width, self.height, self.screen)
 
         # World contains populations or graphical objects like buildings, trees, grass
-        self.world = World(self.width, self.height, self.panel, self.multplayer)
+        self.world = World(self.width, self.height, self.panel, self.multiplayer)
 
         self.thread_event = Event()
         self.draw_thread = Thread(None, my_thread, "1", [self.display, self.thread_event])
@@ -76,6 +80,10 @@ class Game:
             while self.is_running and not self.thread_event.is_set():
                 # We need to recalculate it every time, since it can change
                 targeted_ticks_per_seconds = self.game_controller.get_current_speed() * 50
+                if self.multiplayer.get_newPlayer() is not None:
+                    print(self.multiplayer.get_newPlayer())
+                    self.multiplayer.reset_newPlayer()
+
                 if not self.paused:
                     self.game_controller.update()
                     for walker in GameController.get_instance().walkers:
@@ -83,7 +91,6 @@ class Game:
                 if self.game_controller.is_load_save():
                     self.load_save()
 
-                #self.multplayer.receive()
 
                 time.sleep(1/targeted_ticks_per_seconds)
 
@@ -147,7 +154,7 @@ class Game:
 
     def exit_game(self):
         self.is_running = False
-        self.multplayer.kill_thread()
+        self.multiplayer.kill_thread()
 
     def load_save(self):
         self.world.load_numpy_array()
