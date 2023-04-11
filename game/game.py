@@ -81,7 +81,7 @@ class Game:
                 # We need to recalculate it every time, since it can change
                 targeted_ticks_per_seconds = self.game_controller.get_current_speed() * 50
                 if self.multiplayer.get_newPlayer() is not None:
-                    print("New Player")
+                    print(self.multiplayer.get_newPlayer())
                     self.multiplayer.reset_newPlayer()
 
                 if not self.paused:
