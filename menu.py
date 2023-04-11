@@ -64,9 +64,9 @@ class Menu:
         self.button__exit = button.Button((button_start, 500), button_size,
                                                       image=pg.image.load('assets/menu_sprites/exit.png').convert(),
                                                       image_hover=pg.image.load('assets/menu_sprites/exit_hover.png').convert())
-        self.button__exit.on_click(exit)
+        self.button__exit.on_click(self.exit)
         
-        
+
         
         
         
@@ -164,6 +164,11 @@ class Menu:
         pg.mixer.music.load('sounds/wavs/ROME4.WAV')
         pg.mixer.music.set_volume(0.6)
         pg.mixer.music.play(0, 0, 2000)
+
+    def exit(self):
+        if self.multiplayer is not None:
+            self.multiplayer.kill_thread()
+        self.set_inactive_offline()
 
     def create_room(self):
         if not self.join:
