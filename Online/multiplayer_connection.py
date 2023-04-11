@@ -102,9 +102,9 @@ class Multiplayer_connection:
                         var=None
                         try:
                             if Comp_mode.get_instance().compare_with_mine(int(self.list_receive[1])):
-                                var=" I Won "
+                                var=" You "
                             else:
-                                var= " "+self.list_receive[0] + " Won "
+                                var= " "+self.list_receive[0]
                             Comp_mode.get_instance().play_score(var)
 
                         except ValueError:
