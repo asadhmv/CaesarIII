@@ -17,6 +17,7 @@ class Multiplayer_connection:
         self.builder = None
         self.buffer_receive = None
         self.newPlayer = None
+        self.disconnectedPlayer = None
         """os.chdir('Online')
         subprocess.run(["gcc",  "-c", "-fPIC", "recv.c"])
         subprocess.run(["gcc",  "-c", "-fPIC", "send.c"])
@@ -113,6 +114,12 @@ class Multiplayer_connection:
                     p.set_username(connecting_player_username)
                     self.room.addPlayer(p)
                     self.newPlayer = p.get_username()
+                elif "Disconnecting:" in buffer:
+                    ip_disconnecting_player = buffer[14 : ]
+                    for p in self.get_room().get_players():
+                        if p.get_ip() == ip_disconnecting_player:
+                            self.get_room().removePlayer(p)
+                            self.disconnectedPlayer = p.get_username()
                 else:
                     self.buffer_receive = buffer
                     self.read()
@@ -121,6 +128,8 @@ class Multiplayer_connection:
             self.libNetwork.closeSocket(self.sock)
             
     def kill_thread(self):
+        disconnecting_buffer = "Disconnecting:" + self.player.get_ip()
+        self.send_specific_buffer(disconnecting_buffer)
         self.thread_stop_event.set()
         self.thread.join()
 

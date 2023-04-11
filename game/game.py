@@ -39,7 +39,9 @@ class Game:
         self.width, self.height = self.screen.get_size()
         self.multiplayer = multiplayer
         self.debutAffichage = None
+        self.debutAffichage_disconnect = None
         self.newPlayer = ""
+        self.oldPlayer = ""
 
         #Gestion de la connexion multijoueur
         #if online:
@@ -136,8 +138,19 @@ class Game:
             self.multiplayer.reset_newPlayer()
 
         if self.debutAffichage is not None and len(self.newPlayer) > 0:
-            if time.time() - self.debutAffichage < 5:
-                draw_text('New Connexion Player {}'.format(self.newPlayer), self.screen, (20, 70),color=pg.Color(255, 255, 0), size=22)
+            if time.time() - self.debutAffichage < 2:
+                draw_text('New Connection Player {}'.format(self.newPlayer), self.screen, (20, 70),color=pg.Color(255, 255, 0), size=22)
+                print("New Player Connection")
+
+        if self.multiplayer.disconnectedPlayer is not None:
+            self.debutAffichage_disconnect = time.time()
+            self.oldPlayer = self.multiplayer.disconnectedPlayer
+            self.multiplayer.disconnectedPlayer = None
+
+        if self.debutAffichage_disconnect is not None and len(self.newPlayer) > 0:
+            if time.time() - self.debutAffichage_disconnect < 2:
+                print("Disconnected Player")
+                draw_text('Player {} Disconnected'.format(self.newPlayer), self.screen, (20, 80),color=pg.Color(255, 0, 0), size=22)
 
 
         self.pause_game.display(self.screen)
