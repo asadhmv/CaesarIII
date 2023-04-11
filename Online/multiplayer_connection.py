@@ -112,7 +112,7 @@ class Multiplayer_connection:
                     p.set_ip(connecting_player_ip)
                     p.set_username(connecting_player_username)
                     self.room.addPlayer(p)
-                    self.newPlayer = p
+                    self.newPlayer = p.get_username()
                 else:
                     self.buffer_receive = buffer
                     self.read()
