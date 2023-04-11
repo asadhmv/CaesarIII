@@ -30,12 +30,13 @@ class Attacker(Walker):
 
     def destination_reached(self):
 
-        if Actions.IN_THE_WAY_TO_ATTACK:
+        if Actions.IN_THE_WAY_TO_ATTACK == self.current_action:
             self.current_tile.get_building().to_ruin()
             self.current_action = Actions.IN_THE_WAY_TO_CASTLE
-            super().navigate_to(self.associated_building.get_all_building_tiles()[0])
+            tile = self.associated_building.get_all_building_tiles()
+            super().navigate_to(tile)
 
-        elif Actions.IN_THE_WAY_TO_CASTLE:
+        elif Actions.IN_THE_WAY_TO_CASTLE == self.current_action:
             self.delete()
             self.current_action = Actions.NOTHING
         

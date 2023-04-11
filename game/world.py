@@ -121,6 +121,13 @@ class World:
                     self.builder.set_end_point(mouse_grid_pos)
                     self.builder.set_in_build_action(True)
                     self.sound_manager.play('build_action')
+                else:
+                    self.mode_selectionCastle = False
+                    self.mode_selectionAttack = False
+                    self.panel.set_selected_tile(None)
+                    self.builder.set_start_point(None)
+                    self.builder.set_end_point(None)
+                    self.builder.set_in_build_action(False)
 
             elif event.type == pg.MOUSEMOTION:
                 temp_tile = self.builder.get_temp_tile_info()
