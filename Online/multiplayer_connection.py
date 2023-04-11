@@ -91,7 +91,7 @@ class Multiplayer_connection:
                 buffer = buffer.decode()
                 if "$#[|Who is Room Creator?|]#$" in buffer:
                     #print(self.amItheCreatorOfRoom())
-                    if self.room.amIcreator():
+                    if self.room is not None and self.room.amIcreator():
                         creator_buffer = self.room.get_info_in_buffer()
                         joiningPlayerIp = buffer[28 : ]
                         print(joiningPlayerIp.encode())

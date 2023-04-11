@@ -165,11 +165,12 @@ class Menu:
     def create_room(self):
         if not self.join:
             self.room = Room(self.nbPlayer, self.input_room.getString(), owner=True)
-            self.multiplayer.set_room(self.room)
             myself = self.get_multiplayer().get_player()
             self.room.addPlayer(myself)
         elif self.join:
             self.join_room(self.choosenRoom)
+        
+        self.multiplayer.set_room(self.room)
 
         print("Players in this Room :")
         for p in self.room.get_players():
