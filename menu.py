@@ -494,7 +494,7 @@ class Menu:
         room_nbPlayers = room_info[1][12 : ]
         room_players_info = room_info[2][8 : ]
         room_players = room_players_info.split(",")
-        self.room = Room(int(room_nbPlayers), room_id)
+        self.room = Room(int(room_nbPlayers), room_id, owner=False)
 
         for player in room_players:
             player_info = player.split(":")
