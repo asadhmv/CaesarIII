@@ -84,7 +84,13 @@ class Multiplayer_connection:
         for player in self.get_room().get_players():
             if player.get_ip() != self.player.get_ip():
                 self.libNetwork.sendC(message.encode(), player.get_ip().encode())
-        
+    def send_message(self, message: str):
+
+        message_str = f"{self.player.get_username()}: {message}"
+        self.libNetwork.sendC_broadcast(message_str.encode())
+    
+    def receive_message(self, message: str):
+        self.chat.display_received_message(message, self.player.get_username())
 
     def receive_thread(self):
         while not self.thread_stop_event.is_set():

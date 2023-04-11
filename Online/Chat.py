@@ -2,7 +2,7 @@ import pygame as pg
 from components.input_text import Input_text
 from components.text import Text
 from events.event_manager import EventManager
-
+#from Online.multiplayer_connection import Multiplayer_connection
 
 class Chat:
     instance=None
@@ -45,23 +45,22 @@ class Chat:
         self.screen.blit(self.rect, (posx, posy))
 
         
-    def display_received_message(self, buffer):
+    def display_received_message(self, buffer, username):
         print("hello "+buffer)
         message=buffer
         if buffer.startswith('$chat'):
             message = message.split('$chat', 1)[1].strip()
-            self.historyOfMessagesreceived.append(message)
-            i= 0
-            for line in self.historyOfMessagesreceived:
-                self.historyOfMessagesreceived_blit = Text(str(line), 24,(self.posx +10  , self.posy+10+i), (0,0,0))
-                self.historyOfMessagesreceived_blit.display(self.screen)
-                i+=20                        
+            self.add_message_received(username, message)
+          
 
     def add_message(self, username):
         message = self.input_message.getString()
-        
+        #Multiplayer_connection.get_instance().send_specific_buffer(message)
         self.historyOfMessages.append(f"@{username}: {message}")
         self.input_message.clear_inputText()
+    def add_message_received(self, username, message):
+        self.historyOfMessages.append(f"@{username}: {message}")
+    
     @staticmethod
     def get_instance(screen,posx,posy):
         if Chat.instance is None:
