@@ -5,7 +5,7 @@ import threading
 from class_types.buildind_types import BuildingTypes
 from class_types.road_types import RoadTypes
 from compet_mode import Comp_mode
-import pygame
+
 class Multiplayer_connection:
 
 

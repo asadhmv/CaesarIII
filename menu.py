@@ -1,8 +1,5 @@
 import pygame as pg
-from pygame.locals import *
-
-import backup_game
-
+from compet_mode import Comp_mode
 from components import button
 from components.input_text import Input_text
 from components.text import Text
@@ -10,7 +7,6 @@ from events.event_manager import EventManager
 from game.utils import draw_text
 from sounds.sounds import SoundManager
 from Online.Room import Room
-
 pg.font.init()
 class Menu:
     def __init__(self, screen):
@@ -143,7 +139,7 @@ class Menu:
         self.gamemodeChoice2 = button.Button((size_screen[0]/2.35-50, (size_screen[1]/4)+50), (400, 40), text="COMPETITION MODE", text_size=20, center_text_mod2=True)
         self.gamemodeChoice3 = button.Button((size_screen[0] / 2.35-50, (size_screen[1] / 4)+100), (400, 40), text="OPEN WORLD MODE", text_size=20, center_text_mod2=True)
         self.gamemodeChoice1.on_click(exit)
-        self.gamemodeChoice2.on_click(exit)
+        self.gamemodeChoice2.on_click(self.comp)
         self.gamemodeChoice3.on_click(exit)
 
         if self.is_load_menu() and not self.main_menu:
@@ -244,6 +240,9 @@ class Menu:
         self.join = True
         self.set_inactive()
 
+    def comp(self):
+        Comp_mode.get_instance().launch_compet_mode()
+        self.set_inactive()
     def skip_splashscreen(self):
         EventManager.clear_any_input()
         self.splash_screen = False

@@ -17,7 +17,6 @@ from threading import Thread, Event
 from Online.multiplayer_connection import Multiplayer_connection
 from Online.Room import Room
 
-from compet_mode import Comp_mode
 
 def my_thread(func, event: Event):
     fps_moyen = [0]
@@ -31,7 +30,7 @@ def my_thread(func, event: Event):
         exit()
 
 class Game:
-    def __init__(self, screen,player, online=False, room : Room = None):
+    def __init__(self, screen,player,comp,online=False, room : Room = None):
         self.is_running = False
         self.screen = screen
         self.paused = False
@@ -40,7 +39,7 @@ class Game:
         self.multplayer = None
         self.room = room
         self.start_time = time.time()
-
+        self.comp=comp
         #Gestion de la connexion multijoueur
         if online:
             self.multplayer = Multiplayer_connection(room,screen)
@@ -118,14 +117,14 @@ class Game:
         self.screen.fill((0, 0, 0))
         self.world.draw(self.screen)
         self.panel.draw(self.screen)
-        month_number = self.game_controller.get_actual_month()
-
+        #month_number = self.game_controller.get_actual_month()
         draw_text('fps={}'.format(fps), self.screen, (self.width - 120, 10), size=22)
-        draw_text('Chrono  {}'.format(int(time.time() - self.start_time)), self.screen, (self.width - 905, 10), size=22)
-        draw_text('Score  {}'.format(self.game_controller.get_actual_citizen()+self.game_controller.actual_foods+int(self.game_controller.global_desirability)), self.screen, (self.width - 1200, 10), size=22)
-        if Comp_mode.get_instance().actived:
+        draw_text('Score  {}'.format(self.game_controller.get_actual_citizen() + self.game_controller.actual_foods + int(self.game_controller.global_desirability)), self.screen, (self.width - 1200, 10), size=22)
+        if self.comp.actived:
+            draw_text('Chrono  {}'.format(int(time.time() - self.start_time)), self.screen, (self.width - 905, 10),size=22)
             draw_text('Winner: ', self.screen, (self.width - 590, 10), color=pg.Color(255, 255, 0), size=22)
-            draw_text('{} '.format(Comp_mode.get_instance().var), self.screen, (self.width - 500, 10), color=pg.Color(255, 255, 0), size=22)
+            draw_text('{} '.format(self.comp.var), self.screen, (self.width - 500, 10), color=pg.Color(255, 255, 0), size=22)
+
         draw_text('Speed {}%'.format(int(100*self.game_controller.get_actual_speed())), self.screen, (self.width - 150, 510), color=pg.Color(60, 40, 25), size=16)
 
 
@@ -152,7 +151,7 @@ class Game:
     def exit_game(self):
         self.is_running = False
         self.multplayer.kill_thread()
-        Comp_mode().get_instance().kill_chrono()
+        self.comp.kill_chrono()
 
     def load_save(self):
         self.world.load_numpy_array()
