@@ -17,6 +17,8 @@ from game.overlay import Overlay
 TOPBAR_HEIGHT = 46
 PANEL_WIDTH = 162
 PANEL_HEIGHT = 1080 - TOPBAR_HEIGHT
+LEFT_PANEL_WIDTH = 162
+
 
 class Panel:
     def __init__(self, width, height, screen):
@@ -28,6 +30,7 @@ class Panel:
 
         self.ressource_panel_color = (204, 174, 132)
         self.building_panel_color = (230, 162, 64)
+        self.left_panel_color = (230,162,64)
 
         # Ressource panel in the top of screen
         self.ressource_panel = pg.Surface((self.width, TOPBAR_HEIGHT)).convert()
@@ -49,6 +52,15 @@ class Panel:
         self.building_panel.blit(Textures.get_texture(SwitchViewButtonTypes.MINI_SCULPTURE), (7, 216))
         self.building_panel.blit(Textures.get_texture(SwitchViewButtonTypes.JULIUS), (7, 200 - TOPBAR_HEIGHT))
         self.building_panel.blit(Textures.get_texture(SwitchViewButtonTypes.EUROPEAN), (84, 200 - TOPBAR_HEIGHT))
+        
+        # score panel in left screen
+        
+        self.left_panel = pg.Surface((LEFT_PANEL_WIDTH, self.height)).convert()
+        self.left_panel_rect = self.left_panel.get_rect(topleft=(0, TOPBAR_HEIGHT))
+        self.left_panel.fill(self.left_panel_color)
+        #self.left_panel.blit(Textures.get_texture(SwitchViewButtonTypes.TOP_PANNEL), (0, 0))
+        
+
 
 
 
