@@ -2,6 +2,8 @@ from typing import TYPE_CHECKING
 
 from class_types.buildind_types import BuildingTypes
 from buildable.buildable_datas import buildable_cost
+from Online.player import Player
+
 
 
 if TYPE_CHECKING:
@@ -34,6 +36,7 @@ class GameController:
         self.current_speed = 1.0
 
         self.save_loading = False
+        self.username=" "
 
         # Not implemented yet
         self.sentiment = 80
@@ -41,6 +44,19 @@ class GameController:
             0: "Jan", 1: "Feb", 2: "Mar", 3: "Apr", 4: "May", 5: "Jun", 6: "Jul", 7: "Aug", 8: "Sep", 9: "Oct",
             10: "Nov", 11: "Dec"
         }
+
+    
+    def set_username(self,username):
+        self.username = username
+        
+
+    def get_username(self):
+    
+        
+        return self.username
+
+
+    
 
     def get_current_speed(self):
         return self.current_speed

@@ -7,7 +7,8 @@ from game.game import Game
 from menu import Menu
 from game.textures import Textures
 from Online.player import Player
-
+from game.game_controller import GameController
+from game.utils import draw_text
 def main():
     is_game_run = True
     is_playing = True
@@ -20,27 +21,33 @@ def main():
     pg.mouse.set_cursor(curseur)
     pg.event.set_grab(True)
     menu = Menu(screen)
-   
+ 
     Textures.init(screen)
 
     while menu.is_active():
         menu.run()
 
-    # Clear buttons from the menu
+ # Clear buttons from the menu
     EventManager.reset()
     print(menu.get_online)
     if menu.get_online():
+        controll = GameController()
         
         roomInformations = menu.getInformationsRoom()
         
         username=roomInformations["username"]
-         
+        width = screen.get_size() 
         p = Player(username)
+ 
+        controll.set_username(p.username)
+ 
+
+ 
         p.set_ip()
 
-    game = Game(screen, menu.get_online())
+    game = Game(screen, controll,menu.get_online())
 
-    # Save load, need to be here to load save after init game
+ # Save load, need to be here to load save after init game
     if menu.get_save_loading():
         backup_game.load_game("save.bin")
 

@@ -28,12 +28,13 @@ def my_thread(func, event: Event):
         exit()
 
 class Game:
-    def __init__(self, screen, online=False):
+    def __init__(self, screen,controll, online=False):
         self.is_running = False
         self.screen = screen
         self.paused = False
         self.online = online
-        self.game_controller = GameController.get_instance()
+        self.game_controller = controll.get_instance()
+        self.game_username = controll.get_username()
         self.width, self.height = self.screen.get_size()
 
         #Gestion de la connexion multijoueur
@@ -113,7 +114,7 @@ class Game:
         self.world.draw(self.screen)
         self.panel.draw(self.screen)
         month_number = self.game_controller.get_actual_month()
-
+        draw_text('username {}'.format(str(self.game_username)), self.screen, (self.width - 1450, 10), size=22)
         draw_text('fps={}'.format(fps), self.screen, (self.width - 120, 10), size=22)
         draw_text('food={}'.format(self.game_controller.actual_foods), self.screen, (self.width - 300, 10), size=22)
         draw_text('Denier  {}'.format(self.game_controller.get_denier()), self.screen, (self.width - 905, 10), size=22)
