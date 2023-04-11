@@ -24,17 +24,26 @@ class Attacker(Walker):
         self.associated_building: 'Castle' = associated_building
         self.game_controller = GameController.get_instance()
         self.current_action = Actions.NOTHING
+        self.destination = None
 
 
 
     def destination_reached(self):
+        self.current_tile.get_building().destroy()#comment détruire instant un batiment ???
+        
         # print(self.current_tile.get_building(), self.current_tile.get_show_tile())
-        building = self.current_tile.get_building()
+        # building = self.current_tile.get_building()
+        
 
-        if building and building.get_build_type() == BuildingTypes.GRANARY:
-            self.move_wheat_in_hand_to_granary(building)
-            self.navigate_to(self.associated_building.get_all_building_tiles())  # back to the castle
-            self.current_action = Actions.IN_THE_WAY_TO_CASTLE
+        # if building and building.get_build_type() == BuildingTypes.GRANARY:
+        #     self.move_wheat_in_hand_to_granary(building)
+        #     self.navigate_to(self.associated_building.get_all_building_tiles())  # back to the castle
+        #     self.current_action = Actions.IN_THE_WAY_TO_CASTLE
 
-        elif building and building.get_build_type() == BuildingTypes.WHEAT_FARM:
-            self.delete()
+        # elif building and building.get_build_type() == BuildingTypes.WHEAT_FARM:
+        #     self.delete()
+
+    def attackMode(self, dest):
+        self.current_action = Actions.IN_THE_WAY_TO_ATTACK
+        self.destination = dest
+        super().navigate_to(dest)

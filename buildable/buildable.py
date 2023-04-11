@@ -38,6 +38,7 @@ class Buildable(ABC):
                 tiles.append(grid[self.x - x][self.y + y])
 
         return tiles
+    
 
     def get_current_tile(self)-> 'Tile':
         grid = GameController.get_instance().get_map()

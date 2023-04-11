@@ -146,6 +146,10 @@ class World:
                                 self.mode_selectionCastle.get_building().attack(tile)
                                 self.mode_selectionCastle = False
                                 self.mode_selectionAttack = False
+                                self.panel.set_selected_tile(None)
+                                self.builder.set_start_point(None)
+                                self.builder.set_end_point(None)
+                                self.builder.set_in_build_action(False)
 
                 else:
                     self.builder.set_in_build_action(False)
