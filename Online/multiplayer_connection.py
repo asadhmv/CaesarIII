@@ -9,7 +9,7 @@ import pygame
 class Multiplayer_connection:
 
 
-    def __init__(self, room,screen,online=False):
+    def __init__(self, room,online=False):
         self.room = room
         self.list_receive = []
 
@@ -32,7 +32,6 @@ class Multiplayer_connection:
         self.libPlayer = ctypes.cdll.LoadLibrary('Online/libPlayer.so')
         self.libPlayer.get_myIP.restype = ctypes.c_char_p
         self.ip = self.libPlayer.get_myIP().decode()
-        self.screen=screen
         Comp_mode.get_instance()
 
 

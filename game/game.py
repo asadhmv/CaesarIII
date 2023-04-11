@@ -39,6 +39,7 @@ class Game:
         self.width, self.height = self.screen.get_size()
         self.multplayer = None
         self.room = room
+        self.start_time = time.time()
 
         #Gestion de la connexion multijoueur
         if online:
@@ -120,14 +121,11 @@ class Game:
         month_number = self.game_controller.get_actual_month()
 
         draw_text('fps={}'.format(fps), self.screen, (self.width - 120, 10), size=22)
-        draw_text('food={}'.format(self.game_controller.actual_foods), self.screen, (self.width - 300, 10), size=22)
-        draw_text('Denier  {}'.format(self.game_controller.get_denier()), self.screen, (self.width - 905, 10), size=22)
-        draw_text('Pop  {}'.format(self.game_controller.get_actual_citizen()), self.screen, (self.width - 1200, 10), size=22)
-        draw_text('{} '.format(self.game_controller.get_month(month_number)), self.screen, (self.width - 590, 10), color=pg.Color(255, 255, 0), size=22)
-        draw_text('{} BC'.format(self.game_controller.get_actual_year()), self.screen, (self.width - 500, 10), color=pg.Color(255, 255, 0), size=22)
+        draw_text('Chrono  {}'.format(int(time.time() - self.start_time)), self.screen, (self.width - 905, 10), size=22)
+        draw_text('Score  {}'.format(self.game_controller.get_actual_citizen()+self.game_controller.actual_foods+int(self.game_controller.global_desirability)), self.screen, (self.width - 1200, 10), size=22)
+        draw_text('Winner: '.format(self.game_controller.get_month(month_number)), self.screen, (self.width - 590, 10), color=pg.Color(255, 255, 0), size=22)
+        draw_text('{} '.format(Comp_mode.get_instance().var), self.screen, (self.width - 500, 10), color=pg.Color(255, 255, 0), size=22)
         draw_text('Speed {}%'.format(int(100*self.game_controller.get_actual_speed())), self.screen, (self.width - 150, 510), color=pg.Color(60, 40, 25), size=16)
-        draw_text('Des. {}'.format(int(self.game_controller.global_desirability)), self.screen, (self.width - 150, 560), color=pg.Color(60, 40, 25), size=16)
-        draw_text('Food {}'.format(int(self.game_controller.actual_foods)), self.screen, (self.width - 150, 610), color=pg.Color(60, 40, 25), size=16)
 
 
 

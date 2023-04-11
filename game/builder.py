@@ -78,8 +78,6 @@ class Builder:
             for tile in path:
                 if tile.is_buildable():
                     tile.owner_ip=ip_owner
-                    print("Down")
-                    print(tile.owner_ip)
                     self.road_add(tile.x, tile.y)
 
             self.start_point = None  # update start point to default after building
