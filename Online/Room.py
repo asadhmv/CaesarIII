@@ -2,12 +2,13 @@ from Online.player import Player
 
 class Room():
     
-    def __init__(self, nbJoueur : int, id : str, mdp=False):
+    def __init__(self, nbJoueur : int, id : str,  play_mode, mdp=False):
 
         self.players=[]
         self.nbJoueur = nbJoueur
         self.mdp = mdp
         self.id = id
+        self.play_mode = play_mode
 
     def addMySelf(self, player : Player):
         self.players.append(player)

@@ -258,7 +258,6 @@ class World:
             else:
                 texture = Textures.get_delete_texture(temp_tile['name'])
 
-
             y_size = buildable_size[temp_tile['name']][1]
             offset = _offset(x, y - texture.get_height() + (y_size * TILE_SIZE/2) + (TILE_SIZE/2))
             screen.blit(texture, offset)
@@ -290,7 +289,13 @@ class World:
                     build_sign = Textures.get_texture(BuildingTypes.BUILD_SIGN)
 
                     offset = _offset(x, y - build_sign.get_height() + TILE_SIZE)
+
                     screen.blit(build_sign, offset)
+
+                    if tile.owner_ip == self.player.get_ip():
+                        mask = pg.mask.from_surface(tile).outline()
+                        mask = [tuple(offset) for x,y in mask]
+                        pg.draw.polygon(screen, (255, 255, 255), mask, 3)
 
                 isometric_coor = temp_tile['isometric_coor']
                 isometric_coor_offset = [_offset(x, y) for x, y in isometric_coor]
