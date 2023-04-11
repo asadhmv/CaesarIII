@@ -38,6 +38,7 @@ class Game:
         self.game_controller = GameController.get_instance()
         self.width, self.height = self.screen.get_size()
         self.multiplayer = multiplayer
+        self.debutAffichage = None
 
         #Gestion de la connexion multijoueur
         #if online:
@@ -80,10 +81,6 @@ class Game:
             while self.is_running and not self.thread_event.is_set():
                 # We need to recalculate it every time, since it can change
                 targeted_ticks_per_seconds = self.game_controller.get_current_speed() * 50
-                if self.multiplayer.get_newPlayer() is not None:
-                    newPlayer = self.multiplayer.get_newPlayer()
-                    draw_text('New Connexion Player {}'.format(newPlayer), self.screen, (20, 70), size=22)
-                    self.multiplayer.reset_newPlayer()
 
                 if not self.paused:
                     self.game_controller.update()
@@ -131,7 +128,15 @@ class Game:
         draw_text('Speed {}%'.format(int(100*self.game_controller.get_actual_speed())), self.screen, (self.width - 150, 510), color=pg.Color(60, 40, 25), size=16)
         draw_text('Des. {}'.format(int(self.game_controller.global_desirability)), self.screen, (self.width - 150, 560), color=pg.Color(60, 40, 25), size=16)
         draw_text('Food {}'.format(int(self.game_controller.actual_foods)), self.screen, (self.width - 150, 610), color=pg.Color(60, 40, 25), size=16)
+        
+        if self.multiplayer.get_newPlayer() is not None :
+            self.debutAffichage = time.time()
+            newPlayer = self.multiplayer.get_newPlayer()
+            self.multiplayer.reset_newPlayer()
 
+        if self.debutAffichage is not None:
+            if time.time() - self.debutAffichage < 5:
+                draw_text('New Connexion Player {}'.format(newPlayer), self.screen, (20, 70), size=22)
 
 
         self.pause_game.display(self.screen)
