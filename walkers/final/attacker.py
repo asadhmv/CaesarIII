@@ -33,7 +33,7 @@ class Attacker(Walker):
         if Actions.IN_THE_WAY_TO_ATTACK:
             self.current_tile.get_building().to_ruin()
             self.current_action = Actions.IN_THE_WAY_TO_CASTLE
-            super().navigate_to(self.associated_building.get_all_building_tiles())
+            super().navigate_to(self.associated_building.get_all_building_tiles()[0])
 
         elif Actions.IN_THE_WAY_TO_CASTLE:
             self.delete()
