@@ -1,5 +1,6 @@
 import pygame as pg
 from pygame.locals import *
+import time
 
 import backup_game
 from components import button
@@ -165,8 +166,14 @@ class Menu:
         if not self.join:
             self.room = Room(self.nbPlayer, self.input_room.getString(), owner=True)
             self.multiplayer.set_room(self.room)
+            myself = self.get_multiplayer().get_player()
+            self.room.addPlayer(myself)
         elif self.join:
             self.join_room(self.choosenRoom)
+
+        print("Players in this Room :")
+        for p in self.room.get_players():
+            print("Username = " + p.get_username() + ", IP = " +p.get_ip())
 
     def get_room(self):
         return self.room
@@ -461,16 +468,18 @@ class Menu:
 
         self.listRoomButtons.clear()
         self.multiplayer.getExistingRooms()
+        time.sleep(1)
         #available_rooms = self.multiplayer.get_available_rooms()
         
         self.listRoom = self.multiplayer.get_available_rooms()
+        print("aaaa :", self.listRoom)
 
-        tmp_list = ["salut", "cest moi", "ouf"]
+        #self.listRoom = ["salut", "cest moi", "ouf"]
         i = -100
         for room in self.listRoom:
             room_info = room
-            room = room.replace(";", "\n")
-            room = room.replace(",", "  ")
+            room = room.split(";")[0]
+            room = room.replace("RoomId=", "")
             tmp_button = button.Button((self.size_screen[0]/2, self.size_screen[1]/3.6+i), (self.size_screen[0]/15,self.size_screen[1]/20), text=room, text_size=20, center_text_mod2=True)
             tmp_button.on_click(self.set_username_menu, lambda: self.set_choosenRoom(room_info))
             self.listRoomButtons.append(tmp_button)

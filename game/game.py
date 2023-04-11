@@ -1,6 +1,7 @@
 import time
 import traceback
 import numpy
+import os
 import pygame as pg
 
 from class_types.panel_types import SwitchViewButtonTypes
@@ -29,6 +30,8 @@ def my_thread(func, event: Event):
 
 class Game:
     def __init__(self, screen, multiplayer = None):
+        print(os.getcwd())
+        #os.chdir('..')
         self.is_running = False
         self.screen = screen
         self.paused = False

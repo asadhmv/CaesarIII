@@ -29,10 +29,6 @@ def main():
     # Clear buttons from the menu
     EventManager.reset()
     #print(menu.get_online)
-    if menu.get_online():
-        
-        if menu.get_room() is not None:
-            menu.get_room().addMySelf(menu.get_multiplayer().get_player())
 
     game = Game(screen, menu.get_multiplayer())
 
