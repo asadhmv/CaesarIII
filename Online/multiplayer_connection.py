@@ -29,7 +29,7 @@ class Multiplayer_connection:
         self.libNetwork.sendC.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
         self.libNetwork.sendC_broadcast.argtypes = [ctypes.c_char_p]
         self.sock = None
-        self.chat = Chat(self.screen, self.width-500,self.height-500)
+        self.chat = None
         self.thread_stop_event = threading.Event()
         self.thread = threading.Thread(target=self.receive_thread)
         self.thread.start()
@@ -84,6 +84,7 @@ class Multiplayer_connection:
         for player in self.get_room().get_players():
             if player.get_ip() != self.player.get_ip():
                 self.libNetwork.sendC(message.encode(), player.get_ip().encode())
+    
     def send_message(self, message: str):
 
         message_str = f"{self.player.get_username()}: {message}"
@@ -172,13 +173,5 @@ class Multiplayer_connection:
         self.newPlayer = None
     
 
-
-            
-
-
-
-    @staticmethod
-    def get_instance():
-        if Multiplayer_connection.instance is None:
-            Multiplayer_connection.instance = Multiplayer_connection()
-        return Multiplayer_connection.instance
+    def set_chat(self, chat : Chat):
+        self.chat = chat

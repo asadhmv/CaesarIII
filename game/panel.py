@@ -194,7 +194,7 @@ class Panel:
         self.commerce_menu.on_unselect(lambda: self.build__commerce.set_selected(False) if self.get_selected_tile() is None else True)
         EventManager.register_menu_deroulant(self.commerce_menu)
         #Chat
-        self.chat_room = Chat(self.screen, self.width-500,self.height-500)
+        self.chat_room = None
         
         # File Menu
         self.file_continue_game = Button((0, 46), (200, 46), text="Continue Game", center_text=False, text_size=16)
