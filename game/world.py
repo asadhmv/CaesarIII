@@ -14,6 +14,8 @@ from buildable.final.buildable.leave_sign import LeaveSign
 from buildable.final.buildable.rock import Rock
 from buildable.final.buildable.ruin import Ruin
 from buildable.final.buildable.tree import SmallTree
+from buildable.final.structures.castle import Castle
+from buildable.final.structures.prefecture import Prefecture
 from class_types.buildind_types import BuildingTypes
 from class_types.orientation_types import OrientationTypes
 from class_types.overlay_types import OverlayTypes
@@ -42,6 +44,9 @@ class World:
         self.multplayer = multplayer
         self.multplayer.set_builder(self.builder)
         self.overlay = Overlay.get_instance()
+
+        self.mode_selectionCastle = False
+        self.mode_selectionAttack = False
 
 
         self.default_surface = pg.Surface((DEFAULT_SURFACE_WIDTH, DEFAULT_SURFACE_HEIGHT)).convert()
@@ -106,7 +111,6 @@ class World:
 
         Return: None
         """
-
         mouse_pos = pg.mouse.get_pos()
         mouse_grid_pos = self.mouse_pos_to_grid(mouse_pos)
 
@@ -126,12 +130,30 @@ class World:
 
         if event.type == pg.MOUSEBUTTONUP:
             if event.button == 1 and self.panel.has_selected_tile():
-                self.builder.set_in_build_action(False)
-                if self.in_map(mouse_grid_pos):
-                    self.builder.set_end_point(mouse_grid_pos)
+                if self.panel.get_selected_tile() == "attack" and self.mode_selectionCastle and not self.mode_selectionAttack:
+                    if self.in_map(mouse_grid_pos):
+                        grid = self.game_controller.get_map()
+                        tile = grid[mouse_grid_pos[1]][mouse_grid_pos[0]]
+                        if type(tile.get_building()) == Castle:
+                            self.mode_selectionAttack = True
+                            self.mode_selectionCastle = tile
+
+                elif self.panel.get_selected_tile() == "attack" and self.mode_selectionCastle and self.mode_selectionAttack:
+                        if self.in_map(mouse_grid_pos):
+                            grid = self.game_controller.get_map()
+                            tile = grid[mouse_grid_pos[1]][mouse_grid_pos[0]]
+                            if type(tile.get_building()) == Prefecture:#on détruit que les préfectures pour l'instant
+                                self.mode_selectionCastle.get_building().attack(tile)
+                                self.mode_selectionCastle = False
+                                self.mode_selectionAttack = False
+
                 else:
-                    self.builder.set_end_point(None)
-                    self.builder.set_start_point(None)
+                    self.builder.set_in_build_action(False)
+                    if self.in_map(mouse_grid_pos):
+                        self.builder.set_end_point(mouse_grid_pos)
+                    else:
+                        self.builder.set_end_point(None)
+                        self.builder.set_start_point(None)
 
     def update(self):
         """
@@ -146,10 +168,22 @@ class World:
         mouse_action = pg.mouse.get_pressed()
 
         selected_tile = self.panel.get_selected_tile()
-        #débrouille toi mais faut gérer le truc ici je pense
         self.builder.set_temp_tile_info(None)
 
-        if selected_tile:
+        if selected_tile == "attack" and not self.mode_selectionAttack and not self.mode_selectionCastle:
+
+            self.mode_selectionCastle = True
+
+        elif self.panel.get_selected_tile() == "attack" and self.mode_selectionCastle and self.mode_selectionAttack:
+
+            if mouse_action[2]:
+                self.panel.set_selected_tile(None)
+                self.builder.set_start_point(None)
+                self.builder.set_end_point(None)
+                self.builder.set_in_build_action(False)
+
+        elif selected_tile and not self.mode_selectionAttack and not self.mode_selectionCastle:
+            
             grid = self.game_controller.get_map()
             if self.in_map(mouse_grid_pos):
                 tile = grid[mouse_grid_pos[1]][mouse_grid_pos[0]]

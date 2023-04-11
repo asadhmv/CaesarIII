@@ -340,6 +340,10 @@ class Panel:
             for button in self.get_buttons_list():
                 button.set_selected(False)
             self.build__well.set_selected(True)
+        elif value == "attack":
+            for button in self.get_buttons_list():
+                button.set_selected(False)
+            self.attack.set_selected(True)
 
     def get_panel_rects(self):
         return self.panel_rects

@@ -20,7 +20,7 @@ class Actions(Enum):
 
 class Attacker(Walker):
     def __init__(self, associated_building: 'Castle'):
-        super().__init__(WalkerTypes.FARM_WORKER, associated_building, roads_only=True)
+        super().__init__(WalkerTypes.ATTACKER, associated_building, roads_only=True)
         self.associated_building: 'Castle' = associated_building
         self.game_controller = GameController.get_instance()
         self.current_action = Actions.NOTHING

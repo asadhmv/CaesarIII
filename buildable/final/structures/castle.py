@@ -26,3 +26,6 @@ class Castle(Structure):
         if self.associated_walker:
             self.associated_walker.delete()
         super().to_ruin()
+    
+    def attack(self, dest):#on a un problème pour sortir du mode attack (sortir de l'event bouton) --> mettre les truc de mouse[2] dans les events ??
+        print("gogogogo")
