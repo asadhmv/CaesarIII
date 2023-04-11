@@ -31,6 +31,7 @@ class Menu:
         self.nbPlayer = 1
         self.online = True
         self.join = False
+        self.listRoom = []
 
 
         self.screen = screen
@@ -149,6 +150,8 @@ class Menu:
         #------------------LIST ROOM MENU
         self.listRoomButtons = []
         self.roomChosen = None
+        self.refresh_button = button.Button((self.size_screen[0]/2,self.size_screen[1]/2.17), (self.size_screen[0]/15,self.size_screen[1]/20), text="Refresh", text_size=20, center_text_mod2=True)
+        self.refresh_button.on_click(self.refresh)
 
 
         if self.is_load_menu() and not self.main_menu:
@@ -299,7 +302,9 @@ class Menu:
         EventManager.reset()
         EventManager.clear_any_input()
         EventManager.register_component(self.come_back_to_main_menu)
+        EventManager.register_component(self.refresh_button)
         self.come_back_to_main_menu.display(self.screen)
+        self.refresh_button.display(self.screen)
 
         for button in self.listRoomButtons:
             EventManager.register_component(button)
@@ -467,24 +472,7 @@ class Menu:
         self.listRoom_menu = True
         self.join_create_menu = False
 
-        self.listRoomButtons.clear()
-        self.multiplayer.getExistingRooms()
-        time.sleep(1)
-        #available_rooms = self.multiplayer.get_available_rooms()
-        
-        self.listRoom = self.multiplayer.get_available_rooms()
-        print("aaaa :", self.listRoom)
-
-        #self.listRoom = ["salut", "cest moi", "ouf"]
-        i = -100
-        for room in self.listRoom:
-            room_info = room
-            room = room.split(";")[0]
-            room = room.replace("RoomId=", "")
-            tmp_button = button.Button((self.size_screen[0]/2, self.size_screen[1]/3.6+i), (self.size_screen[0]/15,self.size_screen[1]/20), text=room, text_size=20, center_text_mod2=True)
-            tmp_button.on_click(self.set_username_menu, lambda: self.set_choosenRoom(room_info))
-            self.listRoomButtons.append(tmp_button)
-            i+=75
+        self.refresh()
 
     def set_choosenRoom(self, room):
         self.choosenRoom = room
@@ -552,3 +540,24 @@ class Menu:
     
     def get_multiplayer(self) -> Multiplayer_connection:
         return self.multiplayer
+    
+    def refresh(self):
+        self.listRoomButtons.clear()
+        self.listRoom.clear()
+        self.multiplayer.getExistingRooms()
+        time.sleep(1)
+        #available_rooms = self.multiplayer.get_available_rooms()
+        
+        self.listRoom = self.multiplayer.get_available_rooms()
+        print("aaaa :", self.listRoom)
+
+        #self.listRoom = ["salut", "cest moi", "ouf"]
+        i = -100
+        for room in self.listRoom:
+            room_info = room
+            room = room.split(";")[0]
+            room = room.replace("RoomId=", "")
+            tmp_button = button.Button((self.size_screen[0]/2, self.size_screen[1]/3.6+i), (self.size_screen[0]/15,self.size_screen[1]/20), text=room, text_size=20, center_text_mod2=True)
+            tmp_button.on_click(self.set_username_menu, lambda: self.set_choosenRoom(room_info))
+            self.listRoomButtons.append(tmp_button)
+            i+=75
