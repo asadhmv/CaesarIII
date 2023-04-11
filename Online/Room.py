@@ -9,6 +9,7 @@ class Room():
         self.mdp = mdp
         self.id = id
         self.owner = owner
+        self.creator = {}
 
     def addMySelf(self, player : Player):
         self.players.append(player)
