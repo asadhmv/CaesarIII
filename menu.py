@@ -499,8 +499,10 @@ class Menu:
         for player in room_players:
             player_info = player.split(":")
             username = player_info[0]
+            ip = player_info[1]
             p = Player()
             p.set_username(username)
+            p.set_ip(ip)
             self.room.addPlayer(p)
 
         myself = self.get_multiplayer().get_player()
