@@ -289,7 +289,9 @@ class Menu:
         EventManager.remove_component(self.button__load_saved_game)
         EventManager.remove_component(self.button__connexion)
         EventManager.remove_component(self.button__exit)
-
+        EventManager.register_component(self.gamemodeChoice1)
+        EventManager.register_component(self.gamemodeChoice2)
+        EventManager.register_component(self.gamemodeChoice3)
         self.gamemodeChoice1.display(self.screen)
         self.gamemodeChoice2.display(self.screen)
         self.gamemodeChoice3.display(self.screen)
