@@ -72,8 +72,12 @@ class Multiplayer_connection:
     
     def send(self):
         for player in self.get_room().get_players():
-            self.libNetwork.sendC(self.buffer_send.encode(), player.get_ip())
+            self.libNetwork.sendC(self.buffer_send.encode(), player.get_ip().encode())
 
+    def send_specific_buffer(self, message :str):
+        for player in self.get_room().get_players():
+            self.libNetwork.sendC(message.encode(), player.get_ip().encode())
+        
 
     def receive_thread(self):
         while not self.thread_stop_event.is_set():
@@ -94,6 +98,16 @@ class Multiplayer_connection:
                 elif "RoomId" in buffer and "NbOfPlayers" in buffer and "Players" in buffer:
                     self.available_rooms.append(buffer)
                     print("Received a room")
+                elif "Connecting:" in buffer:
+                    connecting_player = buffer[11 : ]
+                    cp_info = connecting_player.split("=")
+                    connecting_player_username = cp_info[0]
+                    connecting_player_ip = cp_info[1]
+                    p = Player()
+                    p.set_ip(connecting_player_ip)
+                    p.set_username(connecting_player_username)
+                    self.room.addPlayer(p)
+                    
                 else:
                     self.buffer_receive = buffer
                     self.read()

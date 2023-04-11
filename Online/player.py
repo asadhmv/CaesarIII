@@ -13,7 +13,9 @@ class Player:
         self.libPlayer.get_myIP.restype = ctypes.c_char_p
         self.ip= self.libPlayer.get_myIP().decode()
 
-    
+    def set_ip(self, ip : str):
+        self.ip = ip
+
     def get_ip(self) -> str:
         return self.ip
     

@@ -18,7 +18,7 @@ class Room():
         if(len(self.players)==self.nbJoueur):
             return "La room est complète"
         else:
-            self.append(player)
+            self.players.append(player)
             return True
     
     def removePlayer(self, player):

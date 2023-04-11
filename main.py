@@ -30,11 +30,7 @@ def main():
     EventManager.reset()
     #print(menu.get_online)
     if menu.get_online():
-
-        roomInformations = menu.getInformationsRoom()
-        username=roomInformations["username"]
-        menu.get_multiplayer().get_player().set_username(username)
-
+        
         if menu.get_room() is not None:
             menu.get_room().addMySelf(menu.get_multiplayer().get_player())
 

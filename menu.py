@@ -9,6 +9,7 @@ from events.event_manager import EventManager
 from game.utils import draw_text
 from sounds.sounds import SoundManager
 from Online.Room import Room
+from Online.player import Player
 from Online.multiplayer_connection import Multiplayer_connection
 
 pg.font.init()
@@ -145,7 +146,7 @@ class Menu:
         #self.valide_settings.on_click(self.set_inactive, self.create_room)
 
         #------------------LIST ROOM MENU
-        self.listRoom = []
+        self.listRoomButtons = []
         self.roomChosen = None
 
 
@@ -161,9 +162,12 @@ class Menu:
         pg.mixer.music.play(0, 0, 2000)
 
     def create_room(self):
-        self.room = Room(self.nbPlayer, self.input_room.getString(), owner=True)
-        self.multiplayer.set_room(self.room)
-    
+        if not self.join:
+            self.room = Room(self.nbPlayer, self.input_room.getString(), owner=True)
+            self.multiplayer.set_room(self.room)
+        elif self.join:
+            self.join_room(self.choosenRoom)
+
     def get_room(self):
         return self.room
 
@@ -236,12 +240,14 @@ class Menu:
         return self.active
 
     def set_inactive(self):
+        self.multiplayer.get_player().set_username(self.input_username.getString())
         self.active = False
         pg.mixer.music.stop()
     
     def set_inactive_offline(self):
         self.online = False
-        self.set_inactive()
+        self.active = False
+        pg.mixer.music.stop()
 
     def set_inactive_join(self):
         #self.join = True
@@ -287,7 +293,7 @@ class Menu:
         EventManager.register_component(self.come_back_to_main_menu)
         self.come_back_to_main_menu.display(self.screen)
 
-        for button in self.listRoom:
+        for button in self.listRoomButtons:
             EventManager.register_component(button)
             button.display(self.screen)
         return
@@ -418,6 +424,7 @@ class Menu:
         self.roomId_menu = False
         self.listRoom_menu = False
         self.join_create_menu = False
+
     
     def set_roomSettings_menu(self):
         self.room_menu = False
@@ -452,18 +459,44 @@ class Menu:
         self.listRoom_menu = True
         self.join_create_menu = False
 
-        self.listRoom.clear()
-        tmp_list = self.multiplayer.get_available_rooms()
+        self.listRoomButtons.clear()
+        self.listRoom = self.multiplayer.get_available_rooms()
 
         tmp_list = ["salut", "cest moi", "ouf"]
         i = -100
-        for room in tmp_list:
+        for room in self.listRoom:
+            room_info = room
+            room = room.replace(";", "\n")
+            room = room.replace(",", "  ")
             tmp_button = button.Button((self.size_screen[0]/2, self.size_screen[1]/3.6+i), (self.size_screen[0]/15,self.size_screen[1]/20), text=room, text_size=20, center_text_mod2=True)
-            tmp_button.on_click(self.set_username_menu)
-            self.listRoom.append(tmp_button)
+            tmp_button.on_click(self.set_username_menu, lambda: self.set_choosenRoom(room_info))
+            self.listRoomButtons.append(tmp_button)
             i+=75
+
+    def set_choosenRoom(self, room):
+        self.choosenRoom = room
     
-    
+    def join_room(self, room : str):
+        room_info = room.split(";")
+        room_id = room_info[0][ 7 : ]
+        room_nbPlayers = room_info[1][12 : ]
+        room_players_info = room_info[2][8 : ]
+        room_players = room_players_info.split(",")
+        self.room = Room(int(room_nbPlayers), room_id)
+
+        for player in room_players:
+            player_info = player.split(":")
+            username = player_info[0]
+            p = Player()
+            p.set_username(username)
+            self.room.addPlayer(p)
+
+        myself = self.get_multiplayer().get_player()
+        self.room.addPlayer(myself)
+        self.multiplayer.set_room(self.room)
+        connecting_buffer = "Connecting:" + myself.get_username() + "=" + myself.get_ip()
+        self.multiplayer.send_specific_buffer(connecting_buffer)
+
     def incrementNbPlayer(self):
         max = 99
         if self.nbPlayer < max:
