@@ -5,7 +5,6 @@ import threading
 from class_types.buildind_types import BuildingTypes
 from class_types.road_types import RoadTypes
 from Online.player import Player
-from Online.Chat import Chat
 
 list=[]
 class Multiplayer_connection:
@@ -173,5 +172,5 @@ class Multiplayer_connection:
         self.newPlayer = None
     
 
-    def set_chat(self, chat : Chat):
+    def set_chat(self, chat):
         self.chat = chat
