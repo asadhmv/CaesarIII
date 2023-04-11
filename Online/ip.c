@@ -131,26 +131,20 @@ char *get_myIP()
 	struct ifaddrs *ifaddr, *ifa;
     char *addr;
     
-    // récupération des informations sur toutes les interfaces réseau
     if (getifaddrs(&ifaddr) == -1) {
         perror("getifaddrs");
         exit(EXIT_FAILURE);
     }
     
-    // parcours des interfaces réseau
     for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
-        // vérification que l'interface est active et qu'elle a une adresse IP
         if (ifa->ifa_addr != NULL && ifa->ifa_flags & IFF_UP && ifa->ifa_addr->sa_family == AF_INET) {
-            // récupération de l'adresse IP sous forme de chaîne de caractères
             addr = inet_ntoa(((struct sockaddr_in *)ifa->ifa_addr)->sin_addr);
             
-            // affichage de l'adresse IP
             if(strcmp(addr,"127.0.0.1") != 0) 
 				return addr;
         }
     }
     
-    // libération de la mémoire allouée par getifaddrs
     freeifaddrs(ifaddr);
     return NULL;
 }

@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <ifaddrs.h>
+#include <time.h>
 #define PORT 1234
 
 char* get_Broadcast() {

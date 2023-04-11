@@ -64,7 +64,7 @@ class Builder:
     
     def get_in_build_action(self): return self.in_build_action
 
-    def build_from_start_to_end(self, selected_tile: BuildingTypes | RoadTypes, start_point: tuple[int, int], end_point: tuple[int, int]):
+    def build_from_start_to_end(self, selected_tile: BuildingTypes | RoadTypes, start_point: tuple[int, int], end_point: tuple[int, int],ip_owner):
         grid = self.game_controller.get_map()
 
         if selected_tile == RoadTypes.TL_TO_BR:
@@ -78,6 +78,7 @@ class Builder:
 
             for tile in path:
                 if tile.is_buildable():
+                    tile.owner_ip=ip_owner
                     self.road_add(tile.x, tile.y)
 
             self.start_point = None  # update start point to default after building
@@ -89,21 +90,20 @@ class Builder:
                 tile: Tile = grid[row][col]
 
                 if selected_tile == BuildingTypes.PELLE:
-                    if tile.is_destroyable():
-                        if tile.get_building():
+                    if tile.is_destroyable() and (tile.owner_ip is None or tile.owner_ip==ip_owner):
+                        if tile.get_building() :
                             self.delete_building(tile.get_building())
+                            tile.owner_ip=None
                         else:
                             tile.destroy()
+                            tile.owner_ip=None
                             self.road_update(row, col)
                         self.game_controller.denier -= 2
                     continue
 
                 if not tile.is_buildable():
                     continue
-
-
-                self.building_add(row, col, selected_tile)
-
+                self.building_add(row, col, selected_tile,ip_owner)
                 self.start_point = None  # update start point to default after building
                 self.end_point = None  # update start point to default after building
 
@@ -111,7 +111,7 @@ class Builder:
         for tile in tile_with_building.get_all_building_tiles():
             tile.destroy()
 
-    def building_add(self, row: int, col: int, selected_type: RoadTypes | BuildingTypes):
+    def building_add(self, row: int, col: int, selected_type: RoadTypes | BuildingTypes,ip_owner):
         if not self.game_controller.has_enough_denier(selected_type):
             return
 
@@ -169,9 +169,11 @@ class Builder:
                 for y in range(row,row-y_building,-1):
                     if x != col or y != row:
                         grid[y][x].set_building(building, show_building=False)
+                        grid[y][x].owner_ip=ip_owner
 
         #Show first case
         grid[row][col].set_building(building, show_building=True)
+        grid[row][col].owner_ip=ip_owner
         self.game_controller.new_building(building)
 
 

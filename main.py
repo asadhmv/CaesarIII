@@ -8,6 +8,7 @@ from menu import Menu
 from game.textures import Textures
 from Online.player import Player
 
+
 def main():
     is_game_run = True
     is_playing = True
@@ -28,21 +29,24 @@ def main():
 
     # Clear buttons from the menu
     EventManager.reset()
-    print(menu.get_online)
+    #print(menu.get_online)
     if menu.get_online():
-        
-        roomInformations = menu.getInformationsRoom()
-        
-        username=roomInformations["username"]
-         
-        p = Player(username)
-        p.set_ip()
 
-    game = Game(screen, menu.get_online())
+        roomInformations = menu.getInformationsRoom()
+        username=roomInformations["username"]
+        p = Player()
+        p.set_username(username)
+
+        if menu.get_room() is not None:
+            print(menu.get_room().id)
+            menu.get_room().addMySelf(p)
+
+    game = Game(screen,p, menu.get_online(), menu.get_room())
 
     # Save load, need to be here to load save after init game
     if menu.get_save_loading():
         backup_game.load_game("save.bin")
+
 
 
     while is_game_run:

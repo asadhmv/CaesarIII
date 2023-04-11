@@ -31,12 +31,13 @@ from map_element.tile import Tile
 from sounds.sounds import SoundManager
 
 from game.builder import Builder
-
 import backup_game
 
 class World:
 
-    def __init__(self, width, height, panel, multplayer):
+    def __init__(self, width, height, panel, multplayer,player):
+        self.player = player
+
         self.game_controller = GameController.get_instance()
         self.width = width
         self.height = height
@@ -47,6 +48,7 @@ class World:
 
         self.mode_selectionCastle = False
         self.mode_selectionAttack = False
+
 
 
         self.default_surface = pg.Surface((DEFAULT_SURFACE_WIDTH, DEFAULT_SURFACE_HEIGHT)).convert()
@@ -212,12 +214,14 @@ class World:
                 if self.in_map(self.builder.get_start_point()) and self.in_map(self.builder.get_end_point()):
                     start_point = self.builder.get_start_point()
                     end_point = self.builder.get_end_point()
-                    self.builder.build_from_start_to_end(selected_tile, start_point, end_point)
+                    self.builder.build_from_start_to_end(selected_tile, start_point, end_point,self.player.get_ip())
                     #print(self.builder.get_start_point())
                     #print(self.builder.get_end_point())
 
-                    #if self.check_no_builds(start_point,end_point):
-                    self.multplayer.write(start_point,end_point, selected_tile)
+
+                    if not self.multplayer == None:
+                        self.multplayer.write(start_point,end_point, selected_tile)
+
 
 
                     self.builder.set_start_point(None)  # update start point to default after building
@@ -400,8 +404,11 @@ class World:
             if rect.collidepoint(pg.mouse.get_pos()):
                 return False
 
-        in_map_limit = (0 <= grid_pos[0] < GRID_SIZE) and (0 <= grid_pos[1] < GRID_SIZE)
-        return in_map_limit
+        if(grid_pos is not None and grid_pos[0] is not None and grid_pos[1] is not None):
+            in_map_limit = (0 <= grid_pos[0] < GRID_SIZE) and (0 <= grid_pos[1] < GRID_SIZE)
+            return in_map_limit
+        else :
+            return False
 
     def display_cost(self, screen: pg.Surface, cost: int, coord: tuple[int, int]):
         if cost == 0:
