@@ -17,6 +17,8 @@ from threading import Thread, Event
 from Online.multiplayer_connection import Multiplayer_connection
 from Online.Room import Room
 
+from compet_mode import Comp_mode
+
 def my_thread(func, event: Event):
     fps_moyen = [0]
     try:
@@ -40,7 +42,7 @@ class Game:
 
         #Gestion de la connexion multijoueur
         if online:
-            self.multplayer = Multiplayer_connection(room)
+            self.multplayer = Multiplayer_connection(room,screen)
 
         # sound manager
         self.sound_manager = SoundManager()
@@ -151,6 +153,7 @@ class Game:
     def exit_game(self):
         self.is_running = False
         self.multplayer.kill_thread()
+        Comp_mode().get_instance().kill_chrono()
 
     def load_save(self):
         self.world.load_numpy_array()

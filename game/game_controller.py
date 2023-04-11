@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from class_types.buildind_types import BuildingTypes
 from buildable.buildable_datas import buildable_cost
-
+import ctypes
 
 if TYPE_CHECKING:
     from walkers.walker import Walker
@@ -41,6 +41,9 @@ class GameController:
             0: "Jan", 1: "Feb", 2: "Mar", 3: "Apr", 4: "May", 5: "Jun", 6: "Jul", 7: "Aug", 8: "Sep", 9: "Oct",
             10: "Nov", 11: "Dec"
         }
+        self.libPlayer = ctypes.cdll.LoadLibrary('Online/libPlayer.so')
+        self.libPlayer.get_myIP.restype = ctypes.c_char_p
+        self.ip = self.libPlayer.get_myIP().decode()
 
     def get_current_speed(self):
         return self.current_speed
@@ -156,9 +159,10 @@ class GameController:
         self.actual_citizen = 0
         for row in self.grid:
             for tile in row:
-                building = tile.get_building()
-                if building and isinstance(building,House):
-                    self.actual_citizen += int(building.get_citizen())
+                if (tile.owner_ip ==self.ip):
+                    building = tile.get_building()
+                    if building and isinstance(building,House):
+                        self.actual_citizen += int(building.get_citizen())
 
     def __calculate_actual_foods(self):
         from buildable.final.structures.granary import Granary
@@ -166,10 +170,11 @@ class GameController:
 
         for row in self.grid:
             for tile in row:
-                building = tile.get_building()
-                if building and isinstance(building, Granary) and tile.get_show_tile():
-                    building: Granary = building
-                    self.actual_foods += building.get_wheat_stocked()
+                if(tile.owner_ip == self.ip):
+                    building = tile.get_building()
+                    if building and isinstance(building, Granary) and tile.get_show_tile():
+                        building: Granary = building
+                        self.actual_foods += building.get_wheat_stocked()
 
     def __calculate_water_access(self):
         wells = []
@@ -218,9 +223,10 @@ class GameController:
         self.global_desirability = 0
         for row in self.grid:
             for tile in row:
-                building = tile.get_building()
-                if building:
-                    self.global_desirability += building.desirability
+                if (tile.owner_ip == self.ip):
+                    building = tile.get_building()
+                    if building:
+                        self.global_desirability += building.desirability
 
 
     def save_load(self):

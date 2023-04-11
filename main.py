@@ -8,6 +8,7 @@ from menu import Menu
 from game.textures import Textures
 from Online.player import Player
 
+
 def main():
     is_game_run = True
     is_playing = True
@@ -45,6 +46,7 @@ def main():
     # Save load, need to be here to load save after init game
     if menu.get_save_loading():
         backup_game.load_game("save.bin")
+
 
 
     while is_game_run:

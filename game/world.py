@@ -29,7 +29,6 @@ from map_element.tile import Tile
 from sounds.sounds import SoundManager
 
 from game.builder import Builder
-
 import backup_game
 
 class World:

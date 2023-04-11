@@ -4,11 +4,12 @@ import ctypes
 import threading
 from class_types.buildind_types import BuildingTypes
 from class_types.road_types import RoadTypes
-
+from compet_mode import Comp_mode
+import pygame
 class Multiplayer_connection:
 
 
-    def __init__(self, room,online=False):
+    def __init__(self, room,screen,online=False):
         self.room = room
         self.list_receive = []
 
@@ -28,6 +29,11 @@ class Multiplayer_connection:
         self.thread = threading.Thread(target=self.receive_thread)
         self.thread.start()
         self.getExistingRooms()
+        self.libPlayer = ctypes.cdll.LoadLibrary('Online/libPlayer.so')
+        self.libPlayer.get_myIP.restype = ctypes.c_char_p
+        self.ip = self.libPlayer.get_myIP().decode()
+        self.screen=screen
+        Comp_mode.get_instance()
 
 
     def set_builder(self, builder):
@@ -84,15 +90,27 @@ class Multiplayer_connection:
                     self.list_receive.append(buffer[0].decode('utf-8'))
                 if buffer[1]:
                     self.list_receive.append(buffer[1].decode('utf-8'))
-                print(self.list_receive)
+                #print(self.list_receive)
 
                 if self.list_receive[1] == "$#[|Who is Room Creator?|]#$":
                     if self.amItheCreatorOfRoom():
                         creator_buffer = self.room.get_info_in_buffer()
                         self.libNetwork.sendC(creator_buffer.encode())
+
+
                 else:
-                    self.buffer_receive = buffer
-                    self.read()
+                    if self.list_receive[0]!=self.ip:
+                        var=None
+                        try:
+                            if Comp_mode.get_instance().compare_with_mine(int(self.list_receive[1])):
+                                var=" I Won "
+                            else:
+                                var= " "+self.list_receive[0] + " Won "
+                            Comp_mode.get_instance().play_score(var)
+
+                        except ValueError:
+                            self.buffer_receive = buffer
+                            self.read()
             
 
 
