@@ -2,6 +2,7 @@ import pygame as pg
 from pygame.locals import *
 
 import backup_game
+
 from components import button
 from components.input_text import Input_text
 from components.text import Text
@@ -412,6 +413,7 @@ class Menu:
         self.roomSettings_menu = False
         self.roomPassword_menu = False
         self.gamemode = True
+
 
     def incrementNbPlayer(self):
         max = 99
