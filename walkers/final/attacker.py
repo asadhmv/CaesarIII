@@ -29,7 +29,15 @@ class Attacker(Walker):
 
 
     def destination_reached(self):
-        self.current_tile.get_building().destroy()#comment détruire instant un batiment ???
+
+        if Actions.IN_THE_WAY_TO_ATTACK:
+            self.current_tile.get_building().to_ruin()
+            self.current_action = Actions.IN_THE_WAY_TO_CASTLE
+            super().navigate_to(self.associated_building)
+
+        elif Actions.IN_THE_WAY_TO_CASTLE:
+            self.delete()
+            self.current_action = Actions.NOTHING
         
         # print(self.current_tile.get_building(), self.current_tile.get_show_tile())
         # building = self.current_tile.get_building()
