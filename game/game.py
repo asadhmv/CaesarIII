@@ -31,7 +31,7 @@ def my_thread(func, event: Event):
         exit()
 
 class Game:
-    def __init__(self, screen,player, online=False, room : Room = None):
+    def __init__(self, screen, player, online=False, room : Room = None):
         self.is_running = False
         self.screen = screen
         self.paused = False

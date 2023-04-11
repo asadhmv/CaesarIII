@@ -247,3 +247,5 @@ class Tile:
     def get_col(self):
         return self.y
 
+    def get_owner_ip(self):
+        return self.owner_ip

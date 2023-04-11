@@ -22,4 +22,7 @@ class Player:
     
     def get_username(self) -> str:
         return self.username
+    
+    def get_ip(self):
+        return self.ip
 

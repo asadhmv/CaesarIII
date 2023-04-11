@@ -143,7 +143,7 @@ class World:
                     if self.in_map(mouse_grid_pos):
                         grid = self.game_controller.get_map()
                         tile = grid[mouse_grid_pos[1]][mouse_grid_pos[0]]
-                        if type(tile.get_building()) == Castle:
+                        if type(tile.get_building()) == Castle and tile.get_owner_ip() == self.player.get_ip():
                             self.mode_selectionAttack = True
                             self.mode_selectionCastle = tile
 
@@ -151,8 +151,9 @@ class World:
                         if self.in_map(mouse_grid_pos):
                             grid = self.game_controller.get_map()
                             tile = grid[mouse_grid_pos[1]][mouse_grid_pos[0]]
-                            if type(tile.get_building()) == Prefecture:#on détruit que les préfectures pour l'instant
+                            if type(tile.get_building()) == Prefecture and tile.get_owner_ip() != self.player.get_ip():#on détruit que les préfectures pour l'instant
                                 self.mode_selectionCastle.get_building().attack(tile)
+                                #self.mutliplayer.write("écrire un truc qui envoie les info du chateau et de la cible")
                                 self.mode_selectionCastle = False
                                 self.mode_selectionAttack = False
                                 self.panel.set_selected_tile(None)
