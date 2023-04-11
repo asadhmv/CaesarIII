@@ -16,6 +16,7 @@ class Multiplayer_connection:
         self.buffer_send = ""
         self.builder = None
         self.buffer_receive = None
+        self.newPlayer = None
         """os.chdir('Online')
         subprocess.run(["gcc",  "-c", "-fPIC", "recv.c"])
         subprocess.run(["gcc",  "-c", "-fPIC", "send.c"])
@@ -94,14 +95,14 @@ class Multiplayer_connection:
                     if self.room is not None and self.room.amIcreator():
                         creator_buffer = self.room.get_info_in_buffer()
                         joiningPlayerIp = buffer[28 : ]
-                        print(joiningPlayerIp.encode())
+                        #print(joiningPlayerIp.encode())
                         self.libNetwork.sendC(creator_buffer.encode(), joiningPlayerIp.encode())
-                        print("Envoyé")
+                        #print("Envoyé")
                 elif "RoomId" in buffer and "NbOfPlayers" in buffer and "Players" in buffer:
                     self.available_rooms.append(buffer)
-                    print("Buffer : ",buffer)
-                    print("List :", self.available_rooms)
-                    print("Received a room")
+                    # print("Buffer : ",buffer)
+                    # print("List :", self.available_rooms)
+                    # print("Received a room")
                 elif "Connecting:" in buffer:
                     connecting_player = buffer[11 : ]
                     cp_info = connecting_player.split("=")
@@ -111,7 +112,7 @@ class Multiplayer_connection:
                     p.set_ip(connecting_player_ip)
                     p.set_username(connecting_player_username)
                     self.room.addPlayer(p)
-
+                    self.newPlayer = p
                 else:
                     self.buffer_receive = buffer
                     self.read()
@@ -153,6 +154,16 @@ class Multiplayer_connection:
     def get_available_rooms(self):
         print("dans le get : ", self.available_rooms)
         return self.available_rooms
+    
+    def get_newPlayer(self):
+        return self.newPlayer
+    
+    def reset_newPlayer(self):
+        self.newPlayer = None
+    
+
+
+            
 
 
 

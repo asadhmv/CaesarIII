@@ -80,6 +80,10 @@ class Game:
             while self.is_running and not self.thread_event.is_set():
                 # We need to recalculate it every time, since it can change
                 targeted_ticks_per_seconds = self.game_controller.get_current_speed() * 50
+                if self.multiplayer.get_newPlayer() is not None:
+                    print("New Player")
+                    self.multiplayer.reset_newPlayer()
+
                 if not self.paused:
                     self.game_controller.update()
                     for walker in GameController.get_instance().walkers:
