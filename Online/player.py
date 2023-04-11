@@ -5,10 +5,10 @@ class Player:
 
     def __init__(self):
 
-        os.chdir('Online')
+        """os.chdir('Online')
         subprocess.run(["gcc",  "-c", "-fPIC", "ip.c"])
         subprocess.run(["gcc", "-shared", "-fPIC", "-o", "libPlayer.so", "ip.o"])
-        os.chdir('..')
+        os.chdir('..')"""
         self.libPlayer = ctypes.cdll.LoadLibrary('Online/libPlayer.so')
         self.libPlayer.get_myIP.restype = ctypes.c_char_p
         self.ip= self.libPlayer.get_myIP().decode()

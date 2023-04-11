@@ -16,11 +16,11 @@ class Multiplayer_connection:
         self.buffer_send = ""
         self.builder = None
         self.buffer_receive = None
-        os.chdir('Online')
+        """os.chdir('Online')
         subprocess.run(["gcc",  "-c", "-fPIC", "recv.c"])
         subprocess.run(["gcc",  "-c", "-fPIC", "send.c"])
         subprocess.run(["gcc", "-shared", "-fPIC", "-o", "libNetwork.so", "recv.o", "send.o"])
-        os.chdir('..')
+        os.chdir('..')"""
         self.libNetwork = ctypes.cdll.LoadLibrary('Online/libNetwork.so')
         self.libNetwork.recvC.restype = ctypes.c_char_p
         self.libNetwork.sendC.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
