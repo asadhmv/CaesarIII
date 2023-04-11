@@ -30,6 +30,7 @@ def main():
     # Clear buttons from the menu
     EventManager.reset()
     #print(menu.get_online)
+    p = None
     if menu.get_online():
 
         roomInformations = menu.getInformationsRoom()
