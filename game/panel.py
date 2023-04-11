@@ -280,7 +280,7 @@ class Panel:
             EventManager.register_component(self.chat)
             
             self.chat_room.show_chat(self.width-500,self.height-500)
-            self.chat_room.display_received_message()
+            #self.chat_room.display_received_message()
             self.chat.on_click2(lambda: self.set_chat(False))
         if not self.chat_window:
             for button in self.button_list:

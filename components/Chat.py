@@ -1,11 +1,10 @@
 import pygame as pg
-from Online.multiplayer_connection import Multiplayer_connection
-
 from components.input_text import Input_text
 from components.text import Text
 from events.event_manager import EventManager
-
+from multiplayer_connection import Multiplayer_connection
 class Chat:
+    instance=None
     def __init__(self,screen, posx, posy):
         self.screen = screen
         self.posx = posx
@@ -16,7 +15,7 @@ class Chat:
         self.legende= Text("Send message..", 10, (posx+50, posy+390), (0,0,0))
         self.typeText = Text("", 24, (posx+50, posy+410), (0,0,0))
         self.input_message = Input_text((posx+50, posy+400), self.legende, zone_de_texte, self.typeText)
-        self.multiplayer = Multiplayer_connection(True)
+        
         self.historyOfMessages = []
         self.historyOfMessagesreceived = []
         
@@ -26,27 +25,18 @@ class Chat:
         
         self.rect.fill((255, 255, 255))
         self.screen.blit(self.rect, (posx, posy))
-
         self.input_message.add_input_listener()
         self.input_message.display(self.screen)
-        self.display_received_message()
         i= 0
         for line in self.historyOfMessages:
             self.historyOfMessages_blit = Text(str(line), 24,(self.posx +10  , self.posy+10+i), (0,0,0))
             self.historyOfMessages_blit.display(self.screen)
             i+=20
         EventManager.register_key_listener(pg.K_RETURN,self.add_message, params = 'username')
-        EventManager.register_key_listener(pg.K_m,self.send)
+        #self.display_received_message(Multiplayer_connection.b)
 
     
-    def send(self):    
-        self.multiplayer.set_buffer_send("")
-        self.multiplayer.buffer_send= "$chat " + self.typeText.getString()
-        #self.input_message.display(self.screen)
-        if(self.multiplayer.buffer_send!="$chat "):
-            self.multiplayer.send()
-        else:
-            self.multiplayer.set_buffer_send("")
+    
 
     def destroy_chat(self,posx, posy):
         TRANSPARENT= (0, 0, 0, 0)
@@ -54,26 +44,28 @@ class Chat:
         self.screen.blit(self.rect, (posx, posy))
 
         
-    def display_received_message(self):
-        message = self.multiplayer.buffer_receive
-        if self.multiplayer.buffer_receive.startswith('$chat'):
+    def display_received_message(self,buffer):
+        print("hello "+buffer)
+        message=buffer
+        if buffer.startswith('$chat'):
             message = message.split('$chat', 1)[1].strip()
-            # message_text = Text(message, 18, (self.posx+50, self.posy+360), (0, 0, 0))
-            # message_text.display(self.screen)
-            self.historyOfMessagesreceived.append(self.multiplayer.buffer_receive)
+            self.historyOfMessagesreceived.append(message)
             i= 0
             for line in self.historyOfMessagesreceived:
                 self.historyOfMessagesreceived_blit = Text(str(line), 24,(self.posx +10  , self.posy+10+i), (0,0,0))
                 self.historyOfMessagesreceived_blit.display(self.screen)
-                i+=20
-        
-                        
+                i+=20                        
     def add_message(self, username):
         message = self.input_message.getString()
-
+        Multiplayer_connection.set_buffer_send(message)
+        Multiplayer_connection.send()
         self.historyOfMessages.append(f"@{username}: {message}")
         self.input_message.clear_inputText()
-
+    @staticmethod
+    def get_instance(screen,posx,posy):
+        if Chat.instance is None:
+            Chat.instance = Chat(screen,posx,posy)
+        return Chat.instance
 
             
 

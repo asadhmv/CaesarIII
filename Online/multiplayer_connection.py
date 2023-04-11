@@ -4,11 +4,11 @@ import ctypes
 import threading
 from class_types.buildind_types import BuildingTypes
 from class_types.road_types import RoadTypes
-
+from components.Chat import Chat
 list=[]
 class Multiplayer_connection:
-
-    def __init__(self, online=False):
+    instance=None
+    def __init__(self, online=True):
         self.buffer_receive = ""
         self.buffer_send = ""
         self.builder = None
@@ -35,7 +35,9 @@ class Multiplayer_connection:
     def set_buffer_send(self, buffer):
         self.buffer_send = buffer
         return
-
+    def set_buffer_receive(self, buffer):
+        self.buffer_receive = buffer
+        return
     
     def write(self, row, col, buildingType="destroy"):
         if not self.online:
@@ -67,8 +69,6 @@ class Multiplayer_connection:
 
         self.builder.build_from_start_to_end(type_value, Multiplayer_connection.string_to_tuple(tab[1]), Multiplayer_connection.string_to_tuple(tab[2]))
 
-
-    
     def send(self):
         if not self.online:
             return
@@ -89,7 +89,9 @@ class Multiplayer_connection:
             buffer = self.libNetwork.recvC(self.sock)
             if buffer is not None and len(buffer)>0:
                 self.buffer_receive = buffer.decode()
+                Chat.get_instance().display_received_message(self.buffer_receive)
                 self.read()
+                self.libNetwork.sendC("hello".encode())
             self.libNetwork.closeSocket(self.sock)
             
     def kill_thread(self):
@@ -108,3 +110,8 @@ class Multiplayer_connection:
 
 
 
+    @staticmethod
+    def get_instance():
+        if Multiplayer_connection.instance is None:
+            Multiplayer_connection.instance = Multiplayer_connection()
+        return Multiplayer_connection.instance

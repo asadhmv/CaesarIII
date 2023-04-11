@@ -37,7 +37,7 @@ class Game:
         self.width, self.height = self.screen.get_size()
 
         #Gestion de la connexion multijoueur
-        self.multplayer = Multiplayer_connection(self.online)
+        self.multplayer = Multiplayer_connection.get_instance()
 
         # sound manager
         self.sound_manager = SoundManager()
