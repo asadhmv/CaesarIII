@@ -45,6 +45,7 @@ class World:
         self.multiplayer = multiplayer
         self.multiplayer.set_builder(self.builder)
         self.overlay = Overlay.get_instance()
+        self.player = self.multiplayer.player
 
         self.mode_selectionCastle = False
         self.mode_selectionAttack = False

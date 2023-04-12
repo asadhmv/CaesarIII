@@ -176,7 +176,7 @@ class Game:
 
     def exit_game(self):
         self.is_running = False
-        self.multplayer.kill_thread()
+        self.multiplayer.kill_thread()
         self.comp.kill_chrono()
 
     def load_save(self):

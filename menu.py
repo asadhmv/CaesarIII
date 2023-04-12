@@ -125,7 +125,7 @@ class Menu:
         self.button__create_room= button.Button(((self.screen.get_size()[0]/2), self.screen.get_size()[1]/3), (70,20),
                                                       image=pg.image.load('assets/menu_sprites/create_room.png').convert())
         self.button__create_room.on_click(self.set_roomSettings_menu)
-        self.choose_modemenu = button.Button((size_screen[0] / 2.35, size_screen[1] / 2.6), (200, 30), text="Choose game mode", text_size=20, center_text=True)
+        self.choose_modemenu = button.Button((self.size_screen[0] / 2.35, self.size_screen[1] / 2.6), (200, 30), text="Choose game mode", text_size=20, center_text=True)
         self.choose_modemenu.on_click(self.set_gamemode)
 
         #------------------ROOM SETTINGS MENU
@@ -147,8 +147,8 @@ class Menu:
 
 
         size_screen = self.screen.get_size()
-        legende_password = Text("Please enter password", 40, (size_screen[0]/2.4, size_screen[1]/6), (245,245,220))
-        typeText_password = Text("", 24, (size_screen[0]/2-135, size_screen[1]/6+50), (0,0,0))
+        legende_password = Text("Please enter password", 40, (self.size_screen[0]/2.4, self.size_screen[1]/6), (245,245,220))
+        typeText_password = Text("", 24, (self.size_screen[0]/2-135, self.size_screen[1]/6+50), (0,0,0))
         zone_de_texte = pg.image.load("assets/menu_sprites/zone_txt.png")
         zone_de_texte = pg.transform.scale(zone_de_texte, (300,50))
         self.input_password = Input_text((self.size_screen[0]/2.4, self.size_screen[1]/6+30), legende_password, zone_de_texte, typeText_password)
@@ -162,9 +162,9 @@ class Menu:
         self.refresh_button = button.Button((self.size_screen[0]/2,self.size_screen[1]/2.17), (self.size_screen[0]/15,self.size_screen[1]/20), text="Refresh", text_size=20, center_text_mod2=True)
         self.refresh_button.on_click(self.refresh)
 
-        self.gamemodeChoice1 = button.Button((size_screen[0]/2.35-50, size_screen[1]/4), (400, 40), text="ATTACK MODE", text_size=20, center_text_mod2=True)
-        self.gamemodeChoice2 = button.Button((size_screen[0]/2.35-50, (size_screen[1]/4)+50), (400, 40), text="COMPETITION MODE", text_size=20, center_text_mod2=True)
-        self.gamemodeChoice3 = button.Button((size_screen[0] / 2.35-50, (size_screen[1] / 4)+100), (400, 40), text="OPEN WORLD MODE", text_size=20, center_text_mod2=True)
+        self.gamemodeChoice1 = button.Button((self.size_screen[0]/2.35-50, self.size_screen[1]/4), (400, 40), text="ATTACK MODE", text_size=20, center_text_mod2=True)
+        self.gamemodeChoice2 = button.Button((self.size_screen[0]/2.35-50, (self.size_screen[1]/4)+50), (400, 40), text="COMPETITION MODE", text_size=20, center_text_mod2=True)
+        self.gamemodeChoice3 = button.Button((self.size_screen[0] / 2.35-50, (self.size_screen[1] / 4)+100), (400, 40), text="OPEN WORLD MODE", text_size=20, center_text_mod2=True)
         self.gamemodeChoice1.on_click(exit)
         self.gamemodeChoice2.on_click(self.comp)
         self.gamemodeChoice3.on_click(exit)
