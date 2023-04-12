@@ -61,7 +61,6 @@ class Multiplayer_connection:
     def read(self):
 
         tab = self.buffer_receive.split(";")
-        print("tab")
         type_str = tab[0]
         type_parts = type_str.split('.')
         type_name = type_parts[-1]

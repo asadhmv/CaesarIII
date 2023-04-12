@@ -248,7 +248,7 @@ class Menu:
         elif self.join_create_menu:
             self.join_create_menu_display()
         elif self.gamemode:
-            self.gamemode_menu_diplay()
+            self.gamemode_menu_display()
 
 
 
@@ -358,11 +358,13 @@ class Menu:
         EventManager.register_component(self.come_back_to_main_menu)
         EventManager.register_component(self.button__create_room)
         EventManager.register_component(self.button__join)
+        EventManager.register_component(self.choose_modemenu)
         self.come_back_to_main_menu.display(self.screen)
         self.button__join.display(self.screen)
         self.button__create_room.display(self.screen)
         self.choose_modemenu.display(self.screen)
-    def gamemode_menu_diplay(self):
+
+    def gamemode_menu_display(self):
         EventManager.clear_any_input()
         EventManager.remove_component(self.button__start_new_career)
         EventManager.remove_component(self.button__load_saved_game)
@@ -375,7 +377,6 @@ class Menu:
         self.gamemodeChoice2.display(self.screen)
         self.gamemodeChoice3.display(self.screen)
         self.come_back_to_main_menu.display(self.screen)
-        return
         return
 
 
@@ -545,6 +546,7 @@ class Menu:
         self.multiplayer.send_specific_buffer(connecting_buffer)
 
     def set_gamemode(self):
+        self.join_create_menu = False
         self.room_menu = False
         self.loading_menu = False
         self.main_menu = False
