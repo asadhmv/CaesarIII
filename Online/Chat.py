@@ -2,11 +2,11 @@ import pygame as pg
 from components.input_text import Input_text
 from components.text import Text
 from events.event_manager import EventManager
-#from Online.multiplayer_connection import Multiplayer_connection
+from Online.multiplayer_connection import Multiplayer_connection
 
 class Chat:
     instance=None
-    def __init__(self,screen, posx, posy):
+    def __init__(self,screen, posx, posy, multiplayer: Multiplayer_connection):
         self.screen = screen
         self.posx = posx
         self.posy = posy
@@ -16,6 +16,7 @@ class Chat:
         self.legende= Text("Send message..", 10, (posx+50, posy+390), (0,0,0))
         self.typeText = Text("", 24, (posx+50, posy+410), (0,0,0))
         self.input_message = Input_text((posx+50, posy+400), self.legende, zone_de_texte, self.typeText)
+        self.multiplayer = multiplayer
         
         self.historyOfMessages = []
         self.historyOfMessagesreceived = []
@@ -56,10 +57,19 @@ class Chat:
     def add_message(self, username):
         message = self.input_message.getString()
         #Multiplayer_connection.get_instance().send_specific_buffer(message)
+        username = self.multiplayer.player.get_username()
         self.historyOfMessages.append(f"@{username}: {message}")
+        chat_buffer = "$chat:@" + username + ": " + message
+        self.multiplayer.send_specific_buffer(chat_buffer)
         self.input_message.clear_inputText()
-    def add_message_received(self, username, message):
-        self.historyOfMessages.append(f"@{username}: {message}")
+
+    def add_message_received(self, message):
+        max_messages = 17 
+        if len(self.historyOfMessages) > max_messages:
+            self.historyOfMessages.pop(0) 
+        if message.startswith('$chat:'):
+            message = message.split('$chat:', 1)[1].strip()
+            self.historyOfMessages.append(f"{message}")
     
     @staticmethod
     def get_instance(screen,posx,posy):

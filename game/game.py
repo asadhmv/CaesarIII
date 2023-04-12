@@ -38,7 +38,7 @@ class Game:
         self.game_controller = GameController.get_instance()
         self.width, self.height = self.screen.get_size()
         self.multiplayer = multiplayer
-        self.multiplayer.set_chat(Chat(self.screen, self.width -500, self.height - 500))
+        self.multiplayer.set_chat(Chat(self.screen, self.width -500, self.height - 500, self.multiplayer))
 
         #Gestion de la connexion multijoueur
         #if online:
