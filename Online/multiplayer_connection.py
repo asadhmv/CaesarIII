@@ -77,14 +77,20 @@ class Multiplayer_connection:
 
 
     def send(self):
-        for player in self.get_room().get_players():
-            if player.get_ip() != self.player.get_ip():
-                self.libNetwork.sendC(self.buffer_send.encode(), player.get_ip().encode())
+        if not Comp_mode.get_instance().actived:
+            for player in self.get_room().get_players():
+                if player.get_ip() != self.player.get_ip():
+                    self.libNetwork.sendC(self.buffer_send.encode(), player.get_ip().encode())
+        else:
+            self.libNetwork.sendC_broadcast(self.buffer_send.encode())
 
     def send_specific_buffer(self, message :str):
-        for player in self.get_room().get_players():
-            if player.get_ip() != self.player.get_ip():
-                self.libNetwork.sendC(message.encode(), player.get_ip().encode())
+        if not Comp_mode.get_instance().actived:
+            for player in self.get_room().get_players():
+                if player.get_ip() != self.player.get_ip():
+                    self.libNetwork.sendC(message.encode(), player.get_ip().encode())
+        else:
+            self.libNetwork.sendC_broadcast(message.encode())
 
 
 
