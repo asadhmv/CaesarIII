@@ -10,6 +10,7 @@ from Online.player import Player
 from compet_mode import Comp_mode
 
 
+
 def main():
     is_game_run = True
     is_playing = True
