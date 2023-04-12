@@ -37,15 +37,13 @@ import backup_game
 
 class World:
 
-    def __init__(self, width, height, panel, multplayer,player):
-        self.player = player
-
+    def __init__(self, width, height, panel, multiplayer):
         self.game_controller = GameController.get_instance()
         self.width = width
         self.height = height
         self.builder = Builder(panel)
-        self.multplayer = multplayer
-        self.multplayer.set_builder(self.builder)
+        self.multiplayer = multiplayer
+        self.multiplayer.set_builder(self.builder)
         self.overlay = Overlay.get_instance()
 
         self.mode_selectionCastle = False
@@ -115,6 +113,7 @@ class World:
 
         Return: None
         """
+
         mouse_pos = pg.mouse.get_pos()
         mouse_grid_pos = self.mouse_pos_to_grid(mouse_pos)
 
@@ -199,7 +198,7 @@ class World:
                 self.builder.set_in_build_action(False)
 
         elif selected_tile and not self.mode_selectionAttack and not self.mode_selectionCastle:
-            
+
             grid = self.game_controller.get_map()
             if self.in_map(mouse_grid_pos):
                 tile = grid[mouse_grid_pos[1]][mouse_grid_pos[0]]
@@ -221,9 +220,9 @@ class World:
                     #print(self.builder.get_start_point())
                     #print(self.builder.get_end_point())
 
-
-                    if not self.multplayer == None:
-                        self.multplayer.write(start_point,end_point, selected_tile)
+                    #if self.check_no_builds(start_point,end_point):
+                    if self.multiplayer is not None:
+                        self.multiplayer.write(start_point,end_point, selected_tile)
 
 
 

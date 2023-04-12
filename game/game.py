@@ -17,7 +17,6 @@ from threading import Thread, Event
 from Online.multiplayer_connection import Multiplayer_connection
 from Online.Room import Room
 
-
 def my_thread(func, event: Event):
     fps_moyen = [0]
     try:
@@ -30,19 +29,25 @@ def my_thread(func, event: Event):
         exit()
 
 class Game:
-    def __init__(self, screen, player, comp, online=False, room : Room = None):
+    def __init__(self, screen, comp, multiplayer = None):
+        #print(os.getcwd())
+        #os.chdir('..')
         self.is_running = False
         self.screen = screen
         self.paused = False
         self.game_controller = GameController.get_instance()
         self.width, self.height = self.screen.get_size()
-        self.multplayer = None
-        self.room = room
+        self.multiplayer = multiplayer
+        self.debutAffichage = None
+        self.debutAffichage_disconnect = None
+        self.newPlayer = ""
+        self.oldPlayer = ""
         self.start_time = time.time()
-        self.comp=comp
+        self.comp = comp
+
         #Gestion de la connexion multijoueur
-        if online:
-            self.multplayer = Multiplayer_connection(room,screen)
+        #if online:
+        #    self.multplayer = Multiplayer_connection(room)
 
         # sound manager
         self.sound_manager = SoundManager()
@@ -52,7 +57,7 @@ class Game:
         self.panel = Panel(self.width, self.height, self.screen)
 
         # World contains populations or graphical objects like buildings, trees, grass
-        self.world = World(self.width, self.height, self.panel, self.multplayer,player)
+        self.world = World(self.width, self.height, self.panel, self.multiplayer)
 
         self.thread_event = Event()
         self.draw_thread = Thread(None, my_thread, "1", [self.display, self.thread_event])
@@ -126,7 +131,28 @@ class Game:
             draw_text('{} '.format(self.comp.var), self.screen, (self.width - 500, 10), color=pg.Color(255, 255, 0), size=22)
 
         draw_text('Speed {}%'.format(int(100*self.game_controller.get_actual_speed())), self.screen, (self.width - 150, 510), color=pg.Color(60, 40, 25), size=16)
+        draw_text('Des. {}'.format(int(self.game_controller.global_desirability)), self.screen, (self.width - 150, 560), color=pg.Color(60, 40, 25), size=16)
+        draw_text('Food {}'.format(int(self.game_controller.actual_foods)), self.screen, (self.width - 150, 610), color=pg.Color(60, 40, 25), size=16)
 
+        if self.multiplayer.get_newPlayer() is not None :
+            self.debutAffichage = time.time()
+            self.newPlayer = self.multiplayer.get_newPlayer()
+            self.multiplayer.reset_newPlayer()
+
+        if self.debutAffichage is not None and len(self.newPlayer) > 0:
+            if time.time() - self.debutAffichage < 2:
+                draw_text('New Connection Player {}'.format(self.newPlayer), self.screen, (20, 70),color=pg.Color(255, 255, 0), size=22)
+                print("New Player Connection")
+
+        if self.multiplayer.disconnectedPlayer is not None:
+            self.debutAffichage_disconnect = time.time()
+            self.oldPlayer = self.multiplayer.disconnectedPlayer
+            self.multiplayer.disconnectedPlayer = None
+
+        if self.debutAffichage_disconnect is not None and len(self.newPlayer) > 0:
+            if time.time() - self.debutAffichage_disconnect < 2:
+                print("Disconnected Player")
+                draw_text('Player {} Disconnected'.format(self.newPlayer), self.screen, (20, 80),color=pg.Color(255, 0, 0), size=22)
 
 
         self.pause_game.display(self.screen)

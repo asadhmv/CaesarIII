@@ -1,4 +1,6 @@
 import pygame as pg
+import asyncio
+import ctypes
 import backup_game
 from events.event_manager import EventManager
 from game.game import Game
@@ -6,6 +8,7 @@ from menu import Menu
 from game.textures import Textures
 from Online.player import Player
 from compet_mode import Comp_mode
+
 
 def main():
     is_game_run = True
@@ -28,24 +31,12 @@ def main():
     # Clear buttons from the menu
     EventManager.reset()
     #print(menu.get_online)
-    p = None
-    if menu.get_online():
 
-        roomInformations = menu.getInformationsRoom()
-        username=roomInformations["username"]
-        p = Player()
-        p.set_username(username)
-
-        if menu.get_room() is not None:
-            print(menu.get_room().id)
-            menu.get_room().addMySelf(p)
-
-    game = Game(screen, p, Comp_mode.get_instance(), menu.get_online(), menu.get_room())
+    game = Game(screen, Comp_mode.get_instance(), menu.get_multiplayer())
 
     # Save load, need to be here to load save after init game
     if menu.get_save_loading():
         backup_game.load_game("save.bin")
-
 
 
     while is_game_run:
