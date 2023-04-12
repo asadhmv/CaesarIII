@@ -446,7 +446,15 @@ class Textures:
             SwitchViewButtonTypes.DECREASE_SPEED_HOVER: pg.image.load(os.path.join(IMAGE_PATH, 'system_00018.png')).convert_alpha(screen),
             SwitchViewButtonTypes.DECREASE_SPEED_SELECTED: pg.image.load(os.path.join(IMAGE_PATH, 'paneling_00253.png')).convert_alpha(screen),
             SwitchViewButtonTypes.PAUSE_GAME: pg.transform.scale(pg.image.load(os.path.join(IMAGE_PATH, 'pause_game.png')), (39, 26)).convert_alpha(screen),
-            SwitchViewButtonTypes.CONTINUE_GAME: pg.transform.scale(pg.image.load(os.path.join(IMAGE_PATH, 'continue_game.png')), (39, 26)).convert_alpha(screen)
+            SwitchViewButtonTypes.CONTINUE_GAME: pg.transform.scale(pg.image.load(os.path.join(IMAGE_PATH, 'continue_game.png')), (39, 26)).convert_alpha(screen),
+
+            SwitchViewButtonTypes.BUTTONCASTLE: pg.transform.scale(pg.image.load(os.path.join(IMAGE_PATH, 'castle.png')), (30,25)).convert_alpha(screen),
+            SwitchViewButtonTypes.BUTTONCASTLE_HOVER: pg.transform.scale(pg.image.load(os.path.join(IMAGE_PATH, 'hover_castle.png')), (30,25)).convert_alpha(screen),
+            SwitchViewButtonTypes.BUTTONCASTLE_SELECTED: pg.transform.scale(pg.image.load(os.path.join(IMAGE_PATH, 'selected_castle.png')), (30,25)).convert_alpha(screen),
+
+            SwitchViewButtonTypes.BUTTONATTACK: pg.transform.scale(pg.image.load(os.path.join(IMAGE_PATH, 'attack.png')), (30,30)).convert_alpha(screen),
+            SwitchViewButtonTypes.BUTTONATTACK_HOVER: pg.transform.scale(pg.image.load(os.path.join(IMAGE_PATH, 'hover_attack.png')), (30,30)).convert_alpha(screen),
+            SwitchViewButtonTypes.BUTTONATTACK_SELECTED: pg.transform.scale(pg.image.load(os.path.join(IMAGE_PATH, 'selected_attack.png')), (30,30)).convert_alpha(screen)
 
         }
 

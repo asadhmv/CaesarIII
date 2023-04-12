@@ -92,18 +92,18 @@ class Panel:
 
 
 
-        self.build__castle = Button((0, 200), button_size,
-                                        image=Textures.get_texture(SwitchViewButtonTypes.BUTTON15),
-                                        image_hover=Textures.get_texture(SwitchViewButtonTypes.BUTTON15_HOVER),
-                                        image_selected=Textures.get_texture(SwitchViewButtonTypes.BUTTON15_SELECTED),
+        self.build__castle = Button((self.width - 140, 540 + TOPBAR_HEIGHT), button_size,
+                                        image=Textures.get_texture(SwitchViewButtonTypes.BUTTONCASTLE),
+                                        image_hover=Textures.get_texture(SwitchViewButtonTypes.BUTTONCASTLE_HOVER),
+                                        image_selected=Textures.get_texture(SwitchViewButtonTypes.BUTTONCASTLE_SELECTED),
                                         disable_unselect=True, selectable=True, text_pop_up="Build Castle")
         self.build__castle.on_click(lambda: self.set_selected_tile(BuildingTypes.CASTLE))
 
 
-        self.attack= Button((0, 300), button_size,
-                                        image=Textures.get_texture(SwitchViewButtonTypes.BUTTON15),
-                                        image_hover=Textures.get_texture(SwitchViewButtonTypes.BUTTON15_HOVER),
-                                        image_selected=Textures.get_texture(SwitchViewButtonTypes.BUTTON15_SELECTED),
+        self.attack= Button((self.width - 80, 540 + TOPBAR_HEIGHT), button_size,
+                                        image=Textures.get_texture(SwitchViewButtonTypes.BUTTONATTACK),
+                                        image_hover=Textures.get_texture(SwitchViewButtonTypes.BUTTONATTACK_HOVER),
+                                        image_selected=Textures.get_texture(SwitchViewButtonTypes.BUTTONATTACK_SELECTED),
                                         disable_unselect=True, selectable=True, text_pop_up="Attack")
         self.attack.on_click(lambda: self.set_selected_tile("attack"))
 
