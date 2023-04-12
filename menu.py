@@ -282,6 +282,7 @@ class Menu:
     
     def set_inactive_offline(self):
         self.online = False
+        self.multiplayer.set_online(False)
         self.active = False
         pg.mixer.music.stop()
 

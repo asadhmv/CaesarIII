@@ -19,6 +19,7 @@ class Multiplayer_connection:
         self.buffer_receive = None
         self.newPlayer = None
         self.disconnectedPlayer = None
+        self.online = True
         """os.chdir('Online')
         subprocess.run(["gcc",  "-c", "-fPIC", "recv.c"])
         subprocess.run(["gcc",  "-c", "-fPIC", "send.c"])
@@ -35,20 +36,31 @@ class Multiplayer_connection:
         self.thread.start()
 
     def get_room(self):
+        if not self.online:
+            return
+
         return self.room
 
     def set_builder(self, builder):
+        if not self.online:
+            return
         self.builder = builder
 
     def get_player(self):
+        if not self.online:
+            return
         return self.player
 
     def set_buffer_send(self, buffer):
+        if not self.online:
+            return
         self.buffer_send = buffer
         return
 
     
     def write(self, row, col, ip_owner, buildingType="destroy"):
+        if not self.online:
+            return
 
 
         string = str(buildingType) + ";"+ str(row) + ";"+ str(col)+";"+str(ip_owner)+";"
@@ -59,6 +71,8 @@ class Multiplayer_connection:
 
     
     def read(self):
+        if not self.online:
+            return
 
         tab = self.buffer_receive.split(";")
         type_str = tab[0]
@@ -77,6 +91,9 @@ class Multiplayer_connection:
 
 
     def send(self):
+        if not self.online:
+            return
+        
         if not Comp_mode.get_instance().actived:
             for player in self.get_room().get_players():
                 if player.get_ip() != self.player.get_ip():
@@ -85,6 +102,9 @@ class Multiplayer_connection:
             self.libNetwork.sendC_broadcast(self.buffer_send.encode())
 
     def send_specific_buffer(self, message :str):
+        if not self.online:
+            return
+        
         if not Comp_mode.get_instance().actived:
             for player in self.get_room().get_players():
                 if player.get_ip() != self.player.get_ip():
@@ -95,6 +115,10 @@ class Multiplayer_connection:
 
 
     def receive_thread(self):
+        if not self.online:
+            return
+        
+
         while not self.thread_stop_event.is_set():
             self.buffer_receive=""
             self.sock = self.libNetwork.createSocket()
@@ -132,13 +156,27 @@ class Multiplayer_connection:
                             self.get_room().removePlayer(p)
                             self.disconnectedPlayer = p.get_username()
                 else:
-                    self.buffer_receive = buffer
-                    self.read()
+                    if self.list_receive[0]!=self.ip:
+                        var=None
+                        try:
+                            if Comp_mode.get_instance().compare_with_mine(int(self.list_receive[1])):
+                                var=" You "
+                            else:
+                                var= " "+self.list_receive[0]
+                            Comp_mode.get_instance().play_score(var)
+
+                        except ValueError:
+                            self.buffer_receive = buffer
+                            self.read()
             
 
             self.libNetwork.closeSocket(self.sock)
             
     def kill_thread(self):
+        if not self.online:
+            return
+        
+        
         disconnecting_buffer = "Disconnecting:" + self.player.get_ip()
         self.send_specific_buffer(disconnecting_buffer)
         self.thread_stop_event.set()
@@ -154,13 +192,22 @@ class Multiplayer_connection:
         return (int(tab[0]), int(tab[1]))
     
     def set_room(self, room):
+        if not self.online:
+            return
+        
         self.room = room
 
     def getExistingRooms(self):
+        if not self.online:
+            return
+        
         existingRoomsRequest = "$#[|Who is Room Creator?|]#$" + self.player.get_ip()
         self.libNetwork.sendC_broadcast(existingRoomsRequest.encode())
 
     def amItheCreatorOfRoom(self) -> bool:
+        if not self.online:
+            return
+        
         if self.room is not None:
             creator = self.room.get_creator()
             libPlayer = ctypes.cdll.LoadLibrary('Online/libPlayer.so')
@@ -172,12 +219,22 @@ class Multiplayer_connection:
         return False
 
     def get_available_rooms(self):
+        if not self.online:
+            return
+        
         print("dans le get : ", self.available_rooms)
         return self.available_rooms
 
     def get_newPlayer(self):
+        if not self.online:
+            return
         return self.newPlayer
 
     def reset_newPlayer(self):
+        if not self.online:
+            return
         self.newPlayer = None
+
+    def set_online(self, b):
+        self.online = b
 
