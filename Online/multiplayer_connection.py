@@ -20,13 +20,14 @@ class Multiplayer_connection:
         self.newPlayer = None
         self.disconnectedPlayer = None
         self.online = True
+
         """os.chdir('Online')
         subprocess.run(["gcc",  "-c", "-fPIC", "recv.c"])
         subprocess.run(["gcc",  "-c", "-fPIC", "send.c"])
         subprocess.run(["gcc", "-shared", "-fPIC", "-o", "libNetwork.so", "recv.o", "send.o"])
         os.chdir('..')"""
         self.libNetwork = ctypes.cdll.LoadLibrary('Online/libNetwork.so')
-        self.libNetwork.recvC.restype = ctypes.c_char_p
+        self.libNetwork.recvC.restype = ctypes.POINTER(ctypes.c_char_p)
         self.libNetwork.sendC.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
         self.libNetwork.sendC_broadcast.argtypes = [ctypes.c_char_p]
         self.sock = None
@@ -34,6 +35,7 @@ class Multiplayer_connection:
         self.thread_stop_event = threading.Event()
         self.thread = threading.Thread(target=self.receive_thread)
         self.thread.start()
+        self.list_rcv=[]
 
     def get_room(self):
         if not self.online:
@@ -117,15 +119,20 @@ class Multiplayer_connection:
     def receive_thread(self):
         if not self.online:
             return
-        
+
+        self.list_rcv = []
 
         while not self.thread_stop_event.is_set():
             self.buffer_receive=""
             self.sock = self.libNetwork.createSocket()
-            buffer = self.libNetwork.recvC(self.sock)
-
+            buff = self.libNetwork.recvC(self.sock)
+            if buff:
+                if buff[0]:
+                    self.list_rcv.append(buff[0].decode('utf-8'))
+                if buff[1]:
+                    self.list_rcv.append(buff[1].decode('utf-8'))
+            buffer=self.list_rcv[1]
             if buffer is not None and len(buffer)>0:
-                buffer = buffer.decode()
                 if "$#[|Who is Room Creator?|]#$" in buffer:
                     #print(self.amItheCreatorOfRoom())
                     if self.room is not None and self.room.amIcreator():
@@ -156,13 +163,13 @@ class Multiplayer_connection:
                             self.get_room().removePlayer(p)
                             self.disconnectedPlayer = p.get_username()
                 else:
-                    if self.list_receive[0]!=self.ip:
+                    if self.list_rcv[0]!=self.player.get_ip():
                         var=None
                         try:
-                            if Comp_mode.get_instance().compare_with_mine(int(self.list_receive[1])):
+                            if Comp_mode.get_instance().compare_with_mine(int(self.list_rcv[1])):
                                 var=" You "
                             else:
-                                var= " "+self.list_receive[0]
+                                var= " "+self.list_rcv[0]
                             Comp_mode.get_instance().play_score(var)
 
                         except ValueError:
