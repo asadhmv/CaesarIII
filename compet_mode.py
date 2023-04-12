@@ -3,26 +3,27 @@ import time
 import threading
 import os
 import ctypes
-import pygame
-from menu import Menu
 class Comp_mode:
     instance=None
     def __init__(self):
         self.thread = threading.Thread(target=self.chrono)
-        self.thread.start()
         self.thread_stop_event = threading.Event()
         self.libNetwork = ctypes.cdll.LoadLibrary('Online/libNetwork.so')
         self.libNetwork.sendC.argtypes = [ctypes.c_char_p]
         self.score=0
         self.var=""
+        self.actived=False
 
 
     def chrono(self):
-        time.sleep(60)
+        time.sleep(120)
         print("calculate .....")
         self.score=GameController.get_instance().actual_citizen + GameController.get_instance().actual_foods + int(GameController.get_instance().global_desirability)
         self.libNetwork.sendC(str(self.score).encode())
 
+    def launch_compet_mode(self):
+        self.actived=True
+        self.thread.start()
 
     def kill_chrono(self):
         self.thread_stop_event.set()
@@ -47,4 +48,5 @@ class Comp_mode:
         if Comp_mode.instance is None:
             Comp_mode.instance = Comp_mode()
         return Comp_mode.instance
+
 

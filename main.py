@@ -1,13 +1,11 @@
 import pygame as pg
-import asyncio
-import ctypes
 import backup_game
 from events.event_manager import EventManager
 from game.game import Game
 from menu import Menu
 from game.textures import Textures
 from Online.player import Player
-
+from compet_mode import Comp_mode
 
 def main():
     is_game_run = True
@@ -42,7 +40,7 @@ def main():
             print(menu.get_room().id)
             menu.get_room().addMySelf(p)
 
-    game = Game(screen, p, menu.get_online(), menu.get_room())
+    game = Game(screen, p, Comp_mode.get_instance(), menu.get_online(), menu.get_room())
 
     # Save load, need to be here to load save after init game
     if menu.get_save_loading():

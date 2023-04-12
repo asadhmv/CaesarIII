@@ -1,7 +1,5 @@
 import pygame as pg
-from pygame.locals import *
-
-import backup_game
+from compet_mode import Comp_mode
 from components import button
 from components.input_text import Input_text
 from components.text import Text
@@ -9,7 +7,6 @@ from events.event_manager import EventManager
 from game.utils import draw_text
 from sounds.sounds import SoundManager
 from Online.Room import Room
-
 pg.font.init()
 class Menu:
     def __init__(self, screen):
@@ -19,6 +16,7 @@ class Menu:
         self.username_menu = False
         self.roomSettings_menu = False
         self.roomPassword_menu = False
+        self.gamemode = False
         self.splash_screen = True
         self.active = True
         self.save_loading = False
@@ -109,7 +107,8 @@ class Menu:
         self.button__create_room= button.Button(((self.screen.get_size()[0]/2), self.screen.get_size()[1]/3), (70,20),
                                                       image=pg.image.load('assets/menu_sprites/create_room.png').convert())
         self.button__create_room.on_click(self.set_roomSettings_menu)
-
+        self.choose_modemenu = button.Button((size_screen[0] / 2.35, size_screen[1] / 2.6), (200, 30), text="Choose game mode", text_size=20, center_text=True)
+        self.choose_modemenu.on_click(self.set_gamemode)
 
 
         self.nbPlayerText = Text("Nombre de joueur maximum : "+str(self.nbPlayer), 30, (size_screen[0]/2.4, size_screen[1]/2.9), (0,0,0))
@@ -126,6 +125,7 @@ class Menu:
         self.private_button.on_click(self.set_roomPrive)
 
 
+
         size_screen = self.screen.get_size()
         legende_password = Text("Please enter password", 40, (size_screen[0]/2.4, size_screen[1]/6), (245,245,220))
         typeText_password = Text("", 24, (size_screen[0]/2-135, size_screen[1]/6+50), (0,0,0))
@@ -135,7 +135,12 @@ class Menu:
         self.valide_settings = button.Button((size_screen[0]/2,size_screen[1]/2.17), (size_screen[0]/15,size_screen[1]/20), text="Valider", text_size=20, center_text_mod2=True)
         self.valide_settings.on_click(self.set_inactive, self.create_room)
 
-
+        self.gamemodeChoice1 = button.Button((size_screen[0]/2.35-50, size_screen[1]/4), (400, 40), text="ATTACK MODE", text_size=20, center_text_mod2=True)
+        self.gamemodeChoice2 = button.Button((size_screen[0]/2.35-50, (size_screen[1]/4)+50), (400, 40), text="COMPETITION MODE", text_size=20, center_text_mod2=True)
+        self.gamemodeChoice3 = button.Button((size_screen[0] / 2.35-50, (size_screen[1] / 4)+100), (400, 40), text="OPEN WORLD MODE", text_size=20, center_text_mod2=True)
+        self.gamemodeChoice1.on_click(exit)
+        self.gamemodeChoice2.on_click(self.comp)
+        self.gamemodeChoice3.on_click(exit)
 
         if self.is_load_menu() and not self.main_menu:
             EventManager.set_any_input(self.event_load_menu)
@@ -195,7 +200,8 @@ class Menu:
             self.roomSettings_menu_display()
         elif self.roomPassword_menu:
             self.roomPassword_menu_display()
-        
+        elif self.gamemode:
+            self.gamemode_menu_diplay()
 
 
 
@@ -234,6 +240,9 @@ class Menu:
         self.join = True
         self.set_inactive()
 
+    def comp(self):
+        Comp_mode.get_instance().launch_compet_mode()
+        self.set_inactive()
     def skip_splashscreen(self):
         EventManager.clear_any_input()
         self.splash_screen = False
@@ -267,13 +276,27 @@ class Menu:
         EventManager.register_component(self.come_back_to_main_menu)
         EventManager.register_component(self.button__create_room)
         EventManager.register_component(self.button__join)
+        EventManager.register_component(self.choose_modemenu)
         self.input_room.display(self.screen)
         self.input_room.add_input_listener()
         self.come_back_to_main_menu.display(self.screen)
         self.button__join.display(self.screen)
         self.button__create_room.display(self.screen)
-        
-
+        self.choose_modemenu.display(self.screen)
+    def gamemode_menu_diplay(self):
+        EventManager.clear_any_input()
+        EventManager.remove_component(self.button__start_new_career)
+        EventManager.remove_component(self.button__load_saved_game)
+        EventManager.remove_component(self.button__connexion)
+        EventManager.remove_component(self.button__exit)
+        EventManager.register_component(self.gamemodeChoice1)
+        EventManager.register_component(self.gamemodeChoice2)
+        EventManager.register_component(self.gamemodeChoice3)
+        self.gamemodeChoice1.display(self.screen)
+        self.gamemodeChoice2.display(self.screen)
+        self.gamemodeChoice3.display(self.screen)
+        self.come_back_to_main_menu.display(self.screen)
+        return
     def username_menu_display(self):
         EventManager.clear_any_input()
         EventManager.remove_component(self.button__start_new_career)
@@ -381,7 +404,16 @@ class Menu:
         self.username_menu = False
         self.roomSettings_menu = False
         self.roomPassword_menu = True
-    
+    def set_gamemode(self):
+        self.room_menu = False
+        self.loading_menu = False
+        self.main_menu = False
+        self.username_menu = False
+        self.roomSettings_menu = False
+        self.roomPassword_menu = False
+        self.gamemode = True
+
+
     def incrementNbPlayer(self):
         max = 99
         if self.nbPlayer < max:
