@@ -55,6 +55,9 @@ class Chat:
           
 
     def add_message(self, username):
+        max_messages = 17 
+        if len(self.historyOfMessages) > max_messages:
+            self.historyOfMessages.pop(0)
         message = self.input_message.getString()
         #Multiplayer_connection.get_instance().send_specific_buffer(message)
         username = self.multiplayer.player.get_username()
@@ -64,10 +67,10 @@ class Chat:
         self.input_message.clear_inputText()
 
     def add_message_received(self, message):
-        max_messages = 17 
-        if len(self.historyOfMessages) > max_messages:
-            self.historyOfMessages.pop(0) 
         if message.startswith('$chat:'):
+            max_messages = 17 
+            if len(self.historyOfMessages) > max_messages:
+                self.historyOfMessages.pop(0)
             message = message.split('$chat:', 1)[1].strip()
             self.historyOfMessages.append(f"{message}")
     
