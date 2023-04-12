@@ -16,7 +16,7 @@ class Comp_mode:
 
 
     def chrono(self):
-        time.sleep(120)
+        time.sleep(300)
         print("calculate .....")
         self.score=GameController.get_instance().actual_citizen + GameController.get_instance().actual_foods + int(GameController.get_instance().global_desirability)
         self.libNetwork.sendC(str(self.score).encode())
