@@ -135,7 +135,7 @@ class Multiplayer_connection:
             
 
 
-            self.libNetwork.closeSocket(self.sock)
+            self.libNetwork.closeSocket(self.sock) 
             
     def kill_thread(self):
         self.thread_stop_event.set()
