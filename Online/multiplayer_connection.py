@@ -156,18 +156,8 @@ class Multiplayer_connection:
                             self.get_room().removePlayer(p)
                             self.disconnectedPlayer = p.get_username()
                 else:
-                    if self.list_receive[0]!=self.ip:
-                        var=None
-                        try:
-                            if Comp_mode.get_instance().compare_with_mine(int(self.list_receive[1])):
-                                var=" You "
-                            else:
-                                var= " "+self.list_receive[0]
-                            Comp_mode.get_instance().play_score(var)
-
-                        except ValueError:
-                            self.buffer_receive = buffer
-                            self.read()
+                    self.buffer_receive = buffer
+                    self.read()
             
 
             self.libNetwork.closeSocket(self.sock)
