@@ -2,7 +2,7 @@ from Online.player import Player
 
 class Room():
     
-    def __init__(self, nbJoueur : int, id : str, mdp : str = False, owner : bool = False):
+    def __init__(self, nbJoueur : int, id : str,  play_mode= False, mdp : str = False, owner:bool = False):
 
         self.players=[]
         self.nbJoueur = nbJoueur
@@ -10,6 +10,7 @@ class Room():
         self.id = id
         self.owner = owner
         self.creator = {}
+        self.play_mode = play_mode
 
     def addMySelf(self, player : Player):
         self.players.append(player)

@@ -1,15 +1,21 @@
 import pygame as pg
-import asyncio
-import ctypes
 import backup_game
 from events.event_manager import EventManager
 from game.game import Game
 from menu import Menu
 from game.textures import Textures
 from Online.player import Player
-
+from compet_mode import Comp_mode
+import os, subprocess
 
 def main():
+    os.chdir('Online')
+    subprocess.run(["gcc",  "-c", "-fPIC", "recv.c"])
+    subprocess.run(["gcc",  "-c", "-fPIC", "send.c"])
+    subprocess.run(["gcc", "-shared", "-fPIC", "-o", "libNetwork.so", "recv.o", "send.o"])
+    subprocess.run(["gcc",  "-c", "-fPIC", "ip.c"])
+    subprocess.run(["gcc", "-shared", "-fPIC", "-o", "libPlayer.so", "ip.o"])
+    os.chdir('..')
     is_game_run = True
     is_playing = True
 
@@ -42,7 +48,7 @@ def main():
             print(menu.get_room().id)
             menu.get_room().addMySelf(p)
 
-    game = Game(screen, player=p, online=menu.get_online(), room=menu.get_room(), multiplayer=menu.get_multiplayer())
+    game = Game(screen, player=p,Comp_mode.get_instance(), online=menu.get_online(), room=menu.get_room(), multiplayer=menu.get_multiplayer())
 
     #game = Game(screen, menu.get_multiplayer())
 
