@@ -31,33 +31,26 @@ def my_thread(func, event: Event):
         exit()
 
 class Game:
-<<<<<<< HEAD
-    def __init__(self, screen, player, online=False, room : Room = None):
-=======
-    def __init__(self, screen, multiplayer = None):
+    def __init__(self, screen, player, online=False, room : Room = None, multiplayer = None):
         #print(os.getcwd())
         #os.chdir('..')
->>>>>>> menuCorentin
         self.is_running = False
         self.screen = screen
         self.paused = False
         self.game_controller = GameController.get_instance()
         self.width, self.height = self.screen.get_size()
-<<<<<<< HEAD
-        self.multplayer = None
+        self.multiplayer = None
         self.room = room
         self.start_time = time.time()
 
         #Gestion de la connexion multijoueur
         if online:
-            self.multplayer = Multiplayer_connection(room,screen)
-=======
-        self.multiplayer = multiplayer
+            self.multiplayer = multiplayer
+        #self.multiplayer = multiplayer
 
         #Gestion de la connexion multijoueur
         #if online:
         #    self.multiplayer = Multiplayer_connection(room)
->>>>>>> menuCorentin
 
         # sound manager
         self.sound_manager = SoundManager()
@@ -67,11 +60,7 @@ class Game:
         self.panel = Panel(self.width, self.height, self.screen)
 
         # World contains populations or graphical objects like buildings, trees, grass
-<<<<<<< HEAD
-        self.world = World(self.width, self.height, self.panel, self.multplayer,player)
-=======
-        self.world = World(self.width, self.height, self.panel, self.multiplayer)
->>>>>>> menuCorentin
+        self.world = World(self.width, self.height, self.panel, self.multiplayer ,player)
 
         self.thread_event = Event()
         self.draw_thread = Thread(None, my_thread, "1", [self.display, self.thread_event])
@@ -172,12 +161,8 @@ class Game:
 
     def exit_game(self):
         self.is_running = False
-<<<<<<< HEAD
-        self.multplayer.kill_thread()
-        Comp_mode().get_instance().kill_chrono()
-=======
         self.multiplayer.kill_thread()
->>>>>>> menuCorentin
+        Comp_mode().get_instance().kill_chrono()
 
     def load_save(self):
         self.world.load_numpy_array()

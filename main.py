@@ -42,7 +42,7 @@ def main():
             print(menu.get_room().id)
             menu.get_room().addMySelf(p)
 
-    game = Game(screen, p, menu.get_online(), menu.get_room())
+    game = Game(screen, player=p, online=menu.get_online(), room=menu.get_room(), multiplayer=menu.get_multiplayer())
 
     #game = Game(screen, menu.get_multiplayer())
 
