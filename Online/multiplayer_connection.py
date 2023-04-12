@@ -20,6 +20,7 @@ class Multiplayer_connection:
         self.builder = None
         self.buffer_receive = None
         self.newPlayer = None
+        self.world = None
         """os.chdir('Online')
         subprocess.run(["gcc",  "-c", "-fPIC", "recv.c"])
         subprocess.run(["gcc",  "-c", "-fPIC", "send.c"])
@@ -96,6 +97,7 @@ class Multiplayer_connection:
 
             if buffer is not None and len(buffer)>0:
                 buffer = buffer.decode()
+
                 if "$#[|Who is Room Creator?|]#$" in buffer:
                     #print(self.amItheCreatorOfRoom())
                     if self.room is not None and self.room.amIcreator():
@@ -119,6 +121,13 @@ class Multiplayer_connection:
                     p.set_username(connecting_player_username)
                     self.room.addPlayer(p)
                     self.newPlayer = p.get_username()
+                elif "$attack:" in buffer:
+                    tab = []
+                    tmp_str = buffer.replace("$attack:", "")
+                    tmp_tab = tmp_str.split(";")
+                    for coor in tmp_tab:
+                        tab.append(coor.split(","))
+                    print("ici on attaque : ", tab)
                 else:
                     if self.list_receive[0]!=self.ip:
                         var=None
@@ -177,6 +186,9 @@ class Multiplayer_connection:
     
     def reset_newPlayer(self):
         self.newPlayer = None
+
+    def set_world(self, nworld):
+        self.world = nworld
     
 
 

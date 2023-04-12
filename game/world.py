@@ -46,6 +46,7 @@ class World:
         self.builder = Builder(panel)
         self.multiplayer = multiplayer
         self.multiplayer.set_builder(self.builder)
+        self.multiplayer.set_world(self)
         self.overlay = Overlay.get_instance()
 
         self.mode_selectionCastle = False
@@ -153,9 +154,11 @@ class World:
                         if self.in_map(mouse_grid_pos):
                             grid = self.game_controller.get_map()
                             tile = grid[mouse_grid_pos[1]][mouse_grid_pos[0]]
-                            if (tile.get_building().__class__.__base__ == Structure or tile.get_building().__class__.__base__ == House) and tile.get_owner_ip() != self.player.get_ip():
+                            if (tile.get_building().__class__.__base__ == Structure or tile.get_building().__class__.__base__ == House) :#and tile.get_owner_ip() != self.player.get_ip():
                                 self.mode_selectionCastle.get_building().attack(tile)
-                                #self.mutliplayer.write("écrire un truc qui envoie les info du chateau et de la cible")
+                                attacker = str(self.mode_selectionCastle.get_row())+","+str(self.mode_selectionCastle.get_col())
+                                cible = str(tile.get_row())+","+str(tile.get_col())
+                                self.multiplayer.send_specific_buffer("$attack:"+attacker+";"+cible)
                                 self.mode_selectionCastle = False
                                 self.mode_selectionAttack = False
                                 self.panel.set_selected_tile(None)
