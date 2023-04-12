@@ -112,6 +112,7 @@ class Panel:
 
 
 
+
         self.build__well = Button((self.width - 149, 312 + TOPBAR_HEIGHT), button_size,
                                   image=Textures.get_texture(SwitchViewButtonTypes.BUTTON8),
                                   image_hover=Textures.get_texture(SwitchViewButtonTypes.BUTTON8_HOVER),
