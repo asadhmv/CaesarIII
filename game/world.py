@@ -223,7 +223,7 @@ class World:
 
                     #if self.check_no_builds(start_point,end_point):
                     if self.multiplayer is not None:
-                        self.multiplayer.write(start_point,end_point, selected_tile)
+                        self.multiplayer.write(start_point,end_point, self.player.get_ip(), selected_tile)
 
 
 

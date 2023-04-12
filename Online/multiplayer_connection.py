@@ -48,10 +48,10 @@ class Multiplayer_connection:
         return
 
     
-    def write(self, row, col, buildingType="destroy"):
+    def write(self, row, col, ip_owner, buildingType="destroy"):
 
 
-        string = str(buildingType) + ";"+ str(row) + ";"+ str(col)
+        string = str(buildingType) + ";"+ str(row) + ";"+ str(col)+";"+str(ip_owner)+";"
         self.buffer_send += string
         self.send()
         self.set_buffer_send("")
@@ -61,6 +61,7 @@ class Multiplayer_connection:
     def read(self):
 
         tab = self.buffer_receive.split(";")
+        print("tab")
         type_str = tab[0]
         type_parts = type_str.split('.')
         type_name = type_parts[-1]
@@ -72,7 +73,7 @@ class Multiplayer_connection:
         else:
             return
 
-        self.builder.build_from_start_to_end(type_value, Multiplayer_connection.string_to_tuple(tab[1]), Multiplayer_connection.string_to_tuple(tab[2]))
+        self.builder.build_from_start_to_end(type_value, Multiplayer_connection.string_to_tuple(tab[1]), Multiplayer_connection.string_to_tuple(tab[2]), tab[3])
 
 
 
@@ -174,10 +175,4 @@ class Multiplayer_connection:
 
     def reset_newPlayer(self):
         self.newPlayer = None
-
-
-
-
-
-
 
