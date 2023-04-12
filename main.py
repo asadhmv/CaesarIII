@@ -48,7 +48,7 @@ def main():
             print(menu.get_room().id)
             menu.get_room().addMySelf(p)
 
-    game = Game(screen, player=p,Comp_mode.get_instance(), online=menu.get_online(), room=menu.get_room(), multiplayer=menu.get_multiplayer())
+    game = Game(screen, p, Comp_mode.get_instance(), online=menu.get_online(), room=menu.get_room(), multiplayer=menu.get_multiplayer())
 
     #game = Game(screen, menu.get_multiplayer())
 

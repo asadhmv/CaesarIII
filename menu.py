@@ -1,4 +1,7 @@
+import time
 import pygame as pg
+from Online.multiplayer_connection import Multiplayer_connection
+from Online.player import Player
 from compet_mode import Comp_mode
 from components import button
 from components.input_text import Input_text
@@ -230,10 +233,8 @@ class Menu:
             self.username_menu_display()
         elif self.roomSettings_menu:
             self.roomSettings_menu_display()
-        elif self.roomPassword_menu:
-            self.roomPassword_menu_display()
         elif self.gamemode:
-            self.gamemode_menu_diplay()
+            self.gamemode_menu_display()
         elif self.roomId_menu:
             self.roomId_menu_display()
         elif self.listRoom_menu:
@@ -354,12 +355,13 @@ class Menu:
         EventManager.register_component(self.come_back_to_main_menu)
         EventManager.register_component(self.button__create_room)
         EventManager.register_component(self.button__join)
+        EventManager.register_component(self.choose_modemenu)
         self.come_back_to_main_menu.display(self.screen)
         self.button__join.display(self.screen)
         self.button__create_room.display(self.screen)
         self.choose_modemenu.display(self.screen)
         return
-    def gamemode_menu_diplay(self):
+    def gamemode_menu_display(self):
         EventManager.clear_any_input()
         EventManager.remove_component(self.button__start_new_career)
         EventManager.remove_component(self.button__load_saved_game)
