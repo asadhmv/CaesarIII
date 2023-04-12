@@ -243,5 +243,5 @@ class Multiplayer_connection:
         self.newPlayer = None
 
     def set_online(self, b):
-        self.online = b
+        self.online = b 
 
