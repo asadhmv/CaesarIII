@@ -44,6 +44,8 @@ def main():
 
     game = Game(screen, p, menu.get_online(), menu.get_room())
 
+    #game = Game(screen, menu.get_multiplayer())
+
     # Save load, need to be here to load save after init game
     if menu.get_save_loading():
         backup_game.load_game("save.bin")

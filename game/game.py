@@ -1,6 +1,7 @@
 import time
 import traceback
 import numpy
+#import os
 import pygame as pg
 
 from class_types.panel_types import SwitchViewButtonTypes
@@ -14,7 +15,6 @@ from .map_controller import MapController
 from .panel import Panel
 from .game_controller import GameController
 from threading import Thread, Event
-from Online.multiplayer_connection import Multiplayer_connection
 from Online.Room import Room
 
 from compet_mode import Comp_mode
@@ -31,12 +31,19 @@ def my_thread(func, event: Event):
         exit()
 
 class Game:
+<<<<<<< HEAD
     def __init__(self, screen, player, online=False, room : Room = None):
+=======
+    def __init__(self, screen, multiplayer = None):
+        #print(os.getcwd())
+        #os.chdir('..')
+>>>>>>> menuCorentin
         self.is_running = False
         self.screen = screen
         self.paused = False
         self.game_controller = GameController.get_instance()
         self.width, self.height = self.screen.get_size()
+<<<<<<< HEAD
         self.multplayer = None
         self.room = room
         self.start_time = time.time()
@@ -44,6 +51,13 @@ class Game:
         #Gestion de la connexion multijoueur
         if online:
             self.multplayer = Multiplayer_connection(room,screen)
+=======
+        self.multiplayer = multiplayer
+
+        #Gestion de la connexion multijoueur
+        #if online:
+        #    self.multiplayer = Multiplayer_connection(room)
+>>>>>>> menuCorentin
 
         # sound manager
         self.sound_manager = SoundManager()
@@ -53,7 +67,11 @@ class Game:
         self.panel = Panel(self.width, self.height, self.screen)
 
         # World contains populations or graphical objects like buildings, trees, grass
+<<<<<<< HEAD
         self.world = World(self.width, self.height, self.panel, self.multplayer,player)
+=======
+        self.world = World(self.width, self.height, self.panel, self.multiplayer)
+>>>>>>> menuCorentin
 
         self.thread_event = Event()
         self.draw_thread = Thread(None, my_thread, "1", [self.display, self.thread_event])
@@ -82,6 +100,11 @@ class Game:
             while self.is_running and not self.thread_event.is_set():
                 # We need to recalculate it every time, since it can change
                 targeted_ticks_per_seconds = self.game_controller.get_current_speed() * 50
+                if self.multiplayer.get_newPlayer() is not None:
+                    newPlayer = self.multiplayer.get_newPlayer()
+                    draw_text('New Connexion Player {}'.format(newPlayer), self.screen, (20, 70), size=22)
+                    self.multiplayer.reset_newPlayer()
+
                 if not self.paused:
                     self.game_controller.update()
                     for walker in GameController.get_instance().walkers:
@@ -89,7 +112,6 @@ class Game:
                 if self.game_controller.is_load_save():
                     self.load_save()
 
-                #self.multplayer.receive()
 
                 time.sleep(1/targeted_ticks_per_seconds)
 
@@ -150,8 +172,12 @@ class Game:
 
     def exit_game(self):
         self.is_running = False
+<<<<<<< HEAD
         self.multplayer.kill_thread()
         Comp_mode().get_instance().kill_chrono()
+=======
+        self.multiplayer.kill_thread()
+>>>>>>> menuCorentin
 
     def load_save(self):
         self.world.load_numpy_array()

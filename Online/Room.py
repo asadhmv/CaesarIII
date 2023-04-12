@@ -2,12 +2,14 @@ from Online.player import Player
 
 class Room():
     
-    def __init__(self, nbJoueur : int, id : str, mdp=False):
+    def __init__(self, nbJoueur : int, id : str, mdp : str = False, owner : bool = False):
 
         self.players=[]
         self.nbJoueur = nbJoueur
         self.mdp = mdp
         self.id = id
+        self.owner = owner
+        self.creator = {}
 
     def addMySelf(self, player : Player):
         self.players.append(player)
@@ -17,7 +19,7 @@ class Room():
         if(len(self.players)==self.nbJoueur):
             return "La room est complète"
         else:
-            self.append(player)
+            self.players.append(player)
             return True
     
     def removePlayer(self, player):
@@ -32,6 +34,9 @@ class Room():
 
     def get_creator(self):
         return self.creator
+    
+    def amIcreator(self):
+        return self.owner
     
     def get_info(self):
         return {'room_id' : self.id,
@@ -51,9 +56,11 @@ class Room():
                 buffer += ";"
             else:
                 buffer += ","
-        
-        print(buffer)
+
         return buffer
+    
+    def get_players(self) -> list:
+        return self.players
 
 
     # def create(self,room_name, player):
