@@ -40,6 +40,7 @@ class Menu:
         self.screen = screen
         self. graphics = self.load_images()
         self.sound_manager = SoundManager()
+        
 
         # (Width, Height)
         button_size = (322, 32)

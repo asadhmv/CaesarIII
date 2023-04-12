@@ -29,7 +29,7 @@ def main():
     while menu.is_active():
         menu.run()
 
-    # Clear buttons from the menu
+    # Clear buttons fromgit  the menu
     EventManager.reset()
     #print(menu.get_online)
 
@@ -50,3 +50,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+ 

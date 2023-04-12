@@ -7,6 +7,7 @@ from class_types.road_types import RoadTypes
 from compet_mode import Comp_mode
 from Online.player import Player
 
+list=[]
 class Multiplayer_connection:
 
     def __init__(self, room = None):
@@ -31,6 +32,7 @@ class Multiplayer_connection:
         self.libNetwork.sendC_broadcast.argtypes = [ctypes.c_char_p]
         self.sock = None
         Comp_mode.get_instance()
+        self.chat = None
         self.thread_stop_event = threading.Event()
         self.thread = threading.Thread(target=self.receive_thread)
         self.thread.start()
@@ -56,7 +58,9 @@ class Multiplayer_connection:
             return
         self.buffer_send = buffer
         return
-
+    def set_buffer_receive(self, buffer):
+        self.buffer_receive = buffer
+        return
     
     def write(self, row, col, ip_owner, buildingType="destroy"):
         if not self.online:
@@ -69,6 +73,7 @@ class Multiplayer_connection:
         self.set_buffer_send("")
 
 
+    
     
     def read(self):
         if not self.online:
@@ -114,6 +119,15 @@ class Multiplayer_connection:
 
 
 
+    
+    # def send_message(self, message: str):
+
+    #     message_str = f"{self.player.get_username()}: {message}"
+    #     self.libNetwork.sendC_broadcast(message_str.encode())
+    
+    # def receive_message(self, message: str):
+    #     self.chat.display_received_message(message, self.player.get_username())
+
     def receive_thread(self):
         if not self.online:
             return
@@ -155,6 +169,9 @@ class Multiplayer_connection:
                         if p.get_ip() == ip_disconnecting_player:
                             self.get_room().removePlayer(p)
                             self.disconnectedPlayer = p.get_username()
+                elif "$chat:" in buffer:
+                    if self.chat is not None :
+                        self.chat.add_message_received(buffer)
                 else:
                     self.buffer_receive = buffer
                     self.read()
@@ -228,3 +245,7 @@ class Multiplayer_connection:
     def set_online(self, b):
         self.online = b
 
+    
+
+    def set_chat(self, chat):
+        self.chat = chat

@@ -16,6 +16,7 @@ from .game_controller import GameController
 from threading import Thread, Event
 from Online.multiplayer_connection import Multiplayer_connection
 from Online.Room import Room
+from Online.Chat import Chat
 
 def my_thread(func, event: Event):
     fps_moyen = [0]
@@ -44,6 +45,7 @@ class Game:
         self.oldPlayer = ""
         self.start_time = time.time()
         self.comp = comp
+        self.multiplayer.set_chat(Chat(self.screen, self.width -500, self.height - 500, self.multiplayer))
 
         #Gestion de la connexion multijoueur
         #if online:
@@ -55,6 +57,7 @@ class Game:
         # panel has two sub_panel: ressource_panel for displaying Dn, Populations, etc and building_panel
         # for displaying available building in game
         self.panel = Panel(self.width, self.height, self.screen)
+        self.panel.chat_room = self.multiplayer.chat
 
         # World contains populations or graphical objects like buildings, trees, grass
         self.world = World(self.width, self.height, self.panel, self.multiplayer)

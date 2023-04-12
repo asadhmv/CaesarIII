@@ -123,3 +123,6 @@ class Input_text():
         EventManager.remove_key_listener(pg.K_SPACE)
         EventManager.remove_key_listener(pg.K_BACKSPACE)
         return
+
+    def clear_inputText(self):
+        self.inputText.setString("")
